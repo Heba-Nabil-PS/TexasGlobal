@@ -29,17 +29,12 @@ export function StoryHeroV2({
   const ghostX = useTransform(scrollYProgress, [0, 1], [0, -160]);
 
   return (
-    <section ref={ref} className="relative flex items-center overflow-hidden bg-secondary pb-12 pt-32 text-third md:pb-14 md:pt-36 lg:min-h-[100svh]">
-      {/* grunge texture */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.18] mix-blend-multiply"
-        style={{ backgroundImage: "url(/assets/tex-grunge.png)", backgroundSize: "520px" }}
-      />
+    <section ref={ref} className="relative flex items-center overflow-hidden bg-[#E9962A] pb-12 pt-32 text-third md:pb-14 md:pt-36 lg:min-h-[100svh]">
       {/* ghost year */}
       <motion.span
         aria-hidden
         style={{ x: ghostX }}
-        className="display pointer-events-none absolute -bottom-10 left-0 select-none whitespace-nowrap text-[42vw] leading-none text-white/25 md:text-[30vw]"
+        className="display pointer-events-none absolute -bottom-10 left-0 select-none whitespace-nowrap text-[42vw] leading-none text-white/20 md:text-[30vw]"
       >
         1952
       </motion.span>
@@ -59,7 +54,7 @@ export function StoryHeroV2({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: ease.out, delay: 0.5 }}
-            className="mt-6 max-w-xl text-lg leading-relaxed text-third/80"
+            className="mt-6 max-w-xl text-lg leading-relaxed text-third/85"
           >
             {subtitle}
           </motion.p>

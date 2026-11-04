@@ -36,13 +36,6 @@ export function CareersHeroV2() {
               className="object-cover object-[72%_50%]"
             />
           </motion.div>
-          <Image
-            src="/assets/v2/stamp-bold-texas-flavor.png"
-            alt=""
-            width={200}
-            height={200}
-            className="pointer-events-none absolute -left-8 -top-10 w-28 animate-[spin_28s_linear_infinite] md:w-36"
-          />
           <Stamp text={h.stamp} size={130} className="absolute -bottom-8 -left-6 md:-left-10" />
           <span className="display absolute -right-2 bottom-10 rotate-[-6deg] rounded-xl bg-secondary px-4 py-2 text-2xl uppercase text-third shadow-soft3 md:text-3xl">
             Now hiring

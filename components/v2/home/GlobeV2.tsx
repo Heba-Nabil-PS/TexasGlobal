@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import Button from "@/components/ui/Button";
-import { Eyebrow, Title, Stamp } from "@/components/v2/kit";
+import { Eyebrow, Title } from "@/components/v2/kit";
 import { globeV2 } from "@/lib/content-v2/home";
 
 const STEP_MS = 3600;
@@ -33,7 +33,7 @@ export default function GlobeV2() {
   const f = frames[i];
 
   return (
-    <section className="relative overflow-hidden bg-white py-20 md:py-28">
+    <section className="relative overflow-hidden bg-white py-12 md:py-16">
       <div className="container-tx text-center">
         <Eyebrow center>{globeV2.eyebrow}</Eyebrow>
         <Title lines={globeV2.titleLines} size="lg" className="mx-auto max-w-4xl" />
@@ -79,21 +79,22 @@ export default function GlobeV2() {
               <Image src={f.src} alt={`Texas Chicken markets — ${f.region}`} fill sizes="520px" className="object-contain" />
             </motion.div>
           </AnimatePresence>
-          <Stamp text="25+ markets" size={110} className="absolute -right-2 bottom-4 md:-right-6" />
         </div>
 
         {/* Big number + CTAs */}
         <div className="order-3 text-center lg:text-left">
           <div className="display text-7xl leading-none text-secondary md:text-8xl">{globeV2.stat}</div>
           <p className="mx-auto mt-4 max-w-sm text-lg leading-relaxed text-third/75 lg:mx-0 md:text-xl">{globeV2.body}</p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-            <Button href={globeV2.ctaSecondary.href} variant="red" pulse>
-              {globeV2.ctaSecondary.label}
-            </Button>
-            <Button href={globeV2.ctaPrimary.href} variant="ghost">
-              {globeV2.ctaPrimary.label}
-            </Button>
-          </div>
+        </div>
+
+        {/* CTAs — one row under the globe so both buttons sit side by side */}
+        <div className="order-4 flex flex-wrap items-center justify-center gap-3 lg:col-span-3">
+          <Button href={globeV2.ctaSecondary.href} variant="red" pulse>
+            {globeV2.ctaSecondary.label}
+          </Button>
+          <Button href={globeV2.ctaPrimary.href} variant="ghost">
+            {globeV2.ctaPrimary.label}
+          </Button>
         </div>
       </div>
     </section>

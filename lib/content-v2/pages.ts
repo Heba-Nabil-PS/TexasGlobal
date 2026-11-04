@@ -59,7 +59,6 @@ export const contactV2 = {
     bubbles: ["Franchise enquiry? 👋", "Press kit, please!", "Best biscuits ever."],
     stamp: "We're all ears",
   },
-  channelIcons: ["💬", "🤝", "📰", "⭐"],
   body: {
     eyebrow: "Pick a channel",
     title: ["Straight to the", "[right team.]"],

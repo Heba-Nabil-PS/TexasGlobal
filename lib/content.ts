@@ -1023,15 +1023,12 @@ export const footer = {
   columns: [
     { title: "Discover Texas Chicken", links: [
       { label: "Our Story", href: "/our-story" },
+      { label: "Menu", href: "/menu" },
       // Hidden for now — uncomment to bring Leadership Team back into the footer.
       // { label: "Leadership Team", href: "/our-story/leadership" },
       // Hidden for now — uncomment to bring Community back into the footer.
       // { label: "Community", href: "/community" },
       { label: "News", href: "/news" },
-    ] },
-    { title: "Our Food", links: [
-      { label: "Menu", href: "/menu" },
-      { label: "What's New", href: "/news" },
     ] },
     { title: "Join the Family", links: [
       { label: "Franchising", href: "/franchising" },

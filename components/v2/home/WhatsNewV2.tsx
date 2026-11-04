@@ -13,7 +13,7 @@ import { whatsNewV2 } from "@/lib/content-v2/home";
  */
 export default function WhatsNewV2() {
   return (
-    <section id="whats-new" className="relative overflow-hidden bg-white py-20 md:py-24">
+    <section id="whats-new" className="relative overflow-hidden bg-white py-12 md:py-16">
       <div className="container-tx">
         <Eyebrow>{whatsNewV2.eyebrow}</Eyebrow>
         <Title lines={[whatsNewV2.title]} size="xl" />

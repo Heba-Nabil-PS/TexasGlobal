@@ -5,10 +5,19 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { Eyebrow, Stamp, Title } from "@/components/v2/kit";
-import { FieldV2, FloatFood, HeroV2 } from "./shared";
+import { FieldV2, HeroV2 } from "./shared";
 import { contactPage } from "@/lib/content";
 import { contactV2 } from "@/lib/content-v2/pages";
 import { fadeUp, inView, staggerContainer } from "@/lib/motion";
+
+/* Solid 24px glyphs (chat, storefront, article, briefcase) — same filled,
+   currentColor style as the icons in /public/assets/icons. */
+const channelIcons = [
+  "M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z",
+  "M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1zm-9 4H6v-4h6v4z",
+  "M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z",
+  "M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z",
+];
 
 /* ---------------------------------------------------------------- hero */
 export function ContactHeroV2() {
@@ -85,8 +94,10 @@ export function ContactBodyV2() {
                   data-cursor="link"
                   className="group flex items-center gap-5 rounded-[1.75rem] bg-white p-5 shadow-soft3 ring-1 ring-third/10 transition-all duration-300 hover:-translate-y-1 hover:ring-secondary md:p-6"
                 >
-                  <span className={`grid size-14 shrink-0 place-items-center rounded-2xl text-2xl ${badges[i]}`} aria-hidden>
-                    {contactV2.channelIcons[i]}
+                  <span className={`grid size-14 shrink-0 place-items-center rounded-2xl ${badges[i]}`} aria-hidden>
+                    <svg viewBox="0 0 24 24" className="size-7" fill="currentColor">
+                      <path d={channelIcons[i]} />
+                    </svg>
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="display block text-2xl uppercase leading-none text-third md:text-[1.7rem]">{c.title}</span>
@@ -112,13 +123,6 @@ export function ContactBodyV2() {
             onSubmit={(e) => e.preventDefault()}
             className="relative rounded-[2.5rem] bg-white p-8 shadow-soft3 ring-1 ring-third/10 md:p-12"
           >
-            <FloatFood
-              src="/assets/v2/signatures/sig-04.png"
-              alt="Honey-butter biscuits"
-              className="-right-6 -top-14 hidden size-36 md:block"
-              amp={8}
-              sizes="150px"
-            />
             <motion.h2 variants={fadeUp} className="display text-4xl uppercase text-third md:text-5xl">
               {contactPage.form.heading}
             </motion.h2>

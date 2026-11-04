@@ -2,8 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    // Serve images as-is from /public; skip the Next.js image optimizer.
-    unoptimized: true,
+    // Local assets in /public/assets are served statically; no remote domains needed.
+    formats: ['image/avif', 'image/webp'],
   },
 };
 

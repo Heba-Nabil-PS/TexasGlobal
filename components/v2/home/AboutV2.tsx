@@ -13,7 +13,7 @@ import { staggerContainer, fadeUp, inView } from "@/lib/motion";
 /** Home "Our story": global-leadership headline, white canvas, stat cards, tray video. */
 export default function AboutV2() {
   return (
-    <section id="about" className="relative overflow-hidden bg-white pb-20 pt-14 md:pb-28 md:pt-20">
+    <section id="about" className="relative overflow-hidden bg-white pb-12 pt-14 md:pb-16 md:pt-20">
       <OutlineStar className="absolute -right-24 top-10 hidden size-[420px] opacity-60 lg:block" />
       <div className="container-tx relative">
         <div className="grid items-center gap-14 lg:grid-cols-[1fr_1.05fr]">

@@ -190,19 +190,6 @@ export function FranchiseApplyV2() {
                   </motion.li>
                 ))}
               </motion.ul>
-
-              {/* food, fully in frame */}
-              <div className="relative mt-10 hidden aspect-[915/874] w-[78%] max-w-[360px] self-center lg:mt-auto lg:block">
-                <OutlineStar className="absolute -inset-6 h-[calc(100%+3rem)] w-[calc(100%+3rem)]" />
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                  className="relative h-full w-full"
-                >
-                  <Image src="/assets/v2/signatures/sig-01.png" alt="Hand-battered bone-in chicken" fill sizes="360px" className="object-contain drop-shadow-[0_24px_30px_rgba(45,41,38,0.3)]" />
-                </motion.div>
-                <Stamp text="25+ markets" size={96} className="absolute -right-4 bottom-2" />
-              </div>
             </div>
 
             {/* form */}

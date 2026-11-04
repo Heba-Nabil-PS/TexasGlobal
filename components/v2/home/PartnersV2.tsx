@@ -13,7 +13,7 @@ import { partnersV2 } from "@/lib/content-v2/home";
  */
 export default function PartnersV2() {
   return (
-    <section id="partners" className="bg-white pt-24 md:pt-32">
+    <section id="partners" className="bg-white pt-14 md:pt-20">
       <div className="container-tx text-center">
         <Reveal>
           <span className="eyebrow text-tex-red">

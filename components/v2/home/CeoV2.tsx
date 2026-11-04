@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Title, OutlineStar } from "@/components/v2/kit";
+import { Title } from "@/components/v2/kit";
 import { ceoV2 } from "@/lib/content-v2/home";
 import { staggerContainer, fadeUp, inView, ease } from "@/lib/motion";
 
@@ -14,8 +14,7 @@ import { staggerContainer, fadeUp, inView, ease } from "@/lib/motion";
  */
 export default function CeoV2() {
   return (
-    <section className="relative overflow-hidden bg-white py-20 md:py-28">
-      <OutlineStar className="absolute -left-32 bottom-0 hidden size-[380px] opacity-50 lg:block" />
+    <section className="relative overflow-hidden bg-white py-12 md:py-16">
       <div className="container-tx relative grid items-center gap-14 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
         <div className="max-w-xl lg:justify-self-end">
           <Title lines={ceoV2.titleLines} size="lg" className="!mt-0" />
