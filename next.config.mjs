@@ -2,8 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    // Local assets in /public/assets are served statically; no remote domains needed.
-    formats: ['image/avif', 'image/webp'],
+    // Serve images as-is from /public: the Vercel project runs in services mode,
+    // where /_next/image isn't routed, so optimized URLs 404.
+    unoptimized: true,
   },
 };
 
