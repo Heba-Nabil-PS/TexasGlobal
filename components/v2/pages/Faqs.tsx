@@ -3,8 +3,8 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "@/components/ui/Button";
-import { OutlineStar, Stamp } from "@/components/v2/kit";
-import { ClosingCta, FloatFood, HeroV2 } from "./shared";
+import { OutlineStar, Title } from "@/components/v2/kit";
+import { ClosingCta } from "./shared";
 import { faqsPage } from "@/lib/content";
 import { faqsV2 } from "@/lib/content-v2/pages";
 
@@ -13,42 +13,12 @@ const GROUPS = faqsPage.groups.map((g) => ({ ...g, items: g.items.map((i) => ({ 
 
 /* ---------------------------------------------------------------- hero */
 export function FaqsHeroV2() {
-  const h = faqsV2.hero;
   return (
-    <HeroV2
-      eyebrow={h.eyebrow}
-      title={h.title}
-      body={h.body}
-      decor={
-        <div aria-hidden className="pointer-events-none absolute -right-20 top-20 hidden size-[640px] rounded-full border-[48px] border-secondary/25 lg:block" />
-      }
-      visual={
-        <div className="relative mx-auto aspect-square w-full max-w-[520px]">
-          {["?", "!", "?"].map((g, i) => (
-            <motion.span
-              key={i}
-              aria-hidden
-              animate={{ y: [0, -14, 0], rotate: [i * 8 - 8, i * 8, i * 8 - 8] }}
-              transition={{ duration: 5 + i, repeat: Infinity, ease: "easeInOut", delay: i * 0.6 }}
-              className={`display absolute leading-none ${
-                ["left-[2%] top-[4%] text-[9rem] text-primary", "right-[6%] top-[0%] text-[6rem] text-secondary", "right-[0%] bottom-[22%] text-[7rem] text-third"][i]
-              }`}
-            >
-              {g}
-            </motion.span>
-          ))}
-          <FloatFood src="/assets/v2/signatures/sig-04.png" alt="Honey-butter biscuits" className="inset-[10%]" sizes="40vw" />
-          <Stamp text={h.stamp} size={120} className="absolute bottom-[4%] left-[4%]" />
-        </div>
-      }
-    >
-      <Button href="#faq-search" variant="red">
-        Browse all questions
-      </Button>
-      <Button href="/contact-us" variant="ghost">
-        Ask us directly
-      </Button>
-    </HeroV2>
+    <section className="bg-white pb-10 pt-32 text-third md:pb-14 lg:pt-44">
+      <div className="container-tx">
+        <Title as="h1" lines={faqsV2.hero.title} size="lg" className="!mt-0 md:text-[5.4rem]" />
+      </div>
+    </section>
   );
 }
 

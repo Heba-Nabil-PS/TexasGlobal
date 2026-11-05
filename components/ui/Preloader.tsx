@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ease } from "@/lib/motion";
 
+export const PRELOADER_DONE = "preloader:done";
+
 /**
  * Cinematic preloader — a counter races 0→100 while assets settle, then the
  * curtain lifts and hands off into the hero. Sets the pace for everything after.
@@ -32,7 +34,11 @@ export default function Preloader() {
   }, []);
 
   useEffect(() => {
-    if (done) document.documentElement.classList.remove("lenis-stopped");
+    if (!done) return;
+    document.documentElement.classList.remove("lenis-stopped");
+    // Lets page intros wait for the curtain instead of playing behind it.
+    document.documentElement.dataset.preloaded = "true";
+    window.dispatchEvent(new Event(PRELOADER_DONE));
   }, [done]);
 
   return (

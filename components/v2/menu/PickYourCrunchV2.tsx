@@ -138,7 +138,7 @@ function Card({ c, i, className }: { c: Item; i: number; className: string }) {
       transition={{ duration: 0.7, ease: ease.out, delay: Math.min(i, 3) * 0.08 }}
       className={`group relative flex shrink-0 flex-col ${className}`}
     >
-      <h3 className="display text-[2.4rem] leading-[0.88] text-[#E5512A] transition-colors duration-300 group-hover:text-primary md:text-[2.9rem]">
+      <h3 className="display text-[2.4rem] leading-[0.88] text-primary md:text-[2.9rem]">
         <span className="block">{c.title[0]}</span>
         <span className="block">{c.title[1]}</span>
       </h3>
@@ -154,10 +154,6 @@ function Card({ c, i, className }: { c: Item; i: number; className: string }) {
           className="object-contain mix-blend-multiply transition-transform duration-700 ease-out group-hover:-translate-y-2 group-hover:scale-[1.04]"
         />
       </div>
-
-      <span className="mt-1 inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-caps text-third/50 transition-colors group-hover:text-primary">
-        {c.tag} <span aria-hidden className="transition-transform group-hover:translate-x-1"><BrandArrow /></span>
-      </span>
     </motion.a>
   );
 }

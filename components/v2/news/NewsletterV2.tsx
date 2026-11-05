@@ -38,7 +38,7 @@ export default function NewsletterV2() {
           <Image src="/assets/v2/stamp-bold-texas-flavor.png" alt="" fill className="object-contain brightness-0" />
         </motion.div>
         <OutlineStar color="#2d2926" className="absolute right-[38%] top-6 size-16 opacity-40" />
-        <OutlineStar color="#B12028" className="absolute bottom-8 left-[45%] size-10 opacity-60" />
+        <OutlineStar color="#9a3324" className="absolute bottom-8 left-[45%] size-10 opacity-60" />
 
         <div className="relative grid items-center gap-6 px-7 py-14 md:px-14 md:py-16 lg:grid-cols-[1.15fr_0.85fr]">
           <div>

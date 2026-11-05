@@ -60,7 +60,7 @@ export default function CTABand({
           <BrandStar /> {eyebrow}
         </motion.span>
 
-        <h2 className="display mx-auto mt-5 max-w-[16ch] text-5xl uppercase leading-[0.92] md:text-7xl">
+        <h2 className="display mx-auto mt-5 max-w-[16ch] text-5xl uppercase leading-[0.92] md:max-w-none md:text-7xl">
           <CharsRise text={heading} className="block" />
           {accent && <CharsRise text={accent} className="block text-tex-yellow" />}
         </h2>

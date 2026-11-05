@@ -98,11 +98,11 @@ export default function WorldMap() {
                 cx={hq.x}
                 cy={hq.y}
                 r={8}
-                fill="#B12028"
+                fill="#9a3324"
                 animate={{ r: [8, 22], opacity: [0.45, 0] }}
                 transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
               />
-              <circle cx={hq.x} cy={hq.y} r={9} fill="#B12028" stroke="#faf6ef" strokeWidth={2} />
+              <circle cx={hq.x} cy={hq.y} r={9} fill="#9a3324" stroke="#faf6ef" strokeWidth={2} />
             </g>
           </svg>
 

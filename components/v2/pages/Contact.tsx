@@ -29,17 +29,15 @@ export function ContactHeroV2() {
       title={h.title}
       body={h.body}
       visual={
-        <div className="relative mx-auto aspect-[5/4] w-full max-w-[600px]">
-          <div className="absolute inset-[8%] rounded-full bg-secondary" />
-          <div className="absolute inset-[4%]">
-            <Image
-              src="/assets/v2/crunch/crunch-05.png"
-              alt="Texas Chicken meal"
-              fill
-              sizes="(max-width:1024px) 90vw, 45vw"
-              className="rounded-full object-contain mix-blend-multiply"
-            />
-          </div>
+        <div className="relative mx-auto aspect-[1531/1021] w-full max-w-[640px]">
+          <Image
+            src="/assets/v2/contact-team.png"
+            alt="The Texas Chicken team in uniform"
+            fill
+            priority
+            sizes="(max-width:1024px) 90vw, 45vw"
+            className="rounded-[2.5rem] object-cover shadow-soft3"
+          />
           {h.bubbles.map((b, i) => (
             <motion.span
               key={b}
@@ -50,7 +48,7 @@ export function ContactHeroV2() {
                 scale: { delay: 0.6 + i * 0.25, duration: 0.4 },
                 y: { delay: 1 + i * 0.4, duration: 4, repeat: Infinity, ease: "easeInOut" },
               }}
-              className={`absolute whitespace-nowrap rounded-2xl px-4 py-2.5 font-texas text-base font-bold shadow-soft3 md:text-lg ${
+              className={`absolute hidden whitespace-nowrap rounded-2xl px-4 py-2.5 font-texas text-base font-bold shadow-soft3 md:block md:text-lg ${
                 [
                   "left-0 top-[8%] rounded-bl-none bg-secondary text-third",
                   "right-0 top-[38%] rounded-br-none bg-third text-white",
@@ -71,7 +69,6 @@ export function ContactHeroV2() {
 /* --------------------------------------------- channels + HQ + message form */
 export function ContactBodyV2() {
   const [subject, setSubject] = useState(contactPage.form.subjects[0]);
-  const badges = ["bg-secondary text-third", "bg-primary text-white", "bg-third text-white", "bg-secondary text-third"];
 
   return (
     <section className="relative bg-white pb-24 md:pb-32">
@@ -80,7 +77,7 @@ export function ContactBodyV2() {
         <Title lines={contactV2.body.title} size="md" />
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
-          {/* Channels — one clean list, each with its own colour badge */}
+          {/* Channels — one clean list */}
           <motion.ul
             variants={staggerContainer(0.08)}
             initial="hidden"
@@ -95,7 +92,7 @@ export function ContactBodyV2() {
                   data-cursor="link"
                   className="group flex items-center gap-5 rounded-[1.75rem] bg-white p-5 shadow-soft3 ring-1 ring-third/10 transition-all duration-300 hover:-translate-y-1 hover:ring-secondary md:p-6"
                 >
-                  <span className={`grid size-14 shrink-0 place-items-center rounded-2xl ${badges[i]}`} aria-hidden>
+                  <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-primary text-secondary" aria-hidden>
                     <svg viewBox="0 0 24 24" className="size-7" fill="currentColor">
                       <path d={channelIcons[i]} />
                     </svg>

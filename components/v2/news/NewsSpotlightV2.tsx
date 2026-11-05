@@ -175,7 +175,7 @@ function SpotlightCard({ slide, className, imageClass }: { slide: Slide; classNa
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>
-        <span className="absolute right-6 top-6 z-20 rounded-full bg-[#c0392b] px-6 py-2 text-xs font-bold uppercase tracking-wider text-white">
+        <span className="absolute right-6 top-6 z-20 rounded-full bg-primary px-6 py-2 text-xs font-bold uppercase tracking-wider text-white">
           {slide.badge}
         </span>
 

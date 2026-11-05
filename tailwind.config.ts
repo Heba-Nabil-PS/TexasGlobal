@@ -27,14 +27,11 @@ const config: Config = {
           yellow: "#f5b51e",
           yellow600: "#e0a30c",
           red: "#9a3324",
-          red700: "#7a2719",
-          red300: "#c4604f",
           orange: "#e15f02",
         },
         // Reference-site brand tokens (header / footer / app page parity)
         primary: {
-          DEFAULT: "#B12028",
-          700: "#8f1a20",
+          DEFAULT: "#9a3324",
         },
         secondary: {
           DEFAULT: "#F4B118",

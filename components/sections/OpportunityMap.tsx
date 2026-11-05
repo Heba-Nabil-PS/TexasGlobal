@@ -43,8 +43,7 @@ const FILL = {
   /** available, but filtered out by the continent chips or the search */
   openMuted: "#f8e6b4",
   /** United States — Church's Texas Chicken territory */
-  us: "#B12028",
-  usHot: "#d94b4b",
+  us: "#9a3324",
   hot: "#2d2926",
 };
 
@@ -147,7 +146,7 @@ export default function OpportunityMap() {
     const t = byIso3.get(iso3);
     if (!t) return FILL.scenery;
     const lit = hover === iso3 || picked === iso3;
-    if (iso3 === US) return lit ? FILL.usHot : FILL.us;
+    if (iso3 === US) return lit ? FILL.hot : FILL.us;
     if (served.has(iso3)) return FILL.served;
     if (lit) return FILL.hot;
     // dim anything the continent chips or the search have ruled out

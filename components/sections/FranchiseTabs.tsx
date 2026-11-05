@@ -243,7 +243,7 @@ function Opportunities() {
       {/* Every country we do NOT trade in yet, on one interactive map. */}
       <OpportunityMap />
 
-      <div className="mt-12 flex flex-col items-start gap-5 rounded-[1.75rem] border border-tex-red700 bg-tex-red p-8 text-cream md:flex-row md:items-center md:justify-between">
+      <div className="mt-12 flex flex-col items-start gap-5 rounded-[1.75rem] border border-tex-red bg-tex-red p-8 text-cream md:flex-row md:items-center md:justify-between">
         <p className="max-w-xl text-sm leading-relaxed text-cream/85">
           {opportunities.usNote}
         </p>

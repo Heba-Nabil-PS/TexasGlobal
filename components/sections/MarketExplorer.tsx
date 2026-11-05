@@ -88,7 +88,7 @@ const FILL = {
   baseStroke: "#faf6ef",
   quiet: "#f2e2c4", // a market that's filtered out
   texas: "#F4B118", // Texas Chicken gold
-  churchs: "#B12028", // Church's Texas Chicken red
+  churchs: "#9a3324", // Church's Texas Chicken red
   focus: "#e15f02",
 };
 
@@ -331,7 +331,7 @@ export default function MarketExplorer({
                     <motion.span
                       layoutId="market-tab"
                       transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                      className="absolute inset-0 rounded-full bg-primary shadow-[0_10px_24px_rgba(177,32,40,0.28)]"
+                      className="absolute inset-0 rounded-full bg-primary shadow-[0_10px_24px_rgba(154,51,36,0.28)]"
                     />
                   )}
                   <span className="relative z-10">{t.label}</span>
@@ -429,7 +429,7 @@ export default function MarketExplorer({
                               ? FILL.focus
                               : on
                                 ? m.brand === "texas"
-                                  ? "#B12028"
+                                  ? "#9a3324"
                                   : "#F4B118"
                                 : "#c99a3f",
                             boxShadow: `0 0 0 2px #fffdf7, 0 2px 6px rgba(45,42,38,${on ? 0.3 : 0.16})`,
@@ -535,7 +535,7 @@ export default function MarketExplorer({
                       target="_blank"
                       rel="noopener noreferrer"
                       data-cursor="link"
-                      className="group mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-[11px] font-extrabold uppercase tracking-caps text-cream transition-colors hover:bg-primary-700"
+                      className="group mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-[11px] font-extrabold uppercase tracking-caps text-cream transition-colors hover:bg-third"
                     >
                       {copy.visit}
                       <span className="transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden>

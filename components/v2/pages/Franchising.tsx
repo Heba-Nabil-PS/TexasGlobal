@@ -1,15 +1,89 @@
 "use client";
 
 import BrandArrow from "@/components/ui/BrandArrow";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Button from "@/components/ui/Button";
+import { PRELOADER_DONE } from "@/components/ui/Preloader";
 import Counter from "@/components/ui/Counter";
-import { Eyebrow, Lead, OutlineStar, Section, Stamp, Title } from "@/components/v2/kit";
-import { ClosingCta, FieldV2, FloatFood, GlobeSpin, HeroV2 } from "./shared";
+import { Eyebrow, Lead, OutlineStar, Section, Title } from "@/components/v2/kit";
+import { ClosingCta, FieldV2, HeroV2 } from "./shared";
 import { franchisePage } from "@/lib/content";
 import { franchiseV2 } from "@/lib/content-v2/pages";
 import { fadeUp, inView, staggerContainer } from "@/lib/motion";
+
+/** The preloader curtain is still clearing the hero for this long after it starts to lift. */
+const PRELOADER_LIFT_MS = 500;
+
+/* Cut-out plates, placed as % of the final 1667×874 composition. Back to front. */
+const PLATES = [
+  {
+    src: "/assets/v2/franchising/tender.png",
+    box: { left: "0%", top: "-5.15%", width: "56.02%" },
+    from: { x: "-55%", rotate: -7 },
+    delay: 0.25,
+  },
+  {
+    src: "/assets/v2/franchising/biscuits.png",
+    box: { left: "59.03%", top: "12.7%", width: "39.1%" },
+    from: { x: "55%", rotate: 7 },
+    delay: 0.45,
+  },
+  {
+    src: "/assets/v2/franchising/bic.png",
+    box: { left: "21.54%", top: "8.81%", width: "57.08%" },
+    from: { y: "-55%", scale: 1.12 },
+    delay: 0.75,
+  },
+];
+
+/** The side plates slide in, then the bone-in plate drops onto them to complete the spread. */
+function PlatesBuild() {
+  const reduced = useReducedMotion();
+  const [ready, setReady] = useState(false);
+
+  // On a full page load, hold the build until the preloader lifts so it isn't played behind it.
+  useEffect(() => {
+    if (document.documentElement.dataset.preloaded) {
+      setReady(true);
+      return;
+    }
+    let timer = 0;
+    const onDone = () => {
+      timer = window.setTimeout(() => setReady(true), PRELOADER_LIFT_MS);
+    };
+    window.addEventListener(PRELOADER_DONE, onDone, { once: true });
+    return () => {
+      window.removeEventListener(PRELOADER_DONE, onDone);
+      window.clearTimeout(timer);
+    };
+  }, []);
+
+  return (
+    <div
+      role="img"
+      aria-label="Plates of Texas Chicken tenders, bone-in fried chicken and honey-butter biscuits"
+      className="relative mx-auto aspect-[1667/874] w-full"
+    >
+      {PLATES.map((p) => (
+        <motion.div
+          key={p.src}
+          initial={reduced ? false : { opacity: 0, ...p.from }}
+          animate={ready ? { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 } : undefined}
+          transition={{
+            opacity: { duration: 0.35, delay: p.delay },
+            default: { type: "spring", stiffness: 120, damping: 15, delay: p.delay },
+          }}
+          className="absolute aspect-[881/780]"
+          style={p.box}
+        >
+          <Image src={p.src} alt="" fill priority sizes="(max-width:1024px) 55vw, 28vw" className="object-contain" />
+        </motion.div>
+      ))}
+    </div>
+  );
+}
 
 /* ------------------------------------------------------------- hero + proof */
 export function FranchiseHeroV2() {
@@ -23,18 +97,7 @@ export function FranchiseHeroV2() {
         decor={
           <div aria-hidden className="pointer-events-none absolute -right-[18vw] top-24 size-[62vw] max-w-[1000px] rounded-full bg-secondary/15" />
         }
-        visual={
-          <div className="relative mx-auto aspect-square w-full max-w-[560px]">
-            <GlobeSpin className="absolute inset-[6%]" />
-            <Stamp text={h.stamp} size={132} className="absolute right-0 top-2 md:right-2" />
-            <FloatFood
-              src="/assets/v2/signatures/sig-01.png"
-              alt="Hand-battered bone-in chicken"
-              className="-bottom-6 -left-6 size-[52%] md:-left-14"
-              delay={0.4}
-            />
-          </div>
-        }
+        visual={<PlatesBuild />}
       >
         <Button href={h.primary.href} variant="red" pulse>
           {h.primary.label}
@@ -222,7 +285,7 @@ export function FranchiseApplyV2() {
                 <button
                   type="submit"
                   data-cursor="link"
-                  className="group flex w-full items-center justify-center gap-3 rounded-full bg-primary px-8 py-4 text-sm font-extrabold uppercase tracking-caps text-white transition-colors hover:bg-tex-red700"
+                  className="group flex w-full items-center justify-center gap-3 rounded-full bg-primary px-8 py-4 text-sm font-extrabold uppercase tracking-caps text-white transition-colors hover:bg-third"
                 >
                   Submit application
                   <span className="transition-transform group-hover:translate-x-1"><BrandArrow /></span>

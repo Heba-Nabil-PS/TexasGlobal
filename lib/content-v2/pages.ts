@@ -10,7 +10,6 @@ export const franchiseV2 = {
     body: "Since 1952, one hand-battered recipe has grown from a single stand in San Antonio into 1,500+ restaurants across 25+ markets. Now we're opening the door to the next generation of partners.",
     primary: { label: "Start your application", href: "#apply-form" },
     secondary: { label: "See the investment", href: "#investment" },
-    stamp: "25+ markets",
   },
   proof: [
     { value: 1500, suffix: "+", label: "Restaurants worldwide" },
@@ -67,11 +66,8 @@ export const contactV2 = {
 
 export const faqsV2 = {
   hero: {
-    eyebrow: "Help centre",
     title: ["Questions?", "We've got [answers]."],
-    body: "Everything about the brand, the food, the app and joining the family — answered by the team behind 70+ years of crunch.",
     search: "Search a question… e.g. halal, franchise, app",
-    stamp: "Ask away",
   },
   empty: "No answers match that search — try another word, or ask us directly.",
   side: {

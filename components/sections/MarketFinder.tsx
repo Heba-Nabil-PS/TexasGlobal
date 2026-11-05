@@ -170,7 +170,7 @@ export default function MarketFinder({
                     <span className="mt-0.5 flex items-center gap-1.5 truncate text-[11px] font-bold uppercase tracking-caps text-ink-400">
                       <span
                         className="size-1.5 shrink-0 rounded-full"
-                        style={{ background: m.brand === "texas" ? "#F4B118" : "#B12028" }}
+                        style={{ background: m.brand === "texas" ? "#F4B118" : "#9a3324" }}
                       />
                       <span className="truncate text-primary/80">{regionName(m.region)}</span>
                       <span className="text-ink-400">· {brandName(m.brand)}</span>

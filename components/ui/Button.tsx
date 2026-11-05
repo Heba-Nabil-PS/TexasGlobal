@@ -8,7 +8,7 @@ type Variant = "yellow" | "red" | "ghost" | "ghostDark";
 
 const styles: Record<Variant, string> = {
   yellow: "bg-tex-yellow text-ink hover:bg-tex-yellow600",
-  red: "bg-tex-red text-cream hover:bg-tex-red700",
+  red: "bg-tex-red text-cream hover:bg-ink",
   ghost: "border-2 border-ink/80 text-ink hover:bg-ink hover:text-cream",
   ghostDark: "border-2 border-cream/70 text-cream hover:bg-cream hover:text-ink",
 };

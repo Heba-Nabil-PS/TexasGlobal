@@ -14,7 +14,7 @@ import { fadeUp, inView, lineMaskParent, lineMaskChild } from "@/lib/motion";
  */
 
 export const V2 = {
-  red: "#B12028",
+  red: "#9a3324",
   redDeep: "#9a3324",
   yellow: "#F4B118",
   ink: "#2d2926",

@@ -34,7 +34,7 @@ export function HeroV2({
     <section className="relative overflow-hidden bg-white pb-16 pt-32 text-third md:pb-24 lg:pt-44">
       {decor}
       <div
-        className={`container-tx relative z-10 grid items-center gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-8 ${
+        className={`container-tx relative grid items-center gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-8 ${
           reverse ? "lg:[&>*:first-child]:order-2" : ""
         }`}
       >
