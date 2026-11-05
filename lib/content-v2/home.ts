@@ -35,9 +35,9 @@ export const whatsNewV2 = {
   eyebrow: "Limited-time offers",
   title: "What's new.",
   items: [
-    { title: "Golden Dragon", desc: "Glazed with our sweet & fiery golden habanero sauce.", image: "/assets/v2/whats-new/new-01.png", w: 985, h: 1397 },
-    { title: "Mexicana Loaded Fries", desc: "Crispy fries piled with popcorn chicken and bold sauces.", image: "/assets/v2/whats-new/new-02.png", w: 985, h: 1397 },
-    { title: "The Super Hero", desc: "A massively flavorful hero — stacked, saucy and loaded.", image: "/assets/v2/whats-new/new-03.png", w: 1600, h: 1397 },
+    { title: "Golden Dragon", desc: "Glazed with our sweet & fiery golden habanero sauce.", image: "/assets/v2/whats-new/new-01.png", w: 1042, h: 1042 },
+    { title: "Mexicana Loaded Fries", desc: "Crispy fries piled with popcorn chicken and bold sauces.", image: "/assets/v2/whats-new/new-02.png", w: 1042, h: 1042 },
+    { title: "The Super Hero", desc: "A massively flavorful hero — stacked, saucy and loaded.", image: "/assets/v2/whats-new/new-03.png", w: 1042, h: 1042 },
   ],
   badge: "/assets/v2/whats-new/new-04.png",
   note: "Availability varies by market.",
