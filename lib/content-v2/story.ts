@@ -28,10 +28,10 @@ export const storyV2 = {
       { k: "25+", v: "Markets worldwide" },
       { k: "100%", v: "Hand-battered" },
     ],
-    photo: "/assets/story/heritage-chicken.jpg",
+    photo: "/assets/story/george-sr.webp",
+    photoAlt: "George W. Church, founder of Texas Chicken",
     photoCaption: "San Antonio, TX · 1952",
-    product: "/assets/v2/signatures/sig-01.png",
-    stamp: "/assets/v2/stamp-bold-texas-flavor.png",
+    stamp: "/assets/v2/stamp-jal-icon.svg",
   },
 
 };

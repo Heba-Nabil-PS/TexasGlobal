@@ -128,14 +128,12 @@ export function HeritageV2() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const photoRot = useTransform(scrollYProgress, [0, 1], [-9, -3]);
-  const foodY = useTransform(scrollYProgress, [0, 1], [80, -60]);
 
   return (
     <Section>
       <div ref={ref} className="container-tx grid items-center gap-16 lg:grid-cols-[1fr_1fr] lg:gap-20">
         {/* Collage */}
         <div className="relative mx-auto h-[460px] w-full max-w-[560px] sm:h-[560px]">
-          <OutlineStar className="absolute -left-[6%] top-[4%] h-[95%] w-[95%]" />
           {/* yellow note */}
           <motion.div
             initial={{ opacity: 0, rotate: 14, y: -20 }}
@@ -153,16 +151,12 @@ export function HeritageV2() {
             className="absolute left-[2%] top-[8%] z-[5] w-[64%] bg-white p-3 pb-12 shadow-pop"
           >
             <div className="relative aspect-[4/5] overflow-hidden bg-third">
-              <Image src={h.photo} alt="Texas Chicken heritage" fill sizes="(max-width:1024px) 60vw, 30vw" className="object-cover" />
+              <Image src={h.photo} alt={h.photoAlt} fill sizes="(max-width:1024px) 60vw, 30vw" className="object-cover" />
             </div>
             <figcaption className="display absolute inset-x-0 bottom-3 text-center text-lg uppercase text-third/80">
               {h.photoCaption}
             </figcaption>
           </motion.figure>
-          {/* product */}
-          <motion.div style={{ y: foodY }} className="absolute -right-[4%] bottom-[-4%] z-20 aspect-[915/874] w-[66%]">
-            <Image src={h.product} alt="Hand-battered bone-in chicken" fill sizes="(max-width:1024px) 60vw, 32vw" className="object-contain drop-shadow-[0_26px_30px_rgba(45,41,38,0.3)]" />
-          </motion.div>
           {/* stamps */}
           <div className="absolute bottom-[2%] left-[0%] z-30 w-28 sm:w-32">
             <div className="relative aspect-square animate-[spin_26s_linear_infinite]">
