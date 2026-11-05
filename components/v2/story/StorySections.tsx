@@ -7,7 +7,7 @@ import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
 import Button from "@/components/ui/Button";
 import Marquee from "@/components/ui/Marquee";
 import Stats from "@/components/ui/Stats";
-import { Section, Eyebrow, Title, Lead, Stamp, OutlineStar, SliderControls } from "@/components/v2/kit";
+import { Section, Eyebrow, Title, Lead, Stamp, SliderControls } from "@/components/v2/kit";
 import { storyV2 } from "@/lib/content-v2/story";
 import { storyPage } from "@/lib/content";
 import { ease, fadeUp, inView, staggerContainer } from "@/lib/motion";
@@ -30,7 +30,7 @@ export function StoryHeroV2({
   const ghostX = useTransform(scrollYProgress, [0, 1], [0, -160]);
 
   return (
-    <section ref={ref} className="relative flex items-center overflow-hidden bg-[#E9962A] pb-12 pt-32 text-third md:pb-14 md:pt-36 lg:min-h-[100svh]">
+    <section ref={ref} className="relative flex items-center overflow-hidden bg-[#d76b00] pb-12 pt-32 text-third md:pb-14 md:pt-36 lg:min-h-[100svh]">
       {/* ghost year */}
       <motion.span
         aria-hidden
@@ -74,28 +74,17 @@ export function StoryHeroV2({
           </motion.div>
         </div>
 
-        {/* Food composition */}
-        <motion.div style={{ y: foodY }} className="relative mx-auto aspect-square w-full max-w-[520px]">
-          <OutlineStar className="absolute inset-[4%] h-[92%] w-[92%]" color="#ffffff" />
+        {/* Original stand, framed */}
+        <motion.div style={{ y: foodY }} className="relative mx-auto aspect-[838/986] w-full max-w-[440px]">
           <motion.div
             initial={{ opacity: 0, scale: 0.85, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1, ease: ease.expo, delay: 0.3 }}
-            className="absolute inset-x-[2%] top-[10%] aspect-[1680/1096]"
+            className="absolute inset-0"
           >
-            <Image src="/assets/v2/menu/explore-combo.png" alt="Texas Chicken bone-in box, fries and drink" fill priority sizes="(max-width:1024px) 90vw, 46vw" className="object-contain drop-shadow-[0_30px_40px_rgba(45,41,38,0.35)]" />
+            <Image src="/assets/story/san-antonio-1952.png" alt="The original Church's Fried Chicken To Go stand in San Antonio" fill priority sizes="(max-width:1024px) 90vw, 440px" className="object-contain drop-shadow-[0_30px_40px_rgba(45,41,38,0.35)]" />
           </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: -60, rotate: -12 }}
-            animate={{ opacity: 1, x: 0, rotate: -6 }}
-            transition={{ duration: 1, ease: ease.expo, delay: 0.55 }}
-            className="absolute -left-[4%] bottom-[2%] aspect-[915/874] w-[52%]"
-          >
-            <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="relative h-full w-full">
-              <Image src="/assets/v2/signatures/sig-01.png" alt="Hand-battered bone-in chicken" fill sizes="30vw" className="object-contain drop-shadow-[0_24px_30px_rgba(45,41,38,0.35)]" />
-            </motion.div>
-          </motion.div>
-          <Stamp text="Since 1952" size={112} className="absolute bottom-[6%] right-[4%]" />
+          <Stamp text="Since 1952" size={112} className="absolute -bottom-4 left-2 lg:-left-6" />
         </motion.div>
       </div>
     </section>
