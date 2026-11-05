@@ -13,6 +13,8 @@
  *  - full ARIA tablist semantics + ←/→/Home/End keyboard support
  */
 
+import BrandArrow from "@/components/ui/BrandArrow";
+import BrandStar from "@/components/ui/BrandStar";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
@@ -192,7 +194,7 @@ function WhyUs() {
           {credentials.map((c) => (
             <motion.li key={c} variants={fadeUp} className="flex items-center gap-3">
               <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-tex-red text-sm text-cream">
-                ★
+                <BrandStar />
               </span>
               <span className="text-sm font-bold uppercase tracking-caps text-ink">{c}</span>
             </motion.li>
@@ -208,7 +210,7 @@ function WhyUs() {
         viewport={{ once: true, amount: "some" }}
         className="rounded-[1.75rem] border border-ink/10 bg-paper p-8 shadow-soft3"
       >
-        <span className="eyebrow text-tex-red">★ Opening around the world</span>
+        <span className="eyebrow text-tex-red"><BrandStar /> Opening around the world</span>
         <ul className="mt-6 flex flex-col divide-y divide-ink/10">
           {whyUs.openings.map((o, i) => (
             <motion.li
@@ -292,7 +294,7 @@ function Investment() {
             variants={fadeUp}
             className="rounded-[1.5rem] border border-ink/10 bg-paper p-6 shadow-soft3"
           >
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-tex-red text-sm text-cream">★</span>
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-tex-red text-sm text-cream"><BrandStar /></span>
             <h3 className="display mt-4 text-lg uppercase leading-tight text-ink">{p.title}</h3>
             <p className="mt-2 text-sm leading-relaxed text-ink-600">{p.desc}</p>
           </motion.div>
@@ -333,7 +335,7 @@ function Investment() {
       <div className="mt-16 overflow-hidden rounded-[1.75rem] border border-ink/10 bg-paper shadow-soft3">
         <div className="flex flex-col gap-6 border-b border-ink/10 p-8 md:flex-row md:items-end md:justify-between">
           <div>
-            <span className="eyebrow text-tex-red">★ Estimated investment</span>
+            <span className="eyebrow text-tex-red"><BrandStar /> Estimated investment</span>
             <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Build model">
               {investment.models.map((m) => {
                 const on = m.id === model;
@@ -437,7 +439,7 @@ function Investment() {
               ? "Show fewer"
               : `Show all ${investment.lines.length} line items`}
             <span aria-hidden className={showAllLines ? "rotate-180" : ""}>
-              ▾
+              <BrandArrow dir="down" />
             </span>
           </button>
         )}
@@ -548,7 +550,7 @@ function PanelHeading({ eyebrow, heading }: { eyebrow: string; heading: string }
         viewport={{ once: true, amount: "some" }}
         className="eyebrow text-tex-red"
       >
-        <span aria-hidden>★</span> {eyebrow}
+        <BrandStar /> {eyebrow}
       </motion.span>
       <motion.h2
         variants={fadeUp}

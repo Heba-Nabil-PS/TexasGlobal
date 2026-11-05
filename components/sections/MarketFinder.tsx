@@ -8,6 +8,8 @@
  * market's own site; the pin button lights the country up on the map above.
  */
 
+import BrandArrow from "@/components/ui/BrandArrow";
+import BrandStar from "@/components/ui/BrandStar";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { marketPage, type BrandId, type MarketRegionId } from "@/lib/content";
@@ -68,7 +70,7 @@ export default function MarketFinder({
           className="mx-auto max-w-4xl rounded-[28px] border border-ink/10 bg-paper p-7 text-center shadow-soft3 md:p-10"
         >
           <span className="eyebrow justify-center text-tex-red">
-            <span aria-hidden>★</span> {copy.eyebrow}
+            <BrandStar /> {copy.eyebrow}
           </span>
           <h2 className="display mt-4 text-4xl uppercase leading-[0.95] text-ink md:text-5xl">{copy.heading}</h2>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-ink-600 md:text-base">{copy.body}</p>
@@ -106,7 +108,7 @@ export default function MarketFinder({
                 ))}
               </select>
               <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-ink-400" aria-hidden>
-                ▾
+                <BrandArrow dir="down" />
               </span>
             </div>
 
@@ -126,7 +128,7 @@ export default function MarketFinder({
                 ))}
               </select>
               <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-ink-400" aria-hidden>
-                ▾
+                <BrandArrow dir="down" />
               </span>
             </div>
           </div>

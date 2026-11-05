@@ -1,5 +1,6 @@
 "use client";
 
+import BrandStar from "@/components/ui/BrandStar";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import Counter from "@/components/ui/Counter";
@@ -87,7 +88,7 @@ function StatCards() {
             }`}
           >
             <span className="absolute -right-2 -top-3 text-5xl opacity-15" aria-hidden>
-              ★
+              <BrandStar />
             </span>
             <div className={`display text-[2.6rem] leading-none md:text-5xl ${hero ? "text-primary" : "text-secondary"}`}>
               <Counter value={s.value} suffix={s.suffix} />

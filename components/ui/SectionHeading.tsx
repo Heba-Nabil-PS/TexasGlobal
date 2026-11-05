@@ -1,5 +1,6 @@
 "use client";
 
+import BrandStar from "@/components/ui/BrandStar";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { WordsReveal } from "./TextReveal";
@@ -37,7 +38,7 @@ export default function SectionHeading({
           viewport={inView}
           className={`eyebrow ${onDark ? "text-tex-yellow" : "text-tex-red"}`}
         >
-          <span aria-hidden>★</span> {eyebrow}
+          <BrandStar /> {eyebrow}
         </motion.span>
       )}
       <WordsReveal

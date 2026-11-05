@@ -1,5 +1,6 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -106,7 +107,7 @@ export default function MenuHeroV2() {
             data-cursor="link"
             className={`text-sm font-extrabold uppercase tracking-caps underline-offset-4 hover:underline ${lead}`}
           >
-            {secondary.label} ↓
+            {secondary.label} <BrandArrow dir="down" />
           </a>
         </div>
       </div>
@@ -120,7 +121,7 @@ export default function MenuHeroV2() {
               onClick={() => go(index - 1)}
               className="flex size-10 items-center justify-center rounded-full bg-white/90 text-third shadow transition-colors hover:bg-secondary"
             >
-              ←
+              <BrandArrow dir="left" />
             </button>
             {slides.map((sl, i) => (
               <button
@@ -145,7 +146,7 @@ export default function MenuHeroV2() {
               onClick={() => go(index + 1)}
               className="flex size-10 items-center justify-center rounded-full bg-white/90 text-third shadow transition-colors hover:bg-secondary"
             >
-              →
+              <BrandArrow />
             </button>
           </div>
         </div>

@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import BrandArrow from "@/components/ui/BrandArrow";
+import BrandStar from "@/components/ui/BrandStar";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -15,40 +17,45 @@ import Reveal from "@/components/ui/Reveal";
  * - Desktop: a pinned horizontal gallery driven by vertical scroll, with travel
  *   measured from the real track width so the last card always clears.
  */
-export default function Featured() {
+export default function Featured({
+  cards = featured.items.map((item) => <FeaturedCard key={item.title} item={item} />),
+  note,
+}: {
+  cards?: ReactNode;
+  note?: string;
+}) {
   return (
     <>
       {/* Mobile — native swipe carousel */}
       <section id="featured" className="bg-cream py-16 md:hidden">
-        <Heading />
+        <Heading note={note} />
         <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {featured.items.map((item) => (
-            <FeaturedCard key={item.title} item={item} />
-          ))}
+          {cards}
           <EndCard />
         </div>
       </section>
 
       {/* Desktop — pinned horizontal scroll */}
-      <FeaturedPinned />
+      <FeaturedPinned cards={cards} note={note} />
     </>
   );
 }
 
-function Heading() {
+function Heading({ note }: { note?: string }) {
   return (
     <div className="container-tx">
       <Reveal>
-        <span className="eyebrow text-tex-red">★ {featured.eyebrow}</span>
+        <span className="eyebrow text-tex-red"><BrandStar /> {featured.eyebrow}</span>
       </Reveal>
       <h2 className="display mt-4 text-[12vw] leading-[0.88] text-ink md:text-[6vw]">
         <LinesReveal lines={[featured.heading]} lineClassName="block" />
       </h2>
+      {note && <p className="mt-3 text-xs font-bold uppercase tracking-caps text-third/40">{note}</p>}
     </div>
   );
 }
 
-function FeaturedPinned() {
+function FeaturedPinned({ cards, note }: { cards: ReactNode; note?: string }) {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [travel, setTravel] = useState(0);
@@ -82,16 +89,14 @@ function FeaturedPinned() {
     >
       <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden">
         <div className="pt-24 md:pt-28">
-          <Heading />
+          <Heading note={note} />
         </div>
         <motion.div
           ref={trackRef}
           style={{ x, willChange: "transform" }}
           className="mt-8 flex flex-1 items-center gap-8 pb-12 pl-[5vw]"
         >
-          {featured.items.map((item) => (
-            <FeaturedCard key={item.title} item={item} />
-          ))}
+          {cards}
           <EndCard />
         </motion.div>
       </div>
@@ -132,7 +137,7 @@ function EndCard() {
         full menu
       </span>
       <span className="flex h-16 w-16 items-center justify-center rounded-full bg-tex-yellow text-2xl text-ink transition-transform duration-300 group-hover:scale-110">
-        →
+        <BrandArrow />
       </span>
     </Link>
   );

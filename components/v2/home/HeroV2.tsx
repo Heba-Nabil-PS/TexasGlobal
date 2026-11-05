@@ -1,5 +1,6 @@
 "use client";
 
+import BrandStar from "@/components/ui/BrandStar";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { hero } from "@/lib/content";
@@ -50,7 +51,7 @@ function FloatingStars() {
           animate={{ y: [0, -18, 0], rotate: [0, 12, 0] }}
           transition={{ duration: s.dur, repeat: Infinity, ease: "easeInOut", delay: s.delay }}
         >
-          ★
+          <BrandStar />
         </motion.span>
       ))}
     </div>

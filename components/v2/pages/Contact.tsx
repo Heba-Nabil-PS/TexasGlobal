@@ -1,5 +1,6 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
 import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -107,7 +108,7 @@ export function ContactBodyV2() {
                     <span className="mt-0.5 block text-xs text-third/60">{c.note}</span>
                   </span>
                   <span className="grid size-10 shrink-0 place-items-center rounded-full border-2 border-third/10 text-third transition-colors group-hover:border-secondary group-hover:bg-secondary" aria-hidden>
-                    →
+                    <BrandArrow />
                   </span>
                 </a>
               </motion.li>

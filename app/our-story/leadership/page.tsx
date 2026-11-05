@@ -1,5 +1,6 @@
 "use client";
 
+import BrandStar from "@/components/ui/BrandStar";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import PageHeroV2 from "@/components/v2/pages/PageHeroV2";
@@ -78,7 +79,7 @@ export default function LeadershipPage() {
         <div className="container-tx flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
           <div className="max-w-xl">
             <span className="eyebrow text-tex-yellow">
-              <span aria-hidden>★</span> Press
+              <BrandStar /> Press
             </span>
             <h2 className="display mt-4 text-3xl uppercase leading-[0.95] md:text-4xl">
               {leadershipPage.press.heading}

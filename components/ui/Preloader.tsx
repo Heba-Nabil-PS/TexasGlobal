@@ -1,5 +1,6 @@
 "use client";
 
+import BrandStar from "@/components/ui/BrandStar";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ease } from "@/lib/motion";
@@ -48,7 +49,7 @@ export default function Preloader() {
             transition={{ duration: 0.6, ease: ease.out }}
             className="eyebrow text-tex-yellow"
           >
-            ★ Since 1952
+            <BrandStar /> Since 1952
           </motion.div>
 
           <div className="mt-4 overflow-hidden">

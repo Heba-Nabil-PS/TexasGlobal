@@ -1,5 +1,6 @@
 "use client";
 
+import BrandStar from "@/components/ui/BrandStar";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { CharsRise } from "@/components/ui/AnimatedText";
@@ -56,7 +57,7 @@ export default function CTABand({
           viewport={inView}
           className="eyebrow justify-center text-tex-yellow"
         >
-          <span aria-hidden>★</span> {eyebrow}
+          <BrandStar /> {eyebrow}
         </motion.span>
 
         <h2 className="display mx-auto mt-5 max-w-[16ch] text-5xl uppercase leading-[0.92] md:text-7xl">

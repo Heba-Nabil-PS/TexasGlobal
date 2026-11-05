@@ -1,7 +1,9 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
+import BrandStar, { BRAND_STAR_VIEWBOX, BrandStarShape } from "@/components/ui/BrandStar";
 import { fadeUp, inView, lineMaskParent, lineMaskChild } from "@/lib/motion";
 
 /**
@@ -42,10 +44,7 @@ export function Section({
 /** The tilted "shooting star" glyph used in every reference eyebrow. */
 export function ShootingStar({ className = "size-5" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 32 28" className={className} aria-hidden fill="currentColor">
-      <path d="M17.6 1 20 10.2l9.6.4-7.7 5.6 2.9 9.1-7.6-5.6-7.7 5.4 3-9.2L4.8 10.4l9.5-.2Z" transform="rotate(-14 16 14)" />
-      <path d="M0 15.5 9 13l.6 1.8L.6 17.4Z" opacity=".9" />
-    </svg>
+    <BrandStar className={className} />
   );
 }
 
@@ -171,10 +170,9 @@ export function Stamp({
             </textPath>
           </text>
         </g>
-        <path
-          d="M50 33 54.6 45l12.4.4-9.8 7.6 3.5 12-10.7-7-10.3 7.3 3.3-12.2-9.9-7.4 12.6-.6Z"
-          fill={starFill}
-        />
+        <svg x="29" y="29" width="42" height="42" viewBox={BRAND_STAR_VIEWBOX} fill={starFill}>
+          <BrandStarShape />
+        </svg>
       </svg>
     </div>
   );
@@ -183,13 +181,8 @@ export function Stamp({
 /** Thin outline star — sits behind cut-out food, like the Signatures artwork. */
 export function OutlineStar({ className = "", color = V2.yellow }: { className?: string; color?: string }) {
   return (
-    <svg viewBox="0 0 100 100" className={`pointer-events-none ${className}`} aria-hidden>
-      <path
-        d="M50 3 62 37l36 1-28.5 22L80 95 50 74 20 95l10.5-35L2 38l36-1Z"
-        fill="none"
-        stroke={color}
-        strokeWidth="0.8"
-      />
+    <svg viewBox={BRAND_STAR_VIEWBOX} className={`pointer-events-none ${className}`} aria-hidden>
+      <BrandStarShape fill="none" stroke={color} strokeWidth="4" />
     </svg>
   );
 }
@@ -216,7 +209,7 @@ export function SliderControls({
   return (
     <div className="flex items-center gap-4">
       <button aria-label="Previous" onClick={onPrev} disabled={index <= 0} className={btn} data-cursor="link">
-        ←
+        <BrandArrow dir="left" />
       </button>
       <div className="flex min-w-[120px] flex-col gap-1.5">
         <div className={`h-1 overflow-hidden rounded-full ${onDark ? "bg-white/20" : "bg-third/10"}`}>
@@ -231,7 +224,7 @@ export function SliderControls({
         </span>
       </div>
       <button aria-label="Next" onClick={onNext} disabled={index >= count - 1} className={btn} data-cursor="link">
-        →
+        <BrandArrow />
       </button>
     </div>
   );

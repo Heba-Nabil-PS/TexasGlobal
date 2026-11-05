@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+import BrandArrow from "@/components/ui/BrandArrow";
 import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -111,9 +113,7 @@ export default function NewsArchiveV2() {
                     <div className="mt-auto pt-4">
                       <span className="inline-flex items-center font-texas font-bold uppercase tracking-wide text-secondary group-hover:underline">
                         {newsV2.archive.readMore}
-                        <svg className="ms-1 size-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
+                        <BrandArrow className="ms-1 size-4 transition-transform group-hover:translate-x-1" />
                       </span>
                     </div>
                   </div>
@@ -128,11 +128,11 @@ export default function NewsArchiveV2() {
         {/* Pagination */}
         {pages > 1 && (
           <nav aria-label="Stories pages" className="mt-14 flex items-center justify-center gap-2">
-            <PageBtn label="‹ Prev" disabled={page === 0} onClick={() => goTo(page - 1)} />
+            <PageBtn label={<><BrandArrow dir="left" /> Prev</>} disabled={page === 0} onClick={() => goTo(page - 1)} />
             {Array.from({ length: pages }, (_, p) => (
               <PageBtn key={p} label={String(p + 1)} active={p === page} onClick={() => goTo(p)} round />
             ))}
-            <PageBtn label="Next ›" disabled={page === pages - 1} onClick={() => goTo(page + 1)} />
+            <PageBtn label={<>Next <BrandArrow /></>} disabled={page === pages - 1} onClick={() => goTo(page + 1)} />
           </nav>
         )}
       </div>
@@ -147,7 +147,7 @@ function PageBtn({
   disabled = false,
   round = false,
 }: {
-  label: string;
+  label: ReactNode;
   onClick: () => void;
   active?: boolean;
   disabled?: boolean;

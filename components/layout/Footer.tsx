@@ -1,5 +1,6 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -49,14 +50,6 @@ const socials: { label: string; href: string; Icon: ComponentType<{ className?: 
   { label: "X", href: "#", Icon: XIcon },
   { label: "YouTube", href: "#", Icon: YouTubeIcon },
 ];
-
-function ChevronDown({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="m6 9 6 6 6-6" />
-    </svg>
-  );
-}
 
 function ColumnLinks({ links }: { links: { label: string; href: string }[] }) {
   return (
@@ -129,7 +122,7 @@ export default function Footer() {
                 data-cursor="link"
                 className="rounded-full bg-third px-7 py-4 font-texas text-sm font-extrabold uppercase tracking-caps text-white transition-colors hover:bg-primary"
               >
-                Find your market →
+                Find your market <BrandArrow />
               </Link>
             </div>
           </div>
@@ -144,7 +137,7 @@ export default function Footer() {
               <details key={col.title} className="group border-b border-white/10">
                 <summary className="flex cursor-pointer items-center justify-between py-3">
                   <p className="font-texas text-lg font-bold capitalize text-white">{col.title}</p>
-                  <ChevronDown className="size-5 text-white transition-transform duration-200 group-open:rotate-180" />
+                  <BrandArrow dir="down" className="size-5 text-white transition-transform duration-200 group-open:rotate-180" />
                 </summary>
                 <div className="pb-3 ps-2">
                   <ColumnLinks links={col.links} />

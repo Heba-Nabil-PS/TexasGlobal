@@ -1,5 +1,6 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
 import { useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -114,7 +115,7 @@ export default function AnimatedCardHover({
         {href && (
           <span className="mt-4 inline-flex items-center gap-2 text-sm font-extrabold uppercase tracking-caps text-tex-yellow">
             {cta}
-            <span aria-hidden>{isExternal ? "↗" : "→"}</span>
+            <BrandArrow dir={isExternal ? "up-right" : "right"} />
           </span>
         )}
       </motion.div>

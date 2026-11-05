@@ -12,6 +12,7 @@
  * transform plus a per-marker counter-scale, so text never stretches.
  */
 
+import BrandArrow from "@/components/ui/BrandArrow";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
@@ -538,7 +539,7 @@ export default function MarketExplorer({
                     >
                       {copy.visit}
                       <span className="transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden>
-                        ↗
+                        <BrandArrow dir="up-right" />
                       </span>
                     </a>
                   </>
@@ -586,7 +587,7 @@ export default function MarketExplorer({
             >
               {copy.seeAll}
               <span className="transition-transform duration-200 group-hover:translate-y-0.5" aria-hidden>
-                ↓
+                <BrandArrow dir="down" />
               </span>
             </button>
           </motion.div>

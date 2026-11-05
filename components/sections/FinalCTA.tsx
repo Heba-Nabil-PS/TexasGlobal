@@ -1,5 +1,6 @@
 "use client";
 
+import BrandStar from "@/components/ui/BrandStar";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { finalCta } from "@/lib/content";
@@ -40,7 +41,7 @@ export default function FinalCTA({ primaryHref = "/find-your-market" }: { primar
           transition={{ duration: 0.7, ease: ease.out }}
           className="eyebrow justify-center text-tex-yellow"
         >
-          ★ {finalCta.eyebrow}
+          <BrandStar /> {finalCta.eyebrow}
         </motion.span>
 
         <h2 className="display mx-auto mt-6 max-w-[18ch] text-[13vw] leading-[0.86] md:text-[7vw]">

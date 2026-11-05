@@ -1,5 +1,7 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
+import BrandStar from "@/components/ui/BrandStar";
 import Image from "next/image";
 import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -148,7 +150,7 @@ export function FieldV2({
             ))}
           </select>
           <span aria-hidden className="pointer-events-none absolute right-5 top-1/2 mt-1 -translate-y-1/2 text-sm text-third/60">
-            ▾
+            <BrandArrow dir="down" />
           </span>
         </span>
       ) : (
@@ -184,7 +186,7 @@ export function ClosingCta({
           />
           <div className="relative grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
-              <span className="eyebrow text-primary">★ {eyebrow}</span>
+              <span className="eyebrow text-primary"><BrandStar /> {eyebrow}</span>
               <Title lines={title} size="md" className="md:text-[4rem]" />
               <p className="mt-5 max-w-lg text-lg leading-relaxed text-third/80">{body}</p>
               <div className="mt-8 flex flex-wrap gap-4">{children}</div>

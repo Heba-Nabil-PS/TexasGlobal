@@ -1,5 +1,6 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
 import Image from "next/image";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -165,7 +166,7 @@ export function CareersRolesV2() {
                   </p>
                 </div>
                 <span className="grid size-12 shrink-0 place-items-center rounded-full bg-third text-xl text-white transition-transform group-hover:translate-x-1 group-hover:bg-primary">
-                  →
+                  <BrandArrow />
                 </span>
               </motion.a>
             ))}

@@ -1,5 +1,6 @@
 "use client";
 
+import BrandStar from "@/components/ui/BrandStar";
 import Image from "next/image";
 import Reveal from "@/components/ui/Reveal";
 import Marquee from "@/components/ui/Marquee";
@@ -43,7 +44,7 @@ export default function PartnersV2() {
           {partnersV2.regions.map((m) => (
             <span key={m} className="flex items-center" data-cursor="hover">
               <span className="display text-3xl uppercase text-white transition-colors duration-300 hover:text-secondary md:text-5xl">{m}</span>
-              <span className="mx-7 text-3xl text-tex-yellow md:mx-9 md:text-5xl">★</span>
+              <span className="mx-7 text-3xl text-tex-yellow md:mx-9 md:text-5xl"><BrandStar /></span>
             </span>
           ))}
         </Marquee>

@@ -1,5 +1,6 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -40,7 +41,7 @@ export default function NewsHeroV2() {
           <Link href="/" className="transition-colors hover:text-secondary">
             Home
           </Link>
-          <span aria-hidden>›</span>
+          <BrandArrow />
           <span className="text-secondary">News</span>
         </nav>
 

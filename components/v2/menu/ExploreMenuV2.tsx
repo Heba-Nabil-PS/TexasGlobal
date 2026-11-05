@@ -1,8 +1,10 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
+import { BRAND_STAR_VIEWBOX, BrandStarShape } from "@/components/ui/BrandStar";
 import { ShootingStar, V2 } from "@/components/v2/kit";
 import { menuV2 } from "@/lib/content-v2/menu";
 import { ease, fadeUp, inView } from "@/lib/motion";
@@ -61,9 +63,8 @@ export default function ExploreMenuV2() {
         >
           {/* eyebrow */}
           <g className="hidden md:inline" fill={INK}>
-            <svg x={M.eyebrow.starX} y={M.eyebrow.starY} width={M.eyebrow.starW} height={M.eyebrow.starW * (28 / 32)} viewBox="0 0 32 28">
-              <path d="M17.6 1 20 10.2l9.6.4-7.7 5.6 2.9 9.1-7.6-5.6-7.7 5.4 3-9.2L4.8 10.4l9.5-.2Z" transform="rotate(-14 16 14)" />
-              <path d="M0 15.5 9 13l.6 1.8L.6 17.4Z" opacity=".9" />
+            <svg x={M.eyebrow.starX} y={M.eyebrow.starY} width={M.eyebrow.starW} height={M.eyebrow.starW * (28 / 32)} viewBox={BRAND_STAR_VIEWBOX}>
+              <BrandStarShape />
             </svg>
             <Line x={M.eyebrow.x} base={M.eyebrow.base} cap={M.eyebrow.cap} w={M.eyebrow.w} weight={700} text={eyebrow} />
           </g>
@@ -126,7 +127,7 @@ export default function ExploreMenuV2() {
             {ctaPrimary.label}
           </Button>
           <Button href={ctaSecondary.href} variant="ghost">
-            {ctaSecondary.label} ↓
+            {ctaSecondary.label} <BrandArrow dir="down" />
           </Button>
         </motion.div>
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import BrandStar from "@/components/ui/BrandStar";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
@@ -47,7 +48,7 @@ export function StoryHeroV2({
             transition={{ duration: 0.7, ease: ease.out, delay: 0.15 }}
             className="eyebrow text-third"
           >
-            ★ {eyebrow}
+            <BrandStar /> {eyebrow}
           </motion.span>
           <Title as="h1" size="lg" lines={title} />
           <motion.p
@@ -111,7 +112,7 @@ export function KeywordStripV2() {
         {storyV2.strip.map((w) => (
           <span key={w} className="flex items-center">
             <span className="display whitespace-nowrap px-6 text-2xl uppercase leading-none md:text-[2.2rem]">{w}</span>
-            <span className="px-2 text-xl text-secondary md:text-2xl">★</span>
+            <span className="px-2 text-xl text-secondary md:text-2xl"><BrandStar /></span>
           </span>
         ))}
       </Marquee>

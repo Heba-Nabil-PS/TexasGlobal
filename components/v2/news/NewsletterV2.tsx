@@ -1,5 +1,7 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
+import BrandStar from "@/components/ui/BrandStar";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
@@ -59,7 +61,7 @@ export default function NewsletterV2() {
                 className="mt-8 inline-flex items-center gap-3 rounded-full bg-third px-6 py-4 font-texas text-lg font-bold uppercase text-white"
                 role="status"
               >
-                <span className="text-secondary">★</span> {n.thanks}
+                <span className="text-secondary"><BrandStar /></span> {n.thanks}
               </motion.p>
             ) : (
               <form onSubmit={submit} className="mt-8 flex max-w-xl flex-col gap-3 sm:flex-row">
@@ -78,7 +80,7 @@ export default function NewsletterV2() {
                   data-cursor="link"
                   className="h-14 rounded-full bg-primary px-8 text-sm font-extrabold uppercase tracking-caps text-white transition-colors hover:bg-third"
                 >
-                  {n.cta} →
+                  {n.cta} <BrandArrow />
                 </button>
               </form>
             )}

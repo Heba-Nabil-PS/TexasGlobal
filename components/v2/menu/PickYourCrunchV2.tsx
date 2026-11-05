@@ -1,5 +1,6 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
 import Image from "next/image";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
@@ -101,7 +102,7 @@ function ScrollProgress({ progress, count }: { progress: MotionValue<number>; co
           <motion.div className="h-full rounded-full bg-primary" style={{ width }} />
         </div>
         <span className="text-[11px] font-bold uppercase tracking-caps text-third/50">
-          {String(n).padStart(2, "0")} / {String(count).padStart(2, "0")} · Keep scrolling ↓
+          {String(n).padStart(2, "0")} / {String(count).padStart(2, "0")} · Keep scrolling <BrandArrow dir="down" />
         </span>
       </div>
     </div>
@@ -121,7 +122,7 @@ function MobileRow() {
           <Card key={c.id} c={c} i={i} className="w-[76vw] snap-start sm:w-[46vw]" />
         ))}
       </div>
-      <p className="container-tx text-[11px] font-bold uppercase tracking-caps text-third/50">Swipe for more →</p>
+      <p className="container-tx text-[11px] font-bold uppercase tracking-caps text-third/50">Swipe for more <BrandArrow /></p>
     </section>
   );
 }
@@ -155,7 +156,7 @@ function Card({ c, i, className }: { c: Item; i: number; className: string }) {
       </div>
 
       <span className="mt-1 inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-caps text-third/50 transition-colors group-hover:text-primary">
-        {c.tag} <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
+        {c.tag} <span aria-hidden className="transition-transform group-hover:translate-x-1"><BrandArrow /></span>
       </span>
     </motion.a>
   );

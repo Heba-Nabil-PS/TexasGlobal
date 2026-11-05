@@ -1,5 +1,7 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
+import BrandStar from "@/components/ui/BrandStar";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { services } from "@/lib/content";
@@ -19,7 +21,7 @@ export default function Services() {
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div>
             <Reveal>
-              <span className="eyebrow text-tex-yellow">★ {services.eyebrow}</span>
+              <span className="eyebrow text-tex-yellow"><BrandStar /> {services.eyebrow}</span>
             </Reveal>
             <h2 className="display mt-5 text-[10vw] leading-[0.9] md:text-[5vw]">
               <LinesReveal lines={["Crafted,", "not manufactured."]} lineClassName="block" />
@@ -67,7 +69,7 @@ export default function Services() {
               </div>
 
               <span className="absolute right-6 top-6 text-cream/20 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-tex-yellow">
-                →
+                <BrandArrow />
               </span>
             </motion.article>
           ))}

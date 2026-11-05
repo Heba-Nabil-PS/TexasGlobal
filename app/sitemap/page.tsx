@@ -1,5 +1,6 @@
 "use client";
 
+import BrandStar from "@/components/ui/BrandStar";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import PageTitle from "@/components/v2/pages/PageTitle";
@@ -24,7 +25,7 @@ export default function SitemapPage() {
             >
               <motion.div variants={fadeUp}>
                 <span className="eyebrow text-tex-red">
-                  <span aria-hidden>★</span> {group.title}
+                  <BrandStar /> {group.title}
                 </span>
                 <p className="mt-3 text-sm text-ink-600">{group.desc}</p>
               </motion.div>

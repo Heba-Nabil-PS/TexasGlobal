@@ -1,5 +1,6 @@
 "use client";
 
+import BrandStar from "@/components/ui/BrandStar";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -120,7 +121,7 @@ function LeadershipTeaser() {
       <div className="container-tx grid items-center gap-14 lg:grid-cols-[1fr_0.9fr]">
         <div>
           <span className="eyebrow text-tex-yellow">
-            <span aria-hidden>★</span> {leadership.eyebrow}
+            <BrandStar /> {leadership.eyebrow}
           </span>
           <h2 className="display mt-5 uppercase leading-[0.92]" style={{ fontSize: "clamp(32px, 5vw, 66px)" }}>
             <LinesReveal lines={["Operators first.", "Brand-builders always."]} lineClassName="block" />

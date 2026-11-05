@@ -1,5 +1,6 @@
 "use client";
 
+import BrandStar from "@/components/ui/BrandStar";
 import { motion } from "framer-motion";
 import { why } from "@/lib/content";
 import { fadeUp, staggerContainer, inView } from "@/lib/motion";
@@ -13,7 +14,7 @@ export default function WhyTexas() {
       <div className="container-tx">
         <div className="max-w-3xl">
           <Reveal>
-            <span className="eyebrow text-tex-red">★ {why.eyebrow}</span>
+            <span className="eyebrow text-tex-red"><BrandStar /> {why.eyebrow}</span>
           </Reveal>
           <h2 className="display mt-5 text-[9vw] leading-[0.9] text-ink md:text-[4.4vw]">
             <LinesReveal lines={["Seventy-two years,", "one standard."]} lineClassName="block" />

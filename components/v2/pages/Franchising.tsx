@@ -1,5 +1,6 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
@@ -224,7 +225,7 @@ export function FranchiseApplyV2() {
                   className="group flex w-full items-center justify-center gap-3 rounded-full bg-primary px-8 py-4 text-sm font-extrabold uppercase tracking-caps text-white transition-colors hover:bg-tex-red700"
                 >
                   Submit application
-                  <span className="transition-transform group-hover:translate-x-1">→</span>
+                  <span className="transition-transform group-hover:translate-x-1"><BrandArrow /></span>
                 </button>
                 <p className="mt-4 text-center text-[11px] uppercase tracking-caps text-third/40">{a.disclaimer}</p>
               </motion.div>

@@ -1,5 +1,6 @@
 "use client";
 
+import BrandStar from "@/components/ui/BrandStar";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
@@ -34,7 +35,7 @@ export default function DownloadApp() {
             {downloadApp.points.map((p) => (
               <motion.li key={p} variants={fadeUp} className="flex items-center gap-3 text-cream/80">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-tex-yellow text-xs text-ink">
-                  ★
+                  <BrandStar />
                 </span>
                 <span className="text-sm">{p}</span>
               </motion.li>

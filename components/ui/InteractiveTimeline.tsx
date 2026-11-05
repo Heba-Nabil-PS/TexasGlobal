@@ -1,5 +1,6 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
 import { useCallback, useEffect, useState, type KeyboardEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ease } from "@/lib/motion";
@@ -191,7 +192,7 @@ export default function InteractiveTimeline({ items }: { items: TItem[] }) {
       </div>
 
       <p className="mt-5 text-center text-xs uppercase tracking-caps text-ink/35">
-        Tap a year · use ← → keys · auto-plays
+        Tap a year · use <BrandArrow dir="left" /> <BrandArrow /> keys · auto-plays
       </p>
     </div>
   );

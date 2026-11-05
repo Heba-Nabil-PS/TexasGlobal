@@ -1,5 +1,6 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
 import { useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -90,9 +91,7 @@ function CarouselButton({ dir, onClick, label }: { dir: number; onClick: () => v
       data-cursor="link"
       className="flex size-12 items-center justify-center rounded-full border border-cream/25 text-cream transition-colors hover:border-secondary hover:bg-secondary hover:text-ink"
     >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-5">
-        {dir < 0 ? <path d="m15 18-6-6 6-6" /> : <path d="m9 18 6-6-6-6" />}
-      </svg>
+      <BrandArrow dir={dir < 0 ? "left" : "right"} className="size-5" />
     </button>
   );
 }

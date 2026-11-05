@@ -1,5 +1,6 @@
 "use client";
 
+import BrandArrow from "@/components/ui/BrandArrow";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -107,7 +108,7 @@ function ScrollProgress({ progress, count }: { progress: MotionValue<number>; co
           <motion.div className="h-full rounded-full bg-primary" style={{ width }} />
         </div>
         <span className="text-[11px] font-bold uppercase tracking-caps text-third/50">
-          {String(n).padStart(2, "0")} / {String(count).padStart(2, "0")} · Keep scrolling ↓
+          {String(n).padStart(2, "0")} / {String(count).padStart(2, "0")} · Keep scrolling <BrandArrow dir="down" />
         </span>
       </div>
     </div>
