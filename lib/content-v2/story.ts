@@ -10,7 +10,7 @@ export const storyV2 = {
     subtitle:
       "One hand-battered recipe opened for business in San Antonio in 1952. Seven decades later it leads the bold-chicken category across 25+ markets — still marinated, hand-battered and fried fresh, exactly the way it started.",
     ctaPrimary: { label: "Taste the legacy", href: "/menu" },
-    ctaSecondary: { label: "Meet the team", href: "#leadership" },
+    ctaSecondary: { label: "Contact us", href: "/contact-us" },
   },
 
   /** Moving strip. Placeholder brand lines from packaging — confirm against the brand video. */

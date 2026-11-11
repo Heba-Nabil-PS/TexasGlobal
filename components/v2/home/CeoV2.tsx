@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Title } from "@/components/v2/kit";
 import { ceoV2 } from "@/lib/content-v2/home";
 import { staggerContainer, fadeUp, inView, ease } from "@/lib/motion";
@@ -59,8 +59,57 @@ export default function CeoV2() {
             sizes="(max-width: 1024px) 90vw, 460px"
             className="h-auto w-full select-none drop-shadow-2xl"
           />
+          <CeoStamp />
         </motion.div>
       </div>
     </section>
+  );
+}
+
+/** 5-point star path centred on (100,100). */
+const STAR = Array.from({ length: 10 }, (_, i) => {
+  const r = i % 2 === 0 ? 32 : 13;
+  const a = (Math.PI / 5) * i - Math.PI / 2;
+  return `${(100 + r * Math.cos(a)).toFixed(2)},${(100 + r * Math.sin(a)).toFixed(2)}`;
+}).join(" ");
+
+/**
+ * Animated "OUR CEO" stamp. Sits exactly over the stamp baked into ceo.png
+ * (centre ≈ 222,1498 / radius ≈ 222 on the 1545×1721 artwork) and covers it,
+ * so the text ring can spin while the star stays put.
+ */
+function CeoStamp() {
+  const reduce = useReducedMotion();
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute"
+      style={{ left: "-0.3%", top: "73.9%", width: "29.3%", aspectRatio: "1 / 1" }}
+    >
+      <svg viewBox="0 0 200 200" className="h-full w-full overflow-visible">
+        <circle cx="100" cy="100" r="100" fill="#9a3324" />
+        <motion.g
+          style={{ originX: "100px", originY: "100px" }}
+          animate={reduce ? undefined : { rotate: 360 }}
+          transition={{ duration: 14, ease: "linear", repeat: Infinity }}
+        >
+          <defs>
+            <path id="ceo-stamp-ring" d="M100,100 m-60,0 a60,60 0 1,1 120,0 a60,60 0 1,1 -120,0" />
+          </defs>
+          <text className="display" fill="#fff" fontSize="30" letterSpacing="1">
+            <textPath href="#ceo-stamp-ring" textLength="372" lengthAdjust="spacingAndGlyphs">
+              OUR CEO . OUR CEO . OUR CEO .
+            </textPath>
+          </text>
+        </motion.g>
+        <motion.polygon
+          points={STAR}
+          fill="#F4B118"
+          style={{ originX: "100px", originY: "100px" }}
+          animate={reduce ? undefined : { scale: [1, 1.12, 1] }}
+          transition={{ duration: 2.4, ease: "easeInOut", repeat: Infinity }}
+        />
+      </svg>
+    </div>
   );
 }

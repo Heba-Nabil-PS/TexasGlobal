@@ -72,7 +72,7 @@ export const about = {
   video: "/assets/built-standards.webm",
   cta: {
     primary: { label: "Read our story", href: "/our-story" },
-    secondary: { label: "Meet the team", href: "/our-story/leadership" },
+    secondary: { label: "Contact us", href: "/contact-us" },
   },
 };
 
@@ -480,8 +480,8 @@ export const storyPage = {
     eyebrow: "Leadership team",
     heading: "Operators first. Brand-builders always.",
     body: "Seventy-two years of craft doesn't run itself. Meet the leaders steering Texas Chicken across 23 markets — and keeping every piece hand-battered.",
-    cta: "Meet the leadership",
-    ctaHref: "/our-story/leadership",
+    cta: "Contact us",
+    ctaHref: "/contact-us",
   },
   numbers: {
     eyebrow: "By the numbers",
