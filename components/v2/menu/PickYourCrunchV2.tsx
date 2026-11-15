@@ -376,7 +376,8 @@ function Char({ ch, j, m, u, tl }: { ch: string; j: number; m: number; u: Motion
 function Rail({ u, active, onJump }: { u: MotionValue<number>; active: number; onJump: (i: number) => void }) {
   return (
     <nav aria-label="Menu categories" className="absolute inset-x-0 bottom-3 z-10 flex justify-center px-3 md:bottom-6">
-      <ol className="flex gap-1.5 rounded-full bg-white/85 p-1.5 shadow-soft3 backdrop-blur-md md:gap-2">
+      {/* same pill bar as the Franchising tabs */}
+      <ol className="flex gap-1 rounded-full border border-ink/10 bg-paper/90 p-1.5 shadow-soft3 backdrop-blur-md md:gap-2 md:p-2">
         {crunchBuild.map((c, i) => (
           <li key={c.id}>
             <RailButton c={c} i={i} u={u} live={active === i} onJump={onJump} />
@@ -396,17 +397,33 @@ function RailButton({ c, i, u, live, onJump }: { c: BuildCategory; i: number; u:
       onClick={() => onJump(i)}
       aria-current={live ? "step" : undefined}
       data-cursor="link"
-      className={`relative flex items-center gap-2 overflow-hidden rounded-full py-1 pl-1 pr-1 transition-colors duration-300 md:pr-4 ${
-        live ? "bg-third text-white" : "text-third hover:bg-third/5"
+      className={`group relative flex items-center gap-3 rounded-full p-1 text-left transition-colors duration-300 md:py-1.5 md:pl-1.5 md:pr-6 ${
+        live ? "" : "hover:bg-ink/5"
       }`}
     >
-      <span className="relative block h-9 w-[54px] shrink-0 overflow-hidden rounded-full bg-white md:h-10 md:w-[60px]">
-        <Image src={c.combo.src} alt="" fill sizes="60px" className="scale-110 object-contain" />
+      {live && (
+        <motion.span
+          aria-hidden
+          layoutId="crunch-rail-pill"
+          transition={{ type: "spring", stiffness: 380, damping: 32 }}
+          className="absolute inset-0 overflow-hidden rounded-full bg-tex-red"
+        >
+          {/* progress through this category */}
+          <motion.span style={{ scaleX: fill }} className="absolute inset-x-6 bottom-1 h-[2px] origin-left rounded-full bg-tex-yellow" />
+        </motion.span>
+      )}
+      <span
+        className={`relative block size-10 shrink-0 overflow-hidden rounded-full bg-white ring-2 transition-[box-shadow] duration-300 md:size-11 ${
+          live ? "ring-tex-yellow" : "ring-ink/10"
+        }`}
+      >
+        <Image src={c.combo.src} alt="" fill sizes="44px" className="scale-[1.35] object-contain" />
       </span>
-      <span className={`whitespace-nowrap text-xs font-extrabold uppercase tracking-caps ${live ? "max-md:sr-only" : "sr-only md:not-sr-only"}`}>
-        {c.short}
+      <span className="relative hidden md:block">
+        <span className={`block whitespace-nowrap text-sm font-extrabold uppercase tracking-caps ${live ? "text-cream" : "text-ink"}`}>{c.short}</span>
+        <span className={`block whitespace-nowrap text-[0.68rem] font-semibold ${live ? "text-cream/70" : "text-ink-400"}`}>{c.sub}</span>
       </span>
-      <motion.span aria-hidden style={{ scaleX: fill }} className="absolute inset-x-3 bottom-0.5 h-[2px] origin-left rounded-full bg-secondary" />
+      <span className="sr-only md:hidden">{c.short}</span>
     </button>
   );
 }

@@ -39,6 +39,8 @@ export type BuildCategory = {
   title: string[];
   /** label on the category rail */
   short: string;
+  /** second line on the category rail */
+  sub: string;
   blurb: string;
   href: string;
   /** the finished artwork — used for the category rail + reduced-motion view */
@@ -73,6 +75,7 @@ export const crunchBuild: BuildCategory[] = [
     id: "chicken-tender",
     title: ["Chicken &", "Tender", "Combos"],
     short: "Chicken & Tenders",
+    sub: "Bone-in & tenders",
     blurb: "Bone-in pieces and hand-battered tenders, with sides and a drink.",
     href: "/find-your-market",
     combo: { src: `${dir}/chicken/combo.webp`, iw: 735, ih: 480 },
@@ -93,6 +96,7 @@ export const crunchBuild: BuildCategory[] = [
     id: "burger-wrap",
     title: ["Burger &", "Wrap", "Combos"],
     short: "Burgers & Wraps",
+    sub: "Sandwiches & wraps",
     blurb: "Crispy chicken sandwiches and wraps, built bold and stacked high.",
     href: "/find-your-market",
     combo: { src: `${dir}/burger/combo.webp`, iw: 732, ih: 479 },
@@ -112,6 +116,7 @@ export const crunchBuild: BuildCategory[] = [
     id: "sides",
     title: ["Sides"],
     short: "Sides",
+    sub: "Biscuits, slaw & more",
     blurb: "Fries, coleslaw, honey-butter biscuits and the rest of the crew.",
     href: "/find-your-market",
     combo: { src: `${dir}/sides/combo.webp`, iw: 800, ih: 421 },
@@ -131,6 +136,7 @@ export const crunchBuild: BuildCategory[] = [
     id: "desserts",
     title: ["Desserts"],
     short: "Desserts",
+    sub: "Something sweet",
     blurb: "Something sweet to finish the crunch.",
     href: "/find-your-market",
     combo: { src: `${dir}/desserts/combo.webp`, iw: 744, ih: 420 },
