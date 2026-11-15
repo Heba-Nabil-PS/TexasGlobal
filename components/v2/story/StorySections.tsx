@@ -72,14 +72,14 @@ export function StoryHeroV2({
         </div>
 
         {/* Original stand, framed */}
-        <motion.div style={{ y: foodY }} className="relative mx-auto aspect-[838/986] w-full max-w-[440px]">
+        <motion.div style={{ y: foodY }} className="relative mx-auto aspect-[839/987] w-full max-w-[440px]">
           <motion.div
             initial={{ opacity: 0, scale: 0.85, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1, ease: ease.expo, delay: 0.3 }}
             className="absolute inset-0"
           >
-            <Image src="/assets/story/san-antonio-1952.png" alt="The original Church's Fried Chicken To Go stand in San Antonio" fill priority sizes="(max-width:1024px) 90vw, 440px" className="object-contain drop-shadow-[0_30px_40px_rgba(45,41,38,0.35)]" />
+            <Image src="/assets/story/san-antonio-1952-v2.png" alt="The original Church's Fried Chicken To Go stand in San Antonio" fill priority sizes="(max-width:1024px) 90vw, 440px" className="object-contain drop-shadow-[0_30px_40px_rgba(45,41,38,0.35)]" />
           </motion.div>
           <Stamp text="Since 1952" size={112} className="absolute -bottom-4 left-2 lg:-left-6" />
         </motion.div>

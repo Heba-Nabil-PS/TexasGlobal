@@ -203,9 +203,13 @@ function Tray({ c, u, tl }: { c: BuildCategory; u: MotionValue<number>; tl: Tl }
         style={{ opacity: glowOpacity, scale: glowScale, background: `radial-gradient(closest-side, ${c.glow}, transparent)` }}
         className="absolute inset-[-12%] rounded-full blur-2xl"
       />
-      {/* back to front; the cut-outs carry their own shadows */}
-      {c.pieces.map((p, k) => (
-        <Piece key={p.key} p={p} k={k} n={c.pieces.length} u={u} tl={tl} />
+      {/* paper, then the contact shadows on it, then the food back to front */}
+      <Piece p={c.pieces[0]} k={0} n={c.pieces.length} u={u} tl={tl} />
+      {c.pieces.slice(1).map((p, i) => (
+        <ContactShadow key={p.key} p={p} k={i + 1} n={c.pieces.length} u={u} tl={tl} />
+      ))}
+      {c.pieces.slice(1).map((p, i) => (
+        <Piece key={p.key} p={p} k={i + 1} n={c.pieces.length} u={u} tl={tl} />
       ))}
     </>
   );
@@ -240,6 +244,41 @@ function pieceMotion(v: number, p: BuildPiece, k: number, n: number, tl: Tl) {
   const opacity = seg(e, 0, 0.12) * (1 - seg(o, 0.45, 1));
   return { dx, dy, r, s, opacity };
 }
+
+/**
+ * Soft shadow on the paper right under a piece's solid footprint — the dark
+ * "contact" line that makes food read as resting on the sheet, not hovering.
+ * Fades in as the piece lands; lifts away first when it leaves.
+ */
+function ContactShadow({ p, k, n, u, tl }: { p: BuildPiece; k: number; n: number; u: MotionValue<number>; tl: Tl }) {
+  const strength = p.shadow ?? 0.5;
+  const h = (p.w * p.ih) / p.iw;
+  const [foot, l, r] = p.base;
+  const sw = p.w * (r - l) * 0.96;
+  const sh = Math.min(p.w * 0.1, h * 0.22);
+  const cx = p.x + p.w * (l + r) * 0.5;
+  const cy = p.y + h * foot - sh * 0.35; // tucked just under the base
+  const opacity = useTransform(u, (v) => {
+    const { e, o } = piecePhase(v, k, n, tl);
+    return strength * seg(e, 0.6, 1) * (1 - seg(o, 0, 0.2));
+  });
+  if (strength <= 0) return null;
+  return (
+    <motion.div
+      aria-hidden
+      style={{
+        left: pct(cx - sw / 2, STAGE.w),
+        top: pct(cy - sh / 2 - STAGE.y0, STAGE.h),
+        width: pct(sw, STAGE.w),
+        height: pct(sh, STAGE.h),
+        opacity,
+        background: "radial-gradient(closest-side, rgba(64,36,12,0.55), rgba(64,36,12,0.22) 55%, rgba(64,36,12,0))",
+      }}
+      className="pointer-events-none absolute rounded-full"
+    />
+  );
+}
+
 function Piece({ p, k, n, u, tl }: { p: BuildPiece; k: number; n: number; u: MotionValue<number>; tl: Tl }) {
   const h = (p.w * p.ih) / p.iw; // artwork px
   // stage-relative offsets → % of the piece's own box (so no measuring)

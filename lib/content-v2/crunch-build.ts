@@ -32,6 +32,10 @@ export type BuildPiece = {
   from: Pose;
   to: Pose;
   depth: number;
+  /** strength of the soft contact shadow drawn on the paper under it (0–1, default 0.5) */
+  shadow?: number;
+  /** solid footprint as fractions of the image box: [bottom, left, right] (shadow sits under it) */
+  base: [number, number, number];
 };
 
 export type BuildCategory = {
@@ -68,6 +72,8 @@ const tray = (cat: string, from: Pose, to: Pose): BuildPiece => ({
   from,
   to,
   depth: 0.2,
+  shadow: 0,
+  base: [1, 0, 1],
 });
 
 export const crunchBuild: BuildCategory[] = [
@@ -84,12 +90,12 @@ export const crunchBuild: BuildCategory[] = [
     ink: "dark",
     pieces: [
       tray("chicken", { dx: 0.9, dy: 0.25, r: 18, s: 0.9 }, { dx: -1.1, dy: 0.15, r: -12, s: 0.9 }),
-      { key: "cup", src: `${dir}/chicken/cup.webp`, iw: 203, ih: 365, x: 463, y: 92, w: 187, from: { dx: 0.35, dy: -1.05, r: 28, s: 0.7 }, to: { dx: 0.55, dy: -1.1, r: 35, s: 1.2 }, depth: 0.35 },
-      { key: "breast", src: `${dir}/chicken/breast.webp`, iw: 398, ih: 248, x: 396, y: 290, w: 353, from: { dx: 0.85, dy: -0.35, r: 70, s: 0.5 }, to: { dx: 0.9, dy: -0.5, r: 110, s: 1.3 }, depth: 0.55 },
-      { key: "tender-long", src: `${dir}/chicken/tender-long.webp`, iw: 345, ih: 154, x: 60, y: 286, w: 300, from: { dx: -1.05, dy: -0.45, r: -55, s: 0.6 }, to: { dx: -1, dy: -0.6, r: -90, s: 1.3 }, depth: 0.6 },
-      { key: "tender", src: `${dir}/chicken/tender.webp`, iw: 306, ih: 180, x: 168, y: 328, w: 252, from: { dx: -0.65, dy: 0.95, r: 40, s: 0.55 }, to: { dx: -0.6, dy: 1.05, r: 60, s: 1.25 }, depth: 0.75 },
-      { key: "thigh", src: `${dir}/chicken/thigh.webp`, iw: 339, ih: 257, x: 267, y: 316, w: 277, from: { dx: 0.1, dy: 1.15, r: -35, s: 0.6 }, to: { dx: 0.15, dy: 1.15, r: -70, s: 1.35 }, depth: 0.9 },
-      { key: "slaw", src: `${dir}/chicken/slaw.webp`, iw: 214, ih: 197, x: 462, y: 378, w: 209, from: { dx: 0.75, dy: 0.9, r: -25, s: 0.6 }, to: { dx: 0.8, dy: 1, r: -40, s: 1.3 }, depth: 1 },
+      { key: "cup", src: `${dir}/chicken/cup.webp`, iw: 203, ih: 365, x: 463, y: 92, w: 187, from: { dx: 0.35, dy: -1.05, r: 28, s: 0.7 }, to: { dx: 0.55, dy: -1.1, r: 35, s: 1.2 }, depth: 0.35, shadow: 0.6, base: [0.877, 0.044, 0.956] },
+      { key: "breast", src: `${dir}/chicken/breast.webp`, iw: 398, ih: 248, x: 396, y: 290, w: 353, from: { dx: 0.85, dy: -0.35, r: 70, s: 0.5 }, to: { dx: 0.9, dy: -0.5, r: 110, s: 1.3 }, depth: 0.55, shadow: 1, base: [0.871, 0.121, 0.857] },
+      { key: "tender-long", src: `${dir}/chicken/tender-long.webp`, iw: 345, ih: 154, x: 178, y: 302, w: 268, from: { dx: -1.05, dy: -0.45, r: -55, s: 0.6 }, to: { dx: -1, dy: -0.6, r: -90, s: 1.3 }, depth: 0.6, shadow: 1, base: [0.935, 0.003, 0.997] },
+      { key: "tender", src: `${dir}/chicken/tender.webp`, iw: 306, ih: 180, x: 190, y: 338, w: 250, from: { dx: -0.65, dy: 0.95, r: 40, s: 0.55 }, to: { dx: -0.6, dy: 1.05, r: 60, s: 1.25 }, depth: 0.75, shadow: 1, base: [0.994, 0.003, 0.997] },
+      { key: "thigh", src: `${dir}/chicken/thigh.webp`, iw: 339, ih: 257, x: 267, y: 316, w: 277, from: { dx: 0.1, dy: 1.15, r: -35, s: 0.6 }, to: { dx: 0.15, dy: 1.15, r: -70, s: 1.35 }, depth: 0.9, shadow: 1, base: [0.868, 0.094, 0.997] },
+      { key: "slaw", src: `${dir}/chicken/slaw.webp`, iw: 214, ih: 197, x: 462, y: 378, w: 209, from: { dx: 0.75, dy: 0.9, r: -25, s: 0.6 }, to: { dx: 0.8, dy: 1, r: -40, s: 1.3 }, depth: 1, shadow: 0.75, base: [0.827, 0.098, 0.911] },
     ],
   },
   {
@@ -105,11 +111,11 @@ export const crunchBuild: BuildCategory[] = [
     ink: "dark",
     pieces: [
       tray("burger", { dx: 1.1, dy: 0.1, r: 14, s: 0.95 }, { dx: -1.1, dy: 0.15, r: -12, s: 0.9 }),
-      { key: "cup", src: `${dir}/burger/cup.webp`, iw: 203, ih: 357, x: 463, y: 92, w: 187, from: { dx: 0.6, dy: -0.95, r: -30, s: 0.7 }, to: { dx: 0.45, dy: -1.15, r: -40, s: 1.2 }, depth: 0.35 },
-      { key: "fries", src: `${dir}/burger/fries.webp`, iw: 205, ih: 268, x: 545, y: 214, w: 193, from: { dx: 0.95, dy: 0.2, r: 50, s: 0.6 }, to: { dx: 1, dy: -0.3, r: 80, s: 1.25 }, depth: 0.5 },
-      { key: "wrap", src: `${dir}/burger/wrap.webp`, iw: 416, ih: 261, x: 62, y: 282, w: 329, from: { dx: -1.1, dy: 0.05, r: -50, s: 0.6 }, to: { dx: -1.1, dy: -0.35, r: -80, s: 1.3 }, depth: 0.7 },
-      { key: "burger", src: `${dir}/burger/burger.webp`, iw: 368, ih: 327, x: 256, y: 218, w: 364, from: { dx: -0.05, dy: -1.2, r: -20, s: 1.35 }, to: { dx: 0, dy: -1.25, r: 25, s: 1.45 }, depth: 0.85 },
-      { key: "slaw", src: `${dir}/burger/slaw.webp`, iw: 214, ih: 225, x: 462, y: 380, w: 209, from: { dx: 0.5, dy: 1.05, r: 30, s: 0.6 }, to: { dx: 0.6, dy: 1.1, r: 45, s: 1.3 }, depth: 1 },
+      { key: "cup", src: `${dir}/burger/cup.webp`, iw: 203, ih: 357, x: 463, y: 92, w: 187, from: { dx: 0.6, dy: -0.95, r: -30, s: 0.7 }, to: { dx: 0.45, dy: -1.15, r: -40, s: 1.2 }, depth: 0.35, shadow: 0.6, base: [0.894, 0.044, 0.956] },
+      { key: "fries", src: `${dir}/burger/fries.webp`, iw: 205, ih: 268, x: 545, y: 214, w: 193, from: { dx: 0.95, dy: 0.2, r: 50, s: 0.6 }, to: { dx: 1, dy: -0.3, r: 80, s: 1.25 }, depth: 0.5, shadow: 0.8, base: [0.903, 0.083, 0.937] },
+      { key: "wrap", src: `${dir}/burger/wrap.webp`, iw: 416, ih: 261, x: 84, y: 280, w: 322, from: { dx: -1.1, dy: 0.05, r: -50, s: 0.6 }, to: { dx: -1.1, dy: -0.35, r: -80, s: 1.3 }, depth: 0.7, shadow: 1, base: [0.881, 0.002, 0.957] },
+      { key: "burger", src: `${dir}/burger/burger.webp`, iw: 368, ih: 327, x: 256, y: 218, w: 364, from: { dx: -0.05, dy: -1.2, r: -20, s: 1.35 }, to: { dx: 0, dy: -1.25, r: 25, s: 1.45 }, depth: 0.85, shadow: 1, base: [0.865, 0.003, 0.997] },
+      { key: "slaw", src: `${dir}/burger/slaw.webp`, iw: 214, ih: 225, x: 462, y: 380, w: 209, from: { dx: 0.5, dy: 1.05, r: 30, s: 0.6 }, to: { dx: 0.6, dy: 1.1, r: 45, s: 1.3 }, depth: 1, shadow: 0.75, base: [0.72, 0.098, 0.911] },
     ],
   },
   {
@@ -125,11 +131,11 @@ export const crunchBuild: BuildCategory[] = [
     ink: "dark",
     pieces: [
       tray("sides", { dx: 1.05, dy: 0.3, r: 20, s: 0.9 }, { dx: -1.1, dy: 0.2, r: -14, s: 0.9 }),
-      { key: "bold-bag", src: `${dir}/sides/bold-bag.webp`, iw: 217, ih: 233, x: 322, y: 140, w: 222, from: { dx: 0.05, dy: -1.15, r: 25, s: 0.7 }, to: { dx: 0.1, dy: -1.2, r: -35, s: 1.25 }, depth: 0.35 },
-      { key: "mash", src: `${dir}/sides/mash.webp`, iw: 186, ih: 237, x: 529, y: 254, w: 206, from: { dx: 0.9, dy: -0.55, r: 40, s: 0.6 }, to: { dx: 0.95, dy: -0.4, r: 70, s: 1.25 }, depth: 0.55 },
-      { key: "biscuit-a", src: `${dir}/sides/biscuit-a.webp`, iw: 176, ih: 138, x: 134, y: 254, w: 200, from: { dx: -0.95, dy: -0.7, r: -120, s: 0.5 }, to: { dx: -1, dy: -0.75, r: -200, s: 1.3 }, depth: 0.7 },
-      { key: "biscuit-b", src: `${dir}/sides/biscuit-b.webp`, iw: 179, ih: 139, x: 226, y: 346, w: 192, from: { dx: -0.8, dy: 0.95, r: 140, s: 0.5 }, to: { dx: -0.85, dy: 1.05, r: 220, s: 1.3 }, depth: 0.85 },
-      { key: "slaw", src: `${dir}/sides/slaw.webp`, iw: 214, ih: 236, x: 375, y: 340, w: 238, from: { dx: 0.55, dy: 1.05, r: -30, s: 0.6 }, to: { dx: 0.6, dy: 1.1, r: -50, s: 1.3 }, depth: 1 },
+      { key: "bold-bag", src: `${dir}/sides/bold-bag.webp`, iw: 217, ih: 233, x: 308, y: 170, w: 216, from: { dx: 0.05, dy: -1.15, r: 25, s: 0.7 }, to: { dx: 0.1, dy: -1.2, r: -35, s: 1.25 }, depth: 0.35, shadow: 0.9, base: [0.897, 0.005, 0.995] },
+      { key: "mash", src: `${dir}/sides/mash.webp`, iw: 186, ih: 237, x: 529, y: 254, w: 206, from: { dx: 0.9, dy: -0.55, r: 40, s: 0.6 }, to: { dx: 0.95, dy: -0.4, r: 70, s: 1.25 }, depth: 0.55, shadow: 0.75, base: [0.717, 0.086, 0.93] },
+      { key: "biscuit-a", src: `${dir}/sides/biscuit-a.webp`, iw: 176, ih: 138, x: 168, y: 262, w: 196, from: { dx: -0.95, dy: -0.7, r: -120, s: 0.5 }, to: { dx: -1, dy: -0.75, r: -200, s: 1.3 }, depth: 0.7, shadow: 1, base: [0.92, 0.006, 0.994] },
+      { key: "biscuit-b", src: `${dir}/sides/biscuit-b.webp`, iw: 179, ih: 139, x: 226, y: 346, w: 192, from: { dx: -0.8, dy: 0.95, r: 140, s: 0.5 }, to: { dx: -0.85, dy: 1.05, r: 220, s: 1.3 }, depth: 0.85, shadow: 1, base: [0.892, 0.006, 0.994] },
+      { key: "slaw", src: `${dir}/sides/slaw.webp`, iw: 214, ih: 236, x: 375, y: 340, w: 238, from: { dx: 0.55, dy: 1.05, r: -30, s: 0.6 }, to: { dx: 0.6, dy: 1.1, r: -50, s: 1.3 }, depth: 1, shadow: 0.75, base: [0.691, 0.093, 0.907] },
     ],
   },
   {
@@ -145,7 +151,7 @@ export const crunchBuild: BuildCategory[] = [
     ink: "dark",
     pieces: [
       tray("desserts", { dx: -1.05, dy: 0.25, r: -22, s: 0.9 }, { dx: 1.1, dy: 0.2, r: 14, s: 0.9 }),
-      { key: "dessert", src: `${dir}/desserts/dessert.webp`, iw: 424, ih: 382, x: 222, y: 164, w: 408, from: { dx: 0, dy: -1.25, r: -360, s: 0.35 }, to: { dx: 0, dy: -1.2, r: 360, s: 1.4 }, depth: 0.8 },
+      { key: "dessert", src: `${dir}/desserts/dessert.webp`, iw: 424, ih: 382, x: 222, y: 164, w: 408, from: { dx: 0, dy: -1.25, r: -360, s: 0.35 }, to: { dx: 0, dy: -1.2, r: 360, s: 1.4 }, depth: 0.8, shadow: 0.9, base: [0.89, 0.047, 0.974] },
     ],
   },
 ];
