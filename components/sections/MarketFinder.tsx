@@ -54,7 +54,7 @@ export default function MarketFinder({
     "w-full cursor-pointer appearance-none rounded-full border border-ink/12 bg-cream px-5 py-3.5 pr-10 text-sm font-bold text-ink outline-none transition-colors focus:border-primary";
 
   return (
-    <section className="relative overflow-hidden bg-cream-200 py-20 md:py-28">
+    <section className="relative overflow-hidden bg-cream-200 py-10 md:py-12">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-multiply"
         style={{ backgroundImage: "url(/assets/tex-grunge.png)", backgroundSize: "480px" }}

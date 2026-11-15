@@ -14,7 +14,7 @@ import { partnersV2 } from "@/lib/content-v2/home";
  */
 export default function PartnersV2() {
   return (
-    <section id="partners" className="bg-white pt-14 md:pt-20">
+    <section id="partners" className="bg-white pt-10 md:pt-14">
       <div className="container-tx text-center">
         <Reveal>
           <span className="eyebrow text-tex-red">
@@ -39,16 +39,23 @@ export default function PartnersV2() {
         </div>
       </div>
 
-      <div className="mt-16 bg-third py-6">
-        <Marquee duration={24}>
-          {partnersV2.regions.map((m) => (
-            <span key={m} className="flex items-center" data-cursor="hover">
-              <span className="display text-3xl uppercase text-white transition-colors duration-300 hover:text-secondary md:text-5xl">{m}</span>
-              <span className="mx-7 text-3xl text-tex-yellow md:mx-9 md:text-5xl"><BrandStar /></span>
-            </span>
-          ))}
-        </Marquee>
-      </div>
+      <RegionsStripV2 className="mt-16" />
     </section>
+  );
+}
+
+/** Dark scrolling strip of region names — also used on its own on the home page. */
+export function RegionsStripV2({ className = "" }: { className?: string }) {
+  return (
+    <div className={`bg-third py-6 ${className}`}>
+      <Marquee duration={24}>
+        {partnersV2.regions.map((m) => (
+          <span key={m} className="flex items-center" data-cursor="hover">
+            <span className="display text-3xl uppercase text-white transition-colors duration-300 hover:text-secondary md:text-5xl">{m}</span>
+            <span className="mx-7 text-3xl text-tex-yellow md:mx-9 md:text-5xl"><BrandStar /></span>
+          </span>
+        ))}
+      </Marquee>
+    </div>
   );
 }

@@ -11,7 +11,7 @@ import { LinesReveal } from "@/components/ui/TextReveal";
 
 export default function Services() {
   return (
-    <section id="services" className="relative overflow-hidden bg-ink py-28 text-cream md:py-40">
+    <section id="services" className="relative overflow-hidden bg-ink py-12 text-cream md:py-16">
       {/* grain texture */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.06]"

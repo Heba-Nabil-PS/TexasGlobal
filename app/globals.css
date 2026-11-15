@@ -165,3 +165,42 @@ html.lenis body {
     opacity: 0;
   }
 }
+
+/* ------------------------------------------------------------------
+   Pick your crunch (menu) — the pinned tray-builder stage.
+   Stacked (copy over food) on portrait phones/tablets; side by side on
+   desktops and on any landscape screen ≥ 640px ("wide").
+   ------------------------------------------------------------------ */
+.crunch-stage { --cx: 50%; --cy: 64%; }
+.crunch-area { top: 78px; bottom: 80px; }
+.crunch-grid { grid-template-rows: auto minmax(0, 1fr); gap: 0.5rem; }
+.crunch-copy { height: clamp(196px, 31svh, 250px); }
+.crunch-layer { justify-content: flex-start; }
+.crunch-title { font-size: clamp(2.6rem, 12vw, 3.8rem); }
+.crunch-food { width: min(108vw, calc((69svh - 196px) * 1.5)); }
+
+@media (min-width: 768px) {
+  .crunch-area { bottom: 96px; }
+  .crunch-copy { height: clamp(250px, 32svh, 390px); }
+  .crunch-food { width: min(100%, calc((68svh - 250px) * 1.5)); }
+  .crunch-title { font-size: clamp(3.8rem, 8.5vw, 5.4rem); }
+}
+
+@media (min-width: 1024px), (orientation: landscape) and (min-width: 640px) {
+  .crunch-stage { --cx: 69%; --cy: 54%; }
+  .crunch-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: minmax(0, 1fr); gap: 2rem; }
+  .crunch-copy { height: 100%; }
+  .crunch-layer { justify-content: center; }
+  .crunch-title { font-size: clamp(2.4rem, min(6.8vw, 10.5svh), 7.2rem); }
+  .crunch-food { width: min(100%, calc((100svh - 170px) * 1.45)); }
+}
+
+@media (min-width: 1024px) {
+  .crunch-area { top: 128px; }
+  .crunch-food { width: min(100%, calc((100svh - 224px) * 1.42)); }
+}
+
+@media (max-height: 500px) {
+  .crunch-area { bottom: 62px; }
+  .crunch-blurb { display: none; }
+}

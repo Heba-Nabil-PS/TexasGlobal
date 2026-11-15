@@ -107,7 +107,7 @@ export default function MenuHeroV2() {
             data-cursor="link"
             className={`text-sm font-extrabold uppercase tracking-caps underline-offset-4 hover:underline ${lead}`}
           >
-            {secondary.label} <BrandArrow dir="down" />
+            {secondary.label}
           </a>
         </div>
       </div>

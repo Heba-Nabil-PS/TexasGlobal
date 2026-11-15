@@ -1,3 +1,4 @@
+import { privacyPolicy } from "./privacy-policy";
 /**
  * All site copy + asset references in one place.
  * Assets live in /public/assets (copied from the Texas brand kit).
@@ -5,7 +6,7 @@
 
 export const brand = {
   name: "Texas Chicken",
-  tagline: "Hand-battered. Made fresh. Since 1952.",
+  tagline: "Crispy fried chicken, cooked fresh. Since 1952.",
   since: 1952,
 };
 
@@ -37,12 +38,14 @@ export const site = {
     // News lives in the footer (moved out of the top nav to declutter it).
     { label: "Franchising", href: "/franchising" },
     { label: "Contact Us", href: "/contact-us" },
+    { label: "Find Your Market", href: "/find-your-market" },
   ],
   // secondary links (mobile drawer only)
   topNav: [
     { label: "Careers", href: "/careers" },
   ],
-  cta: { label: "Find Your Market", href: "/find-your-market" },
+  // red circle in the nav: straight to the franchise application form
+  cta: { label: "Franchise with us", href: "/franchising#apply-form" },
 };
 
 export const hero = {
@@ -51,7 +54,7 @@ export const hero = {
   line2: "chicken.",
   line3: "Real Texas soul.",
   subtitle:
-    "Marinated, hand-breaded and fried fresh in every restaurant — the way it's been done in Texas since 1952. Now served in 23 markets across the globe.",
+    "Marinated, hand-breaded and fried fresh in every restaurant, the way it's been done in Texas since 1952. Now served in 23 markets across the globe.",
   ctaPrimary: "Explore the menu",
   ctaSecondary: "Find your market",
   video: "/assets/hero-banner.mp4",
@@ -61,7 +64,7 @@ export const hero = {
 export const about = {
   eyebrow: "Our story",
   heading: "It started across the street from the Alamo.",
-  body: "In 1952, George W. Church opened a small chicken stand in San Antonio, Texas — right across from the Alamo. One recipe, hand-battered and fried fresh to order. Seventy-two years later, that same uncompromising craft travels the world, still made by hand, still made fresh, one restaurant at a time.",
+  body: "In 1952, George W. Church opened a small chicken stand in San Antonio, Texas, right across from the Alamo. One recipe, hand-battered and fried fresh to order. Seventy-two years later, that same uncompromising craft travels the world, still made by hand, still made fresh, one restaurant at a time.",
   stats: [
     { value: 1952, label: "Founded in San Antonio", suffix: "" },
     { value: 23, label: "Markets worldwide", suffix: "" },
@@ -71,8 +74,7 @@ export const about = {
   image: "/assets/home-tray.png",
   video: "/assets/built-standards.webm",
   cta: {
-    primary: { label: "Read our story", href: "/our-story" },
-    secondary: { label: "Contact us", href: "/contact-us" },
+    primary: { label: "Follow the journey", href: "/our-story" },
   },
 };
 
@@ -82,7 +84,7 @@ export const services = {
   items: [
     {
       title: "Hand-battered",
-      desc: "Every piece is marinated, then hand-dredged in our signature coating. No factory pre-coat — ever.",
+      desc: "Every piece is marinated, then hand-dredged in our signature coating. No factory pre-coat, ever.",
       icon: "star",
     },
     {
@@ -97,15 +99,15 @@ export const services = {
     },
     {
       title: "Bold by design",
-      desc: "Original or spicy, sandwiches to loaded fries — big Texan flavor built into every bite.",
+      desc: "Original or spicy, sandwiches to loaded fries: big Texan flavor built into every bite.",
       icon: "locate",
     },
   ],
 };
 
 export const featured = {
-  eyebrow: "Limited-time offers",
-  heading: "What's new.",
+  eyebrow: "Our core menu",
+  heading: "Crunch classics.",
   items: [
     {
       title: "Golden Dragon",
@@ -122,7 +124,7 @@ export const featured = {
     {
       title: "The Super Hero",
       tag: "New",
-      desc: "A massively flavorful hero — stacked, saucy and loaded.",
+      desc: "A massively flavorful hero: stacked, saucy and loaded.",
       image: "/assets/ltos/lto-03.png",
     },
   ],
@@ -191,7 +193,7 @@ export const discover = {
 export const menuCategories = {
   eyebrow: "Explore the menu",
   heading: "Pick your crunch.",
-  body: "From bone-in buckets to loaded sandwiches — every category is built on the same hand-battered craft.",
+  body: "From bone-in buckets to loaded sandwiches, every category is built on the same hand-battered craft.",
   items: [
     { title: "Combos", tag: "Meals for one", image: "/assets/categories/combo.jpg", href: "/menu" },
     { title: "Sharing", tag: "Wraps & more", image: "/assets/categories/sharing.jpg", href: "/menu" },
@@ -203,7 +205,7 @@ export const menuCategories = {
 export const downloadApp = {
   eyebrow: "Texas Chicken App",
   heading: "Skip the line. Stack the rewards.",
-  body: "Order ahead, unlock members-only deals and earn a free crunch on us. Your next honey-butter biscuit is one tap away.",
+  body: "Order ahead, unlock members-only deals and earn a free crunch on us. Your next honey-butter biscuit, or spicy sandwich, is one tap away.",
   points: ["Order ahead & pay in-app", "Exclusive app-only deals", "Earn & redeem rewards", "Track your favourites"],
   image: "/assets/home-tray.png",
 };
@@ -305,14 +307,14 @@ export const marketPage = {
     eyebrow: "Global, locally served",
     title: ["Find", "your market."],
     subtitle:
-      "Two names, one recipe: Texas Chicken across the Middle East, Asia-Pacific and Europe, Church's Texas Chicken across the Americas. Pick a region on the map — or find your country in the list below.",
+      "Two names, one recipe: Texas Chicken across the Middle East, Asia-Pacific and Europe, Church's Texas Chicken across the Americas. Pick a region on the map, or find your country in the list below.",
   },
   brands: [
     {
       id: "texas" as const,
       name: "Texas Chicken",
       short: "Texas Chicken",
-      blurb: "The international brand — Middle East, Asia-Pacific and Europe.",
+      blurb: "The international brand: Middle East, Asia-Pacific and Europe.",
     },
     {
       id: "churchs" as const,
@@ -324,12 +326,14 @@ export const marketPage = {
   explorer: {
     eyebrow: "Where we serve",
     heading: "Pick your region.",
-    body: "Every highlighted country is a market hand-battering chicken the exact same way we do in Texas.",
+    /** same text as `heading`, as Title lines — [bracketed] renders in brand red */
+    titleLines: ["Pick your [region.]"],
+    body: "Every highlighted country serves crispy fried chicken, cooked fresh the exact same way we do in Texas.",
     allBrands: "Both brands",
     allLabel: "All markets",
     allName: "Around the world",
     allBlurb:
-      "From the Gulf to South East Asia, Europe to the Caribbean — one recipe, hand-battered fresh in every kitchen. Choose a region to zoom in.",
+      "From the Gulf to South East Asia, Europe to the Caribbean: one recipe, hand-battered fresh in every kitchen. Choose a region to zoom in.",
     selectedLabel: "Selected region",
     selectedMarket: "Selected market",
     hint: "Tap a country to see it up close",
@@ -344,7 +348,7 @@ export const marketPage = {
     allRegions: "All regions",
     allBrands: "All brands",
     showOnMap: "Show on map",
-    empty: "No market matches that search — but new markets open every year.",
+    empty: "No market matches that search, but new markets open every year.",
   },
   regions: [
     {
@@ -352,7 +356,7 @@ export const marketPage = {
       name: "Middle East",
       short: "Middle East",
       blurb:
-        "Our busiest region — drive-thrus, malls and delivery kitchens serving the crunch from Casablanca and Cairo to Riyadh, Baghdad and Muscat.",
+        "Our busiest region: drive-thrus, malls and delivery kitchens serving the crunch from Casablanca and Cairo to Riyadh, Baghdad and Muscat.",
     },
     {
       id: "apac" as const,
@@ -366,7 +370,7 @@ export const marketPage = {
       name: "Europe",
       short: "Europe",
       blurb:
-        "Our newest frontier — the first European and Caucasus kitchens bringing hand-battered Texas chicken to a whole new audience.",
+        "Our newest frontier: the first European and Caucasus kitchens bringing hand-battered Texas chicken to a whole new audience.",
     },
     {
       id: "ams" as const,
@@ -421,7 +425,7 @@ export const menuPage = {
   hero: {
     eyebrow: "The full line-up",
     title: ["The", "menu."],
-    subtitle: "Hand-battered, fried fresh, built bold. Explore every category — then find your nearest restaurant to order.",
+    subtitle: "Crispy fried chicken, spicy sandwiches, wraps and honey-butter biscuits, cooked fresh. Explore every category, then find your nearest restaurant to order.",
   },
   categories: [
     { id: "star-box", title: "Star Box Combos", tag: "Loaded boxes", image: "/assets/menu-cats/categorie-1.png" },
@@ -455,14 +459,14 @@ export const storyPage = {
   hero: {
     eyebrow: "Since 1952",
     title: ["Across from", "the Alamo."],
-    subtitle: "One stand. One recipe. One promise — hand-battered, fried fresh, every single time. This is how a San Antonio chicken stand became a taste the world drives across town for.",
+    subtitle: "One stand. One recipe. One promise: hand-battered, fried fresh, every single time. This is how a San Antonio chicken stand became a taste the world drives across town for.",
   },
   heritage: {
     eyebrow: "Heritage & founding",
     heading: "It started across from the Alamo.",
     body: [
-      "In 1952, George W. Church opened his first Church's Fried Chicken To-Go stand across the street from the Alamo in San Antonio, Texas. He was 65. No seating, no frills — just chicken marinated and hand-battered to order, fried until the coating shattered.",
-      "That obsession with craft is the only thing we've never changed. Seventy-two years later, the same uncompromising recipe travels the world — still made by hand, still fried fresh, one restaurant at a time.",
+      "In 1952, George W. Church opened his first Church's Fried Chicken To-Go stand across the street from the Alamo in San Antonio, Texas. He was 65. No seating, no frills, just chicken marinated and hand-battered to order, fried until the coating shattered.",
+      "That obsession with craft is the only thing we've never changed. Seventy-two years later, the same uncompromising recipe travels the world, still made by hand, still fried fresh, one restaurant at a time.",
     ],
     image: "/assets/story/heritage-chicken.jpg",
     place: "San Antonio, TX · 1952",
@@ -470,7 +474,7 @@ export const storyPage = {
   evolution: {
     eyebrow: "Brand evolution",
     heading: "One recipe. Two names. One crunch.",
-    body: "Born as Church's in San Antonio and known as Texas Chicken across most of the world, the dual brand carries a single hand-battered heritage under one badge — Church's Texas Chicken.",
+    body: "Born as Church's in San Antonio and known as Texas Chicken across most of the world, the dual brand carries a single hand-battered heritage under one badge: Church's Texas Chicken.",
     logos: [
       { src: "/assets/logo-churchs-badge.svg", label: "Church's · The Americas" },
       { src: "/assets/logo-dual-badge.svg", label: "Texas Chicken · Worldwide" },
@@ -479,9 +483,9 @@ export const storyPage = {
   leadership: {
     eyebrow: "Leadership team",
     heading: "Operators first. Brand-builders always.",
-    body: "Seventy-two years of craft doesn't run itself. Meet the leaders steering Texas Chicken across 23 markets — and keeping every piece hand-battered.",
-    cta: "Contact us",
-    ctaHref: "/contact-us",
+    body: "Seventy-two years of craft doesn't run itself. Meet the leaders steering Church's Texas Chicken across 25+ markets, and keeping every piece hand-battered and cooked fresh.",
+    cta: "Join us",
+    ctaHref: "/careers",
   },
   numbers: {
     eyebrow: "By the numbers",
@@ -498,7 +502,7 @@ export const storyPage = {
       {
         titleImage: "/assets/story/mission-title.webp",
         alt: "Our Mission",
-        body: "To serve authentic, bold, fresh fried chicken prepared in small batches, guided by clear standards, real kitchen discipline, and consistent execution that guests can trust in every market we serve.",
+        body: "To serve authentic, bold, crispy fried chicken cooked fresh in small batches, guided by clear standards, real kitchen discipline, and consistent execution that guests can trust in every market we serve.",
       },
       {
         titleImage: "/assets/story/vision-title.webp",
@@ -517,18 +521,56 @@ export const storyPage = {
     ],
   },
   timeline: [
-    { year: "1952", title: "The first stand", desc: "George W. Church opens across from the Alamo in San Antonio. Two pieces, a roll and jalapeños." },
-    { year: "1962", title: "Ten years, a following", desc: "A cult crunch. Locals line up daily; the hand-battered method becomes gospel." },
-    { year: "1970s", title: "Texas goes national", desc: "The recipe spreads across the United States, one freshly-fried restaurant at a time." },
-    { year: "1990s", title: "Crossing oceans", desc: "The brand travels internationally as Texas Chicken, carrying the same coating worldwide." },
-    { year: "2000s", title: "Around the world", desc: "MENA, Southeast Asia and the Pacific fall for the Texas crunch." },
-    { year: "Today", title: "23 markets, one craft", desc: "1,500+ restaurants. Still hand-battered. Still fried fresh. Still bold." },
+    {
+      year: "1952",
+      title: "The first stand",
+      place: "San Antonio, Texas",
+      desc: "George W. Church opens a walk-up stand across from the Alamo: crispy fried chicken, hand-battered and cooked fresh to order. Two pieces, a roll and jalapeños.",
+      image: "/assets/story/timeline/1952-first-stand.webp",
+      inset: { image: "/assets/story/timeline/1952-george-church.webp", caption: "George W. Church Sr., founder" },
+    },
+    {
+      year: "1962",
+      title: "Ten years, a following",
+      place: "Across Texas",
+      desc: "Locals line up daily for the crunch. More stands open, and the hand-battered, cooked-fresh method becomes the house rule.",
+      image: "/assets/story/timeline/1962-stand.webp",
+    },
+    {
+      year: "1970s",
+      title: "Texas goes national",
+      place: "United States",
+      desc: "Walk-up windows and drive-thrus carry the recipe across the country, one freshly fried restaurant at a time.",
+      image: "/assets/story/timeline/1970s-drive-thru.webp",
+      inset: { image: "/assets/story/timeline/1970s-frying.webp", caption: "Hand-battered, fried fresh" },
+    },
+    {
+      year: "1990s",
+      title: "Crossing oceans",
+      place: "Worldwide",
+      desc: "The brand travels internationally as Texas Chicken, carrying the same coating and the same standards to new markets.",
+      image: "/assets/story/timeline/1990s-restaurant.webp",
+    },
+    {
+      year: "2000s",
+      title: "Around the world",
+      place: "Middle East & Asia Pacific",
+      desc: "MENA, Southeast Asia and the Pacific fall for the Texas crunch, from Gulf malls to city high streets.",
+      image: "/assets/story/timeline/2000s-texas-chicken.webp",
+    },
+    {
+      year: "Today",
+      title: "25+ markets, one craft",
+      place: "Four continents",
+      desc: "1,500+ restaurants. Still hand-battered. Still cooked fresh. Still the taste of Texas, done right.",
+      image: "/assets/franchising/world/why1.jpg",
+    },
   ],
   values: [
     { title: "Hand-crafted", desc: "If a machine could do it, it wouldn't be us. Every piece is battered by hand." },
     { title: "Fresh, never held", desc: "Fried to order in-restaurant. We'd rather you wait than serve you yesterday." },
     { title: "Boldly Texan", desc: "Big flavor, big hospitality, no apologies. That's the San Antonio spirit." },
-    { title: "One recipe, everywhere", desc: "Riyadh or San Antonio — the crunch is identical. That's the whole point." },
+    { title: "One recipe, everywhere", desc: "Riyadh or San Antonio, the crunch is identical. That's the whole point." },
   ],
 };
 
@@ -539,12 +581,12 @@ export const communityPage = {
   hero: {
     eyebrow: "Bigger than chicken",
     title: ["Good crunch,", "good neighbours."],
-    subtitle: "We've fed a lot of people over 70 years — and we take feeding communities seriously. Here's how Texas Chicken shows up beyond the counter.",
+    subtitle: "We've fed a lot of people over 70 years, and we take feeding communities seriously. Here's how Texas Chicken shows up beyond the counter.",
   },
   pillars: [
     { title: "Feeding communities", desc: "Meal donations and partnerships with local food banks in every market we serve.", stat: "2M+", statLabel: "Meals shared" },
     { title: "Local jobs", desc: "Restaurants run by local teams, offering first jobs and real career paths.", stat: "40K+", statLabel: "Team members" },
-    { title: "Halal & trusted", desc: "Certified halal across our MENA and APAC markets — food everyone can share.", stat: "100%", statLabel: "Halal in-region" },
+    { title: "Halal & trusted", desc: "Certified halal across our MENA and APAC markets, food everyone can share.", stat: "100%", statLabel: "Halal in-region" },
     { title: "Youth & sport", desc: "Backing grassroots sport and youth programs where our restaurants call home.", stat: "150+", statLabel: "Programs backed" },
   ],
   initiatives: [
@@ -562,7 +604,7 @@ export const newsPage = {
     eyebrow: "Newsroom",
     title: ["What's new", "at Texas."],
     subtitle:
-      "Press releases from the Texas Chicken® and Church's Texas Chicken® press room — new markets, new partners, new milestones.",
+      "Press releases from the Texas Chicken® and Church's Texas Chicken® press room: new markets, new partners, new milestones.",
   },
   /** Where every release below comes from. */
   source: {
@@ -576,7 +618,7 @@ export const newsPage = {
     category: "Heritage",
     title: "It started across from the Alamo.",
     excerpt:
-      "In 1952, George W. Church Sr. opened a single walk-up stand across the street from the Alamo in San Antonio — one recipe, hand-battered and fried fresh all day long.",
+      "In 1952, George W. Church Sr. opened a single walk-up stand across the street from the Alamo in San Antonio: one recipe, hand-battered and fried fresh all day long.",
     date: "San Antonio, Texas",
     image: "/assets/food-crispy-chicken.png",
     href: "/our-story",
@@ -606,7 +648,7 @@ export const newsPage = {
       category: "Awards",
       date: "November 14, 2022",
       excerpt:
-        "The brand landed at No. 87 on the Franchise Times Top 500 — a ranking of the largest U.S.-based franchise systems, and a marker of momentum at home and abroad.",
+        "The brand landed at No. 87 on the Franchise Times Top 500, a ranking of the largest U.S.-based franchise systems, and a marker of momentum at home and abroad.",
       image: "/assets/news/franchise-times-top-500.jpg",
       href: "https://franchise.texaschicken.com/PressRoom/ChurchsTexasChickenRanksintheFranchiseTimesTop500AmongtheLargestUSBasedFranchiseSystems",
     },
@@ -615,7 +657,7 @@ export const newsPage = {
       category: "Brand",
       date: "October 27, 2022",
       excerpt:
-        "The refreshed restaurant design — bolder signage, dedicated delivery pickup and charging stations — anchors the development of 20 new restaurants in New Zealand.",
+        "The refreshed restaurant design (bolder signage, dedicated delivery pickup and charging stations) anchors the development of 20 new restaurants in New Zealand.",
       image: "/assets/news/new-restaurant-design.jpg",
       href: "https://franchise.texaschicken.com/PressRoom/TexasChickensNewRestaurantDesignPropelsInternationalExpansion",
     },
@@ -633,7 +675,7 @@ export const newsPage = {
       category: "Brand",
       date: "August 7, 2022",
       excerpt:
-        "Church's Texas Chicken is the international sister brand of Church's Chicken, named to carry its Texas origins abroad — with 61 Canadian sites planned for the year.",
+        "Church's Texas Chicken is the international sister brand of Church's Chicken, named to carry its Texas origins abroad, with 61 Canadian sites planned for the year.",
       image: "/assets/news/take-me-to-church.jpg",
       href: "https://franchise.texaschicken.com/PressRoom/TAKEMETOCHURCH",
     },
@@ -642,7 +684,7 @@ export const newsPage = {
       category: "Expansion",
       date: "June 22, 2022",
       excerpt:
-        "With more than 50 Canadian restaurants trading, the brand set out to double that count inside a year — recruiting franchisees who share its standards.",
+        "With more than 50 Canadian restaurants trading, the brand set out to double that count inside a year, recruiting franchisees who share its standards.",
       image: "/assets/news/bold-plans-canada.jpg",
       href: "https://franchise.texaschicken.com/PressRoom/CHURCHSTEXASCHICKENHASBOLDPLANSFORCANADA",
     },
@@ -656,7 +698,7 @@ export const newsPage = {
       href: "https://franchise.texaschicken.com/PressRoom/TexasChickenMalaysiaEarnsSilverPutraBrandAwardforSecondConsecutiveYear",
     },
     {
-      title: "Take me to Church — Church's Chicken™ is taking Canada by storm",
+      title: "Take me to Church: Church's Chicken™ is taking Canada by storm",
       category: "Expansion",
       date: "March 28, 2022",
       excerpt:
@@ -705,7 +747,7 @@ export const newsPage = {
       category: "Milestones",
       date: "July 21, 2021",
       excerpt:
-        "With franchise partner Grupo GES, the brand opened its 100th Mexican location in Ciudad del Carmen, Campeche — a free-standing restaurant with new ordering technology.",
+        "With franchise partner Grupo GES, the brand opened its 100th Mexican location in Ciudad del Carmen, Campeche, a free-standing restaurant with new ordering technology.",
       image: "/assets/news/mexico-100th-restaurant.jpeg",
       href: "https://franchise.texaschicken.com/PressRoom/CHURCHSTEXASCHICKENOPENSITS100THRESTAURANTINMEXICO",
     },
@@ -720,7 +762,7 @@ export const franchisePage = {
     eyebrow: "Franchise with us",
     title: ["Own a piece", "of the crunch."],
     subtitle:
-      "It started 72 years ago when George W. Church began selling chicken across from the Alamo in San Antonio, Texas. Today more than 1,500 restaurants trade in 24 countries — and we expect to bring our brands to more than 20 new international markets.",
+      "It started 72 years ago when George W. Church began selling chicken across from the Alamo in San Antonio, Texas. Today more than 1,500 restaurants trade in 24 countries, and we expect to bring our brands to more than 20 new international markets.",
   },
   /** Headline proof — every figure is stated on franchise.texaschicken.com. */
   proof: [
@@ -748,19 +790,24 @@ export const franchisePage = {
       "One recipe, hand-battered and fried fresh, has carried this brand from a single San Antonio stand to restaurants on four continents. It travels because the product is genuinely craveable and the operating model is proven.",
       "Two names, one kitchen: Texas Chicken across the Middle East, Asia-Pacific and Europe; Church's Texas Chicken across the Americas and the Caribbean.",
     ],
-    /** Recent openings named on the Why Us page. */
+    /** "See us opening around the world" — slides (order + images) from franchise.texaschicken.com/whyus. */
     openings: [
-      "Texas Chicken™ Qatar",
-      "Texas Chicken™ UAE — Garhoud",
-      "Texas Chicken™ UAE — Dubai Mall",
-      "Texas Chicken™ UAE — JBR",
-      "Church's Texas Chicken® — Mexico",
+      { name: "Texas Chicken™ Qatar", image: "/assets/franchising/world/why1.jpg" },
+      { name: "Texas Chicken™ UAE, Garhoud", image: "/assets/franchising/world/why4.jpg" },
+      { name: "Texas Chicken™ UAE, Dubai Mall", image: "/assets/franchising/world/why6.jpg" },
+      { name: "Texas Chicken™ UAE, JBR", image: "/assets/franchising/world/why7.jpg" },
+      { name: "Texas Chicken™ Qatar", image: "/assets/franchising/world/why3.jpg" },
+      { name: "Church's Texas Chicken™ Mexico", image: "/assets/franchising/world/why11.jpg" },
+      { name: "Texas Chicken™ UAE, JBR", image: "/assets/franchising/world/why8.jpg" },
+      { name: "Church's Texas Chicken™ Mexico", image: "/assets/franchising/world/why12.jpg" },
+      { name: "Texas Chicken™ UAE, JBR", image: "/assets/franchising/world/why9.jpg" },
+      { name: "Church's Texas Chicken™ Mexico", image: "/assets/franchising/world/why10.jpg" },
     ],
   },
 
   opportunities: {
     heading: "Identify an international territory near you.",
-    body: "Every country highlighted on the map below is still open — we have no restaurants there yet. We are considering inquiries for these markets, but circumstances may affect whether we proceed with the application and approval process.",
+    body: "Every country highlighted on the map below is still open: we have no restaurants there yet. We are considering inquiries for these markets, but circumstances may affect whether we proceed with the application and approval process.",
     usNote:
       "Opportunities inside the United States are handled separately by Church's Texas Chicken®.",
     /** US franchising lives on its own site, not on texaschicken.com */
@@ -770,29 +817,29 @@ export const franchisePage = {
       allLabel: "Everywhere",
       openLabel: "Open territory",
       servedLabel: "Already serving",
-      usLabel: "United States — Church's",
+      usLabel: "United States (Church's)",
       /** short form, for the search dropdown's right-hand tag */
       usTag: "Church's",
       clear: "Clear search",
       hint: "Tap a highlighted country to start an enquiry",
-      openBody: "No Texas Chicken restaurants here yet — this territory is open for development.",
+      openBody: "No Texas Chicken restaurants here yet. This territory is open for development.",
       servedBody: "We already operate in this market. Visit the local site to see the menu and restaurants.",
       visit: "Visit the site",
       enquire: "Enquire about this territory",
       oneOpen: "open territory",
       manyOpen: "open territories",
       searchPlaceholder: "Search for your country…",
-      empty: "No country matches that search — try another spelling, or clear the filters.",
+      empty: "No country matches that search. Try another spelling, or clear the filters.",
     },
   },
 
   investment: {
     profileHeading: "The partner we're looking for",
     profile: [
-      { title: "Food service or retail experience", desc: "You have run customer-facing operations before, at scale." },
-      { title: "Multi-unit portfolio company", desc: "You are set up to develop and operate more than one restaurant." },
-      { title: "Proven real-estate track record", desc: "A history of securing high-quality sites in your market." },
-      { title: "Shared values", desc: "The same standards for product, people and hospitality that we hold." },
+      { icon: "store", title: "Food service or retail experience", desc: "You have run customer-facing operations before, at scale." },
+      { icon: "units", title: "Multi-unit portfolio company", desc: "You are set up to develop and operate more than one restaurant." },
+      { icon: "site", title: "Proven real-estate track record", desc: "A history of securing high-quality sites in your market." },
+      { icon: "values", title: "Shared values", desc: "The same standards for product, people and hospitality that we hold." },
     ],
     termsHeading: "Commercial terms",
     terms: [
@@ -875,7 +922,7 @@ export const franchisePage = {
             title: "Programmes",
             items: [
               "Strategic business planning",
-              "MIT training — a five-week mandatory course for owners and two managers",
+              "MIT training: a five-week mandatory course for owners and two managers",
               "System initiatives",
               "Cascade training",
               "Executing in-restaurant and local store marketing activities",
@@ -900,7 +947,7 @@ export const franchisePage = {
             title: "Ongoing",
             items: [
               "Brand-initiated campaigns and product innovation",
-              "Digital channels — mobile app and online ordering",
+              "Digital channels: mobile app and online ordering",
               "Annual market planning",
               "Social media platform support",
             ],
@@ -911,7 +958,7 @@ export const franchisePage = {
         id: "supply-chain",
         title: "Supply chain",
         summary:
-          "Quality assurance and supply chain teams make sure food, packaging, equipment and distribution meet the standard — sourcing local first, then regional, then leveraging global buying power.",
+          "Quality assurance and supply chain teams make sure food, packaging, equipment and distribution meet the standard, sourcing local first, then regional, then leveraging global buying power.",
         groups: [
           {
             title: "Focus areas",
@@ -942,13 +989,13 @@ export const contactPage = {
   hero: {
     eyebrow: "Get in touch",
     title: ["Let's talk."],
-    subtitle: "Questions, feedback, press or partnerships — we're all ears. Reach the right team below.",
+    subtitle: "Questions, feedback, press or partnerships? We're all ears. Reach the right team below.",
   },
   channels: [
     { title: "General enquiries", value: "hello@texaschicken.example", note: "We reply within 2 business days." },
-    { title: "Franchising", value: "franchise@texaschicken.example", note: "For market & partnership opportunities." },
-    { title: "Press & media", value: "press@texaschicken.example", note: "Newsroom, assets and interviews." },
-    { title: "Careers", value: "careers@texaschicken.example", note: "Join a team of 40,000+." },
+    { title: "Franchising", value: "franchise@texaschicken.example", note: "For market & partnership opportunities.", href: "/franchising" },
+    { title: "Press & media", value: "press@texaschicken.example", note: "Newsroom, assets and interviews.", href: "/news" },
+    { title: "Careers", value: "careers@texaschicken.example", note: "Join a team of 40,000+.", href: "/careers" },
   ],
   hq: {
     label: "Global support office",
@@ -992,7 +1039,7 @@ export const appPage = {
   findUs: {
     title: "Find",
     highlight: "your nearest store",
-    body: "Whether you're dining in, picking up, or ordering delivery, Texas Chicken is ready when you are. Find your nearest location and enjoy it your way.",
+    body: "Whether you're dining in, picking up, or ordering delivery, our crispy fried chicken is cooked fresh and ready when you are. Find your nearest location and enjoy the taste of Texas, done right.",
     cta: "Find Us",
     ctaHref: "/find-your-market",
     map: "/assets/app-data/findus-map.png",
@@ -1046,9 +1093,8 @@ export const footer = {
     ] },
   ],
   legal: [
-    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Privacy & Cookies Policy", href: "/privacy" },
     { label: "Terms & Conditions", href: "/terms" },
-    { label: "Sitemap", href: "/sitemap" },
   ],
   social: ["facebook", "google", "star", "apple"],
 };
@@ -1060,14 +1106,14 @@ export const leadershipPage = {
   hero: {
     eyebrow: "Leadership team",
     title: ["The people", "behind the crunch."],
-    subtitle: "Seventy-two years of craft doesn't run itself. Meet the leaders steering Texas Chicken across 23 markets — and keeping every piece hand-battered.",
+    subtitle: "Seventy-two years of craft doesn't run itself. Meet the leaders steering Church's Texas Chicken across 25+ markets, and keeping every piece hand-battered and cooked fresh.",
   },
   intro: {
     heading: "Operators first. Brand-builders always.",
     body: "Our leadership blends deep restaurant operations with global brand experience. Together they protect the recipe, support our franchisees, and grow the Texas Chicken name the right way.",
   },
   execs: [
-    { name: "Roland Gonzalez", image: "/assets/leadership/exec-1.jpg", role: "Chief Executive Officer", bio: "Sets the vision for the global brand and champions the franchisee-first culture that drives results." },
+    { name: "Roland Gonzalez", image: "/assets/leadership/ceo-roland.jpg", role: "Chief Executive Officer", bio: "Sets the vision for the global brand and champions the franchisee-first culture that drives results." },
     { name: "Amelia Hart", image: "/assets/leadership/exec-2.jpg", role: "Chief Operating Officer", bio: "Owns the operational playbook that keeps the crunch identical from Riyadh to San Antonio." },
     { name: "David Okafor", image: "/assets/leadership/exec-3.jpg", role: "Chief Marketing Officer", bio: "Leads the bold, Texas-proud brand voice across every market and every menu drop." },
     { name: "Priya Nair", image: "/assets/leadership/exec-4.jpg", role: "Chief Development Officer", bio: "Guides new-market entry and the franchise pipeline from first handshake to grand opening." },
@@ -1076,7 +1122,7 @@ export const leadershipPage = {
   ],
   press: {
     heading: "Press & media",
-    body: "Journalists and prospective franchisees — request bios, headshots and interviews through our media team.",
+    body: "Journalists and prospective franchisees can request bios, headshots and interviews through our media team.",
     email: "press@texaschicken.example",
   },
 };
@@ -1095,9 +1141,9 @@ export const careersPage = {
     body: "We hire for heart and train for skill. Whether it's your first job or your next big move, you'll learn from people who care about doing things properly.",
     points: [
       { title: "Real career paths", desc: "Most of our restaurant leaders started behind the counter. We promote from within." },
-      { title: "Learn the craft", desc: "Hands-on training through the Team Texas academy — hospitality skills that last." },
+      { title: "Learn the craft", desc: "Hands-on training through the Team Texas academy: hospitality skills that last." },
       { title: "Global opportunity", desc: "23 markets and growing. Great people travel far with us." },
-      { title: "Culture that delivers", desc: "Bold brand, big hearts, high standards — and we have fun doing it." },
+      { title: "Culture that delivers", desc: "Bold brand, big hearts, high standards, and we have fun doing it." },
     ],
   },
   stats: [
@@ -1126,21 +1172,21 @@ export const faqsPage = {
   hero: {
     eyebrow: "Help centre",
     title: ["Questions?", "We've got answers."],
-    subtitle: "Everything you might want to know about the brand, the food, the app and joining the family — in one place.",
+    subtitle: "Everything you might want to know about the brand, the food, the app and joining the family, in one place.",
   },
   groups: [
     {
       title: "About the brand",
       items: [
         { q: "Where did Texas Chicken start?", a: "In 1952, George W. Church opened his first stand across from the Alamo in San Antonio, Texas. That hand-battered, fried-fresh craft is still the heart of everything we do." },
-        { q: "Are Texas Chicken and Church's the same brand?", a: "Yes — it's a dual brand. Known as Church's Texas Chicken in the Americas and Texas Chicken across most international markets, with one shared recipe and heritage." },
+        { q: "Are Texas Chicken and Church's the same brand?", a: "Yes, it's a dual brand. Known as Church's Texas Chicken in the Americas and Texas Chicken across most international markets, with one shared recipe and heritage." },
         { q: "How many markets are you in?", a: "We operate 1,500+ restaurants across 23 markets, run by independent franchisees in the Middle East, Asia Pacific and beyond." },
       ],
     },
     {
       title: "Menu & allergens",
       items: [
-        { q: "Is your chicken really hand-battered?", a: "Every piece is marinated, hand-breaded and fried fresh in-restaurant — never pre-made or held. That's the whole point." },
+        { q: "Is your chicken really hand-battered?", a: "Every piece is marinated, hand-breaded and fried fresh in-restaurant, never pre-made or held. That's the whole point." },
         { q: "Do you have allergen and nutrition information?", a: "Yes. Allergen and nutrition details vary slightly by market and local supplier. Check your local market site or ask in-restaurant for the latest." },
         { q: "Is the food halal?", a: "Our restaurants across the MENA and APAC regions are certified halal. Certification is displayed in-restaurant and on local market sites." },
       ],
@@ -1156,7 +1202,7 @@ export const faqsPage = {
     {
       title: "Franchising",
       items: [
-        { q: "Can I open a Texas Chicken franchise?", a: "Yes — we're actively expanding. We look for partners with local market knowledge, operational capability and a passion for the brand." },
+        { q: "Can I open a Texas Chicken franchise?", a: "Yes, we're actively expanding. We look for partners with local market knowledge, operational capability and a passion for the brand." },
         { q: "What support do franchisees get?", a: "End-to-end: site selection, build-out, training, marketing and an operational playbook that keeps the crunch consistent from day one." },
         { q: "How do I apply?", a: "Head to our Franchising page and submit an inquiry. Our development team will be in touch to align on territory and investment." },
       ],
@@ -1175,21 +1221,15 @@ export const faqsPage = {
 /* --------------------------------------------------------------------------
  * PRIVACY policy (/privacy)
  * ------------------------------------------------------------------------ */
+/* Verbatim policy text lives in lib/privacy-policy.ts (from canada.churchstexaschicken.com/privacy). */
 export const privacyPage = {
   hero: {
     eyebrow: "Legal",
-    title: ["Privacy", "policy."],
-    subtitle: "How Texas Chicken collects, uses and protects your information across our global websites and app.",
+    title: ["Privacy & Cookies", "Policy."],
+    subtitle: privacyPolicy.subtitle,
   },
-  updated: "Last updated: July 2026",
-  sections: [
-    { id: "overview", title: "Overview", body: ["This Privacy Policy explains how Texas Chicken International and its franchisees handle personal information collected through our global websites and app. Individual markets may operate local sites governed by additional local notices.", "By using our services you agree to the practices described here. Where local law requires, the local market notice takes precedence."] },
-    { id: "collect", title: "Information we collect", body: ["We collect information you provide directly — such as your name, contact details and order history — and information collected automatically, including device data, approximate location and usage analytics.", "We do not knowingly collect personal information from children without appropriate consent."] },
-    { id: "use", title: "How we use information", body: ["To process orders and rewards, personalise your experience, improve our products and services, respond to inquiries, and send you relevant offers where you've opted in.", "We never sell your personal information."] },
-    { id: "cookies", title: "Cookie policy reference", body: ["Our sites use cookies and similar technologies to keep the site working, remember your preferences and measure performance. You can manage cookies through your browser settings or our on-site preference controls.", "For full detail, see the cookie notice presented when you first visit a market site."] },
-    { id: "rights", title: "Your rights", body: ["Depending on your region, you may have the right to access, correct, delete or restrict the use of your personal information. To exercise these rights, contact us using the details below."] },
-    { id: "contact", title: "Contact", body: ["Questions about this policy? Reach our team at privacy@texaschicken.example."] },
-  ],
+  updated: privacyPolicy.updated,
+  sections: privacyPolicy.sections,
 };
 
 /* --------------------------------------------------------------------------
@@ -1206,48 +1246,9 @@ export const termsPage = {
     { id: "acceptance", title: "Acceptance of terms", body: ["By accessing or using Texas Chicken's global websites and app, you agree to be bound by these Terms of Use. If you do not agree, please do not use our services."] },
     { id: "use", title: "Use of the site", body: ["You may use our sites for lawful, personal, non-commercial purposes. You agree not to disrupt, reverse-engineer or misuse the site, or to use it in a way that infringes the rights of others."] },
     { id: "orders", title: "Orders & availability", body: ["Menu items, offers and pricing vary by market and are operated by independent franchisees. Availability is not guaranteed and may change without notice.", "Rewards and app features are subject to their own program terms presented in-app."] },
-    { id: "ip", title: "Intellectual property", body: ["All content on our sites — text, graphics, logos and imagery — is owned by or licensed to Texas Chicken and protected by intellectual-property laws."] },
+    { id: "ip", title: "Intellectual property", body: ["All content on our sites (text, graphics, logos and imagery) is owned by or licensed to Texas Chicken and protected by intellectual-property laws."] },
     { id: "trademark", title: "Trademark notice (dual brand)", body: ["Church's Texas Chicken®, Texas Chicken® and associated logos are registered trademarks. The brand operates under the Church's Texas Chicken name in the Americas and Texas Chicken across most international markets.", "Use of these marks without prior written permission is strictly prohibited."] },
     { id: "liability", title: "Limitation of liability", body: ["Our sites are provided \"as is\". To the fullest extent permitted by law, Texas Chicken is not liable for any indirect or consequential loss arising from your use of the site."] },
     { id: "contact", title: "Contact", body: ["Questions about these terms? Reach our team at legal@texaschicken.example."] },
   ],
 };
-
-/* --------------------------------------------------------------------------
- * SITEMAP page (/sitemap) — human-readable index of the whole site
- * ------------------------------------------------------------------------ */
-export const siteMapGroups = [
-  {
-    title: "Brand & consumer",
-    desc: "The pages guests explore most.",
-    pages: [
-      { name: "Homepage", href: "/", note: "Brand entry point" },
-      { name: "Our Story", href: "/our-story", note: "Heritage & the dual brand" },
-      { name: "Menu", href: "/menu", note: "Signature items & categories" },
-      { name: "App & Rewards", href: "/app", note: "Order ahead & earn points" },
-      { name: "Community", href: "/community", note: "How we show up locally" },
-      { name: "News", href: "/news", note: "Press releases & brand stories" },
-      { name: "Find Your Market", href: "/find-your-market", note: "Locate your local site" },
-    ],
-  },
-  {
-    title: "Business & corporate",
-    desc: "For partners, press and talent.",
-    pages: [
-      { name: "Leadership Team", href: "/our-story/leadership", note: "Executive bios" },
-      { name: "Franchising", href: "/franchising", note: "Own a piece of the crunch" },
-      { name: "Careers", href: "/careers", note: "Join Team Texas" },
-      { name: "Contact Us", href: "/contact-us", note: "Reach the right team" },
-    ],
-  },
-  {
-    title: "Utility & legal",
-    desc: "The essentials.",
-    pages: [
-      { name: "FAQs", href: "/faqs", note: "Questions answered" },
-      { name: "Privacy Policy", href: "/privacy", note: "How we handle your data" },
-      { name: "Terms & Conditions", href: "/terms", note: "The fine print" },
-      { name: "Sitemap", href: "/sitemap", note: "You are here" },
-    ],
-  },
-];

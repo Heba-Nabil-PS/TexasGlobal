@@ -27,18 +27,15 @@ export function StoryHeroV2({
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const foodY = useTransform(scrollYProgress, [0, 1], [0, 140]);
-  const ghostX = useTransform(scrollYProgress, [0, 1], [0, -160]);
 
   return (
-    <section ref={ref} className="relative flex items-center overflow-hidden bg-[#d76b00] pb-12 pt-32 text-third md:pb-14 md:pt-36 lg:min-h-[100svh]">
-      {/* ghost year */}
-      <motion.span
+    <section ref={ref} className="relative flex items-center overflow-hidden bg-[#FFF4DC] pb-10 pt-32 text-third md:pb-14 md:pt-36 lg:min-h-[100svh]">
+      {/* Light warm tint (not full brand yellow) so the yellow menu bar stays visible;
+          a soft yellow glow sits behind the 1952 photo. */}
+      <div
         aria-hidden
-        style={{ x: ghostX }}
-        className="display pointer-events-none absolute -bottom-10 left-0 select-none whitespace-nowrap text-[42vw] leading-none text-white/20 md:text-[30vw]"
-      >
-        1952
-      </motion.span>
+        className="pointer-events-none absolute -right-[10%] top-1/2 size-[70vw] max-w-[900px] -translate-y-1/2 rounded-full bg-secondary/35 blur-[90px] lg:size-[55vw]"
+      />
 
       <div className="container-tx relative z-10 grid w-full items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
         <div>

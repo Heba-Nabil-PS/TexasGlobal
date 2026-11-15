@@ -2,8 +2,6 @@
 
 import { useCallback, useRef, useState } from "react";
 import { useLenis } from "lenis/react";
-import MarketHeroV2 from "@/components/v2/pages/MarketHeroV2";
-import Button from "@/components/ui/Button";
 // import CTABand from "@/components/sections/CTABand";
 import FinalCTA from "@/components/sections/FinalCTA";
 import MarketExplorer from "@/components/sections/MarketExplorer";
@@ -44,22 +42,11 @@ export default function MarketPage() {
 
   return (
     <>
-      <MarketHeroV2
-        eyebrow={marketPage.hero.eyebrow}
-        title={[marketPage.hero.title[0], `[${marketPage.hero.title[1]}]`]}
-        body={marketPage.hero.subtitle}
-      >
-        <Button href="/menu" variant="red" pulse>
-          Explore the menu
-        </Button>
-        <Button href="/franchising" variant="ghost">
-          Franchise with us
-        </Button>
-      </MarketHeroV2>
-
-      {/* Interactive region map */}
+      {/* Interactive region map — its "Pick your region." heading is the page title (h1).
+          The old hero and "Find your market" title are gone; restore from git history if needed. */}
       <div ref={mapRef} id="map" className="scroll-mt-24">
         <MarketExplorer
+          pageTitle
           brand={brand}
           onBrandChange={setBrand}
           region={region}

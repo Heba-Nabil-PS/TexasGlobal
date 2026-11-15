@@ -88,7 +88,7 @@ function PinnedRow({ slides }: { slides: Slide[] }) {
         <Header aside={<ScrollProgress progress={scrollYProgress} count={slides.length} />} />
         <motion.div ref={trackRef} style={{ x, paddingInline: GUTTER, willChange: "transform" }} className="mt-10 flex w-max gap-8">
           {slides.map((s, k) => (
-            <SpotlightCard key={s.href + k} slide={s} className="w-[min(680px,52vw)]" imageClass="h-[min(400px,40vh)]" />
+            <SpotlightCard key={s.href + k} slide={s} className="w-[min(680px,52vw)]" imageClass="h-[clamp(300px,calc(100svh-25rem),520px)]" />
           ))}
         </motion.div>
       </div>
@@ -121,7 +121,7 @@ function MobileCarousel({ slides }: { slides: Slide[] }) {
   const startX = useRef<number | null>(null);
 
   return (
-    <section className="relative overflow-hidden bg-white pb-24 pt-10 md:hidden">
+    <section className="relative overflow-hidden bg-white pb-10 pt-10 md:hidden">
       <Header aside={<SliderControls index={i} count={slides.length} onPrev={() => go(i - 1)} onNext={() => go(i + 1)} />} />
       <div className="container-tx mt-12">
         <div
@@ -144,7 +144,7 @@ function MobileCarousel({ slides }: { slides: Slide[] }) {
               key={s.href + k}
               slide={s}
               className={`w-[86vw] transition-opacity duration-500 ${k === i ? "opacity-100" : "opacity-50"}`}
-              imageClass="h-[300px]"
+              imageClass="h-[360px]"
             />
           ))}
         </div>

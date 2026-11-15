@@ -1,13 +1,12 @@
 "use client";
 
-import BrandArrow from "@/components/ui/BrandArrow";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import Button from "@/components/ui/Button";
 import { BRAND_STAR_VIEWBOX, BrandStarShape } from "@/components/ui/BrandStar";
 import { ShootingStar, V2 } from "@/components/v2/kit";
 import { menuV2 } from "@/lib/content-v2/menu";
-import { ease, fadeUp, inView } from "@/lib/motion";
+import { ease, inView } from "@/lib/motion";
 
 /**
  * Explore our menu — a 1:1 rebuild of the supplied artwork
@@ -17,6 +16,8 @@ import { ease, fadeUp, inView } from "@/lib/motion";
  *  - words are SVG text stretched to the artwork's exact line widths
  *    (textLength); font size = cap height / 0.734 (brand font cap ratio)
  *  - the tray is an HTML layer positioned in % of the frame
+ * The category reel (PickYourCrunchV2) follows as its own section (it pins, and
+ * this section clips overflow). The body copy + CTAs are hidden for now.
  * Below md the small eyebrow + tagline would be unreadable at frame scale, so
  * they switch to regular HTML text.
  */
@@ -33,17 +34,20 @@ const M = {
   // image has transparent padding (~4% left, ~9% right), so the frame is wider than
   // the visible tray: visible food spans ~877 → 1350 (touching "MENU"), bottom ~581
   tray: { x: 856, y: 227, w: 543 },
+  // the animated combo (802×520, cropped tight to the final layout): same visible
+  // food span ~877 → 1350, bottom ~585
+  video: { x: 873, y: 274, w: 480 },
   tagline: { x: 535, base: 636, cap: 23, w: 1015 },
 };
 
 const pct = (v: number, of: number) => `${(v / of) * 100}%`;
 
 export default function ExploreMenuV2() {
-  const { eyebrow, lines, tagline, image, body, ctaPrimary, ctaSecondary } = menuV2.explore;
+  const { eyebrow, lines, tagline, image, video } = menuV2.explore;
   const [left, right] = lines[1].split("|");
 
   return (
-    <section className="relative overflow-hidden bg-white pb-10 pt-6 text-third md:pb-12 md:pt-10">
+    <section id="pick-your-crunch" className="relative scroll-mt-24 overflow-hidden bg-white pb-6 pt-6 text-third md:pb-4 md:pt-10">
       {/* mobile-only small text */}
       <p className="eyebrow w-full justify-center text-third md:hidden">
         <ShootingStar className="size-5" /> {eyebrow}
@@ -82,54 +86,16 @@ export default function ExploreMenuV2() {
           </g>
         </motion.svg>
 
-        {/* combo tray — exact artwork position, over both lines */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.85, y: 20 }}
-          whileInView={{ opacity: 1, scale: 1, y: 0 }}
-          viewport={inView}
-          transition={{ duration: 0.9, ease: ease.pop, delay: 0.25 }}
-          className="absolute"
-          style={{ left: pct(M.tray.x, 2000), top: pct(M.tray.y, 723), width: pct(M.tray.w, 2000) }}
-        >
-          <Image
-            src={image}
-            alt="Texas Chicken combo: chicken, fries and drink"
-            width={1680}
-            height={1096}
-            sizes="(max-width: 1500px) 24vw, 360px"
-            className="h-auto w-full"
-          />
-        </motion.div>
+        {/* combo tray — the meal assembles itself (transparent WebM), over both lines */}
+        <ComboVideo image={image} video={video} />
       </div>
 
       <div className="container-tx flex flex-col items-center text-center">
         {/* mobile-only tagline */}
         <p className="mt-2 text-sm font-semibold uppercase text-third md:hidden">{tagline}</p>
 
-        <motion.p
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="show"
-          viewport={inView}
-          className="mt-8 max-w-2xl text-lg leading-relaxed text-third/75 md:mt-6 md:text-xl"
-        >
-          {body}
-        </motion.p>
-
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="show"
-          viewport={inView}
-          className="mt-9 flex flex-wrap items-center justify-center gap-4"
-        >
-          <Button href={ctaPrimary.href} variant="yellow">
-            {ctaPrimary.label}
-          </Button>
-          <Button href={ctaSecondary.href} variant="ghost">
-            {ctaSecondary.label} <BrandArrow dir="down" />
-          </Button>
-        </motion.div>
+        {/* Hidden for now: body copy + "Find your market to order" / "See the signatures" buttons.
+            Restore with: <motion.p variants={fadeUp} ...>{body}</motion.p> and the two <Button>s (see git history). */}
       </div>
     </section>
   );
@@ -141,5 +107,80 @@ function Line({ x, base, cap, w, weight, text }: { x: number; base: number; cap:
     <text x={x} y={base} fontSize={cap / CAP} fontWeight={weight} textLength={w} lengthAdjust="spacingAndGlyphs">
       {text.toUpperCase()}
     </text>
+  );
+}
+
+/**
+ * The combo assembling itself: a transparent VP9 WebM that plays once when it
+ * scrolls into view and holds on the final frame. Safari can't render VP9
+ * alpha (it shows a black box), and reduced-motion users get the still, so
+ * both fall back to the static cutout in its artwork position.
+ */
+function ComboVideo({ image, video }: { image: string; video: string }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const [useVideo, setUseVideo] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const ua = navigator.userAgent;
+    const safari = /Safari/.test(ua) && !/Chrome|Chromium|CriOS|Edg|Android/.test(ua);
+    const ios = /iPad|iPhone|iPod/.test(ua);
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setUseVideo(!safari && !ios && !reduced);
+  }, []);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!useVideo || !el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          el.play().catch(() => {});
+          io.disconnect();
+        }
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [useVideo]);
+
+  if (useVideo === null) return null;
+
+  if (useVideo) {
+    return (
+      <div className="absolute" style={{ left: pct(M.video.x, 2000), top: pct(M.video.y, 723), width: pct(M.video.w, 2000) }}>
+        <video
+          ref={ref}
+          src={video}
+          muted
+          playsInline
+          preload="auto"
+          aria-label="Texas Chicken combo: chicken, fries and drink"
+          className="block h-auto w-full"
+          width={802}
+          height={520}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.85, y: 20 }}
+      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+      viewport={inView}
+      transition={{ duration: 0.9, ease: ease.pop, delay: 0.25 }}
+      className="absolute"
+      style={{ left: pct(M.tray.x, 2000), top: pct(M.tray.y, 723), width: pct(M.tray.w, 2000) }}
+    >
+      <Image
+        src={image}
+        alt="Texas Chicken combo: chicken, fries and drink"
+        width={1680}
+        height={1096}
+        sizes="(max-width: 1500px) 24vw, 360px"
+        className="h-auto w-full"
+      />
+    </motion.div>
   );
 }

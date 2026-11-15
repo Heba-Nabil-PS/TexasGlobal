@@ -8,7 +8,7 @@ import { staggerContainer, fadeUp, inView } from "@/lib/motion";
 
 export default function BuiltStandards() {
   return (
-    <section className="relative overflow-hidden bg-cream py-20 md:py-28">
+    <section className="relative overflow-hidden bg-cream py-10 md:py-12">
       <div className="container-tx grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
         {/* Copy */}
         <div className="order-2 lg:order-1">

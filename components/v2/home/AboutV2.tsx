@@ -1,12 +1,11 @@
 "use client";
 
-import BrandStar from "@/components/ui/BrandStar";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import Counter from "@/components/ui/Counter";
 import Reveal from "@/components/ui/Reveal";
 import { WordsReveal } from "@/components/ui/TextReveal";
-import { Eyebrow, Title, Stamp, OutlineStar } from "@/components/v2/kit";
+import { Eyebrow, Title } from "@/components/v2/kit";
 import { about } from "@/lib/content";
 import { aboutV2 } from "@/lib/content-v2/home";
 import { staggerContainer, fadeUp, inView } from "@/lib/motion";
@@ -14,8 +13,7 @@ import { staggerContainer, fadeUp, inView } from "@/lib/motion";
 /** Home "Our story": global-leadership headline, white canvas, stat cards, tray video. */
 export default function AboutV2() {
   return (
-    <section id="about" className="relative overflow-hidden bg-white pb-12 pt-14 md:pb-16 md:pt-20">
-      <OutlineStar className="absolute -right-24 top-10 hidden size-[420px] opacity-60 lg:block" />
+    <section id="about" className="relative overflow-hidden bg-white pb-10 pt-10 md:pb-12 md:pt-14">
       <div className="container-tx relative">
         <div className="grid items-center gap-14 lg:grid-cols-[1fr_1.05fr]">
           <div>
@@ -32,14 +30,10 @@ export default function AboutV2() {
               <Button href={about.cta.primary.href} variant="yellow">
                 {about.cta.primary.label}
               </Button>
-              <Button href={about.cta.secondary.href} variant="ghost">
-                {about.cta.secondary.label}
-              </Button>
             </Reveal>
           </div>
 
           <div className="relative h-[380px] md:h-[620px]">
-            <Stamp text="Bold Texas flavor" size={120} className="absolute right-4 top-6 z-10 md:right-10" />
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -76,7 +70,8 @@ function StatCards() {
       className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4"
     >
       {aboutV2.stats.map((s, i) => {
-        const hero = i === 1;
+        // balanced: yellow, black, yellow, black
+        const hero = i % 2 === 0;
         return (
           <motion.div
             key={s.label}
@@ -87,9 +82,6 @@ function StatCards() {
               hero ? "bg-secondary text-third" : "bg-third text-white"
             }`}
           >
-            <span className="absolute -right-2 -top-3 text-5xl opacity-15" aria-hidden>
-              <BrandStar />
-            </span>
             <div className={`display text-[2.6rem] leading-none md:text-5xl ${hero ? "text-primary" : "text-secondary"}`}>
               <Counter value={s.value} suffix={s.suffix} />
             </div>

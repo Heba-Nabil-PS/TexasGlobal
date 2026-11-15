@@ -86,15 +86,46 @@ function FollowUs() {
   );
 }
 
+/** Home-page band: the app's loyalty program (informational, no CTA). */
+function AppRewardsBand() {
+  return (
+    <div className="relative overflow-hidden bg-secondary text-third">
+      <div className="mx-auto grid max-w-7xl items-center gap-6 px-6 py-10 md:grid-cols-[auto_1fr] md:py-8 lg:px-8">
+        <motion.div
+          initial={{ rotate: -20, scale: 0.8, opacity: 0 }}
+          whileInView={{ rotate: 0, scale: 1, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mx-auto flex size-28 items-center justify-center rounded-full bg-third md:mx-0 md:size-32"
+        >
+          <Image src="/assets/icons/rewards.svg" alt="" width={64} height={64} className="size-14 brightness-0 invert md:size-16" />
+        </motion.div>
+        <div className="text-center md:text-left">
+          <p className="display text-4xl leading-[0.9] md:text-5xl">
+            Every order earns.
+            <br />
+            <span className="text-primary">Every crunch counts.</span>
+          </p>
+          <p className="mt-3 max-w-2xl text-sm font-semibold uppercase tracking-caps text-third/70 md:text-base">
+            Collect points on every app order and swap them for free favourites and members-only treats.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Footer() {
   const columns = footer.columns;
+  const pathname = usePathname();
   // The band is a "Find your market" prompt — pointless on that page itself.
-  const showBand = usePathname() !== "/find-your-market";
+  const showBand = pathname !== "/find-your-market";
 
   return (
     <footer className="relative bg-third text-white">
+      {pathname === "/" && <AppRewardsBand />}
       {/* Brand band */}
-      {showBand && (
+      {showBand && pathname !== "/" && (
         <div className="relative overflow-hidden bg-secondary text-third">
           <div className="mx-auto grid max-w-7xl items-center gap-6 px-6 py-10 md:grid-cols-[auto_1fr_auto] md:py-8 lg:px-8">
             <motion.div
@@ -113,16 +144,23 @@ export default function Footer() {
                 <span className="text-primary">25+ markets. One crunch.</span>
               </p>
               <p className="mt-3 max-w-lg text-sm font-semibold uppercase tracking-caps text-third/70 md:text-base">
-                Hand-battered since 1952 — find the one closest to you.
+                Hand-battered since 1952. Find the one closest to you.
               </p>
             </div>
-            <div className="relative flex items-center justify-center md:justify-end">
+            <div className="relative flex flex-wrap items-center justify-center gap-3 md:justify-end">
+              <Link
+                href="/franchising#apply-form"
+                data-cursor="link"
+                className="rounded-full border-2 border-third px-7 py-[14px] font-texas text-sm font-extrabold uppercase tracking-caps text-third transition-colors hover:bg-third hover:text-white"
+              >
+                Franchise with us
+              </Link>
               <Link
                 href="/find-your-market"
                 data-cursor="link"
                 className="rounded-full bg-third px-7 py-4 font-texas text-sm font-extrabold uppercase tracking-caps text-white transition-colors hover:bg-primary"
               >
-                Find your market <BrandArrow />
+                Find your market
               </Link>
             </div>
           </div>

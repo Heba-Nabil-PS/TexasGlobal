@@ -1,15 +1,12 @@
 "use client";
 
-import BrandArrow from "@/components/ui/BrandArrow";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { PRELOADER_DONE } from "@/components/ui/Preloader";
-import Counter from "@/components/ui/Counter";
-import { Eyebrow, Lead, OutlineStar, Section, Title } from "@/components/v2/kit";
-import { ClosingCta, FieldV2, HeroV2 } from "./shared";
-import { franchisePage } from "@/lib/content";
+import { Eyebrow, Lead, Section, Title } from "@/components/v2/kit";
+import { ClosingCta, HeroV2 } from "./shared";
 import { franchiseV2 } from "@/lib/content-v2/pages";
 import { fadeUp, inView, staggerContainer } from "@/lib/motion";
 
@@ -102,37 +99,8 @@ export function FranchiseHeroV2() {
         <Button href={h.primary.href} variant="red" pulse>
           {h.primary.label}
         </Button>
-        <Button href={h.secondary.href} variant="ghost">
-          {h.secondary.label}
-        </Button>
       </HeroV2>
-
-      {/* Proof — investor-grade numbers as bold tiles */}
-      <section className="bg-white pb-16 md:pb-24">
-        <div className="container-tx">
-          <motion.div
-            variants={staggerContainer(0.08)}
-            initial="hidden"
-            whileInView="show"
-            viewport={inView}
-            className="grid grid-cols-2 gap-4 md:grid-cols-4"
-          >
-            {franchiseV2.proof.map((s, i) => (
-              <motion.div
-                key={s.label}
-                variants={fadeUp}
-                className={`relative overflow-hidden rounded-3xl p-6 md:p-8 ${
-                  ["bg-primary text-white", "bg-secondary text-third", "bg-third text-white", "bg-white text-third ring-2 ring-third/10"][i]
-                }`}
-              >
-                <OutlineStar className="absolute -right-6 -top-6 size-28 opacity-60" color={i === 1 ? "#fff" : "#F4B118"} />
-                <Counter value={s.value} suffix={s.suffix} className="display relative text-5xl md:text-6xl" />
-                <p className="relative mt-2 text-sm font-bold uppercase tracking-caps opacity-80">{s.label}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+      {/* Proof stat tiles removed per client (data still in franchiseV2.proof). */}
     </>
   );
 }
@@ -141,59 +109,61 @@ export function FranchiseHeroV2() {
 export function FranchiseCredentialsV2() {
   const c = franchiseV2.credentials;
   return (
-    <Section>
-      <div className="container-tx grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="relative">
-          <Eyebrow>{c.eyebrow}</Eyebrow>
-          <Title lines={c.title} size="md" />
-          <Lead>{c.body}</Lead>
-          <motion.ul
-            variants={staggerContainer(0.1)}
-            initial="hidden"
-            whileInView="show"
-            viewport={inView}
-            className="mt-10 space-y-5"
-          >
-            {c.reasons.map((r, i) => (
-              <motion.li key={r.k} variants={fadeUp} className="flex gap-4">
-                <span className="display grid size-11 shrink-0 place-items-center rounded-full bg-secondary text-lg text-third">
-                  {i + 1}
-                </span>
-                <div>
-                  <p className="display text-2xl uppercase">{r.k}</p>
-                  <p className="text-third/70">{r.v}</p>
-                </div>
-              </motion.li>
-            ))}
-          </motion.ul>
-        </div>
+    <Section className="!pb-8 md:!pb-10">
+      <div className="container-tx">
+        {/* Row 1 — headline + intro beside the awards panel (balanced heights) */}
+        <div className="grid items-center gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
+          <div>
+            <Eyebrow>{c.eyebrow}</Eyebrow>
+            <Title lines={c.title} size="md" />
+            <Lead>{c.body}</Lead>
+          </div>
 
-        <div className="relative">
+          {/* awards on one warm panel, equal-height cards */}
           <motion.div
             variants={staggerContainer(0.12)}
             initial="hidden"
             whileInView="show"
             viewport={inView}
-            className="grid gap-5 sm:grid-cols-3"
+            className="grid gap-4 rounded-[2.5rem] bg-[#FFF4DC] p-4 sm:grid-cols-3 sm:p-5"
           >
-            {c.items.map((b, i) => (
+            {c.items.map((b) => (
               <motion.div
                 key={b.title}
                 variants={fadeUp}
-                whileHover={{ y: -8, rotate: i === 1 ? 0 : i === 0 ? -2 : 2 }}
-                className={`flex flex-col items-center rounded-[2rem] bg-white p-6 text-center shadow-soft3 ring-1 ring-third/5 ${
-                  i === 1 ? "sm:-translate-y-8" : ""
-                }`}
+                whileHover={{ y: -6 }}
+                className="flex h-full flex-col items-center rounded-[1.75rem] bg-white px-5 py-6 text-center shadow-soft3 ring-1 ring-third/5"
               >
-                <div className="relative h-24 w-full">
-                  <Image src={b.badge} alt={b.title} fill className="object-contain" />
+                <div className="relative h-20 w-full md:h-24">
+                  <Image src={b.badge} alt={b.title} fill sizes="200px" className="object-contain" />
                 </div>
-                <p className="display mt-5 text-2xl uppercase text-primary">{b.title}</p>
-                <p className="mt-1 text-sm text-third/60">{b.note}</p>
+                <p className="display mt-5 text-xl uppercase leading-tight text-primary md:text-2xl">{b.title}</p>
+                <p className="mt-1.5 text-sm leading-snug text-third/60">{b.note}</p>
               </motion.div>
             ))}
           </motion.div>
         </div>
+
+        {/* Row 2 — the three reasons, full width, divided columns */}
+        <motion.ul
+          variants={staggerContainer(0.1)}
+          initial="hidden"
+          whileInView="show"
+          viewport={inView}
+          className="mt-12 grid gap-8 border-t border-third/10 pt-10 md:grid-cols-3 md:gap-0 md:divide-x md:divide-third/10"
+        >
+          {c.reasons.map((r, i) => (
+            <motion.li key={r.k} variants={fadeUp} className="flex gap-4 md:px-8 md:first:pl-0 md:last:pr-0">
+              <span className="display grid size-11 shrink-0 place-items-center rounded-full bg-secondary text-lg text-third">
+                {i + 1}
+              </span>
+              <div>
+                <p className="display text-2xl uppercase leading-none">{r.k}</p>
+                <p className="mt-2 leading-relaxed text-third/70">{r.v}</p>
+              </div>
+            </motion.li>
+          ))}
+        </motion.ul>
       </div>
     </Section>
   );
@@ -203,36 +173,15 @@ export function FranchiseCredentialsV2() {
 export function FranchiseApplyV2() {
   const a = franchiseV2.apply;
   return (
-    <section id="apply" className="relative overflow-hidden bg-white pb-24 pt-8 md:pb-32">
+    <section id="apply" className="relative overflow-x-clip bg-white pb-10 pt-10 md:pb-14 md:pt-12">
       <div className="container-tx">
-        <Eyebrow>{a.eyebrow}</Eyebrow>
-        <Title lines={a.title} size="md" />
-
-        {/* steps as a connected road */}
-        <motion.ol
-          variants={staggerContainer(0.12)}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: "some" }}
-          className="relative mt-14 grid gap-6 md:grid-cols-4"
-        >
-          <span aria-hidden className="absolute left-0 right-0 top-8 hidden border-t-4 border-dashed border-secondary md:block" />
-          {franchisePage.steps.map((s) => (
-            <motion.li key={s.n} variants={fadeUp} className="relative">
-              <span className="display relative z-10 grid size-16 place-items-center rounded-full bg-primary text-2xl text-white shadow-pop">
-                {s.n}
-              </span>
-              <h3 className="display mt-5 text-3xl uppercase">{s.title}</h3>
-              <p className="mt-2 text-third/70">{s.desc}</p>
-            </motion.li>
-          ))}
-        </motion.ol>
-
         {/* application — pitch + form on the white canvas */}
-        <div className="relative mt-20 text-third">
-          <div className="relative grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+        <div className="relative text-third">
+          {/* The embedded form is tall, so the pitch column stays pinned beside it
+              (sticky) instead of leaving an empty column; the form gets the wider track. */}
+          <div className="relative grid items-start gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-14">
             {/* pitch */}
-            <div className="flex flex-col">
+            <div className="flex flex-col lg:sticky lg:top-44">
               <Eyebrow>{a.formEyebrow}</Eyebrow>
               <Title lines={a.formTitle} size="md" />
               <p className="mt-5 max-w-sm text-lg leading-relaxed text-third/75">{a.formBody}</p>
@@ -256,43 +205,25 @@ export function FranchiseApplyV2() {
               </motion.ul>
             </div>
 
-            {/* form */}
-            <motion.form
+            {/* form — the official FranConnect franchise enquiry form, embedded.
+                id="apply-form" is the target of the "Start your application" buttons. */}
+            <motion.div
               id="apply-form"
-              variants={staggerContainer(0.06)}
+              variants={fadeUp}
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, amount: "some" }}
-              onSubmit={(e) => e.preventDefault()}
-              className="relative rounded-[2rem] bg-white p-6 shadow-soft3 ring-1 ring-third/10 sm:p-10"
+              className="relative overflow-hidden rounded-[2rem] bg-white p-2 shadow-soft3 ring-1 ring-third/10 sm:p-4"
             >
-              <div className="flex flex-wrap items-baseline justify-between gap-2 border-b-2 border-dashed border-third/10 pb-5">
-                <h3 className="display text-3xl uppercase">{a.formHeading}</h3>
-                <span className="text-xs font-bold uppercase tracking-caps text-third/50">{a.formTime}</span>
-              </div>
-
-              <div className="mt-6 grid gap-5 sm:grid-cols-2">
-                <FieldV2 label="Full name" placeholder="Jane Doe" />
-                <FieldV2 label="Email" type="email" placeholder="jane@company.com" />
-                <FieldV2 label="Country / market" placeholder="e.g. Egypt" />
-                <FieldV2 as="select" label="Investment capacity" placeholder="Select a range" options={a.investment} />
-              </div>
-              <div className="mt-5">
-                <FieldV2 as="textarea" label="Tell us more" placeholder="Your experience, target territory, timeline…" />
-              </div>
-
-              <motion.div variants={fadeUp} className="mt-7">
-                <button
-                  type="submit"
-                  data-cursor="link"
-                  className="group flex w-full items-center justify-center gap-3 rounded-full bg-primary px-8 py-4 text-sm font-extrabold uppercase tracking-caps text-white transition-colors hover:bg-third"
-                >
-                  Submit application
-                  <span className="transition-transform group-hover:translate-x-1"><BrandArrow /></span>
-                </button>
-                <p className="mt-4 text-center text-[11px] uppercase tracking-caps text-third/40">{a.disclaimer}</p>
-              </motion.div>
-            </motion.form>
+              <iframe
+                src="https://churchschicken.franconnect.net/fc/extforms/franchiseewebsite?refLoc=ifrm"
+                title="Franchisee Website Form"
+                width="100%"
+                height={880}
+                loading="lazy"
+                className="block w-full rounded-[1.5rem] border-0"
+              />
+            </motion.div>
           </div>
         </div>
       </div>
@@ -306,7 +237,7 @@ export function FranchiseClosingV2() {
     <ClosingCta
       eyebrow="Your market is next"
       title={["Bring the crunch", "to [your market]."]}
-      body="Tell us where you see Texas Chicken next — our development team will map the opportunity with you."
+      body="Tell us where you see Texas Chicken next. Our development team will map the opportunity with you."
       image="/assets/v2/crunch/crunch-03.png"
     >
       <Button href="#apply-form" variant="red">

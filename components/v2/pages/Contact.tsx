@@ -2,10 +2,11 @@
 
 import BrandArrow from "@/components/ui/BrandArrow";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
-import { Eyebrow, Stamp, Title } from "@/components/v2/kit";
+import { Eyebrow, Title } from "@/components/v2/kit";
 import { FieldV2, HeroV2 } from "./shared";
 import { contactPage } from "@/lib/content";
 import { contactV2 } from "@/lib/content-v2/pages";
@@ -38,28 +39,6 @@ export function ContactHeroV2() {
             sizes="(max-width:1024px) 90vw, 45vw"
             className="rounded-[2.5rem] object-cover shadow-soft3"
           />
-          {h.bubbles.map((b, i) => (
-            <motion.span
-              key={b}
-              initial={{ opacity: 0, scale: 0.6, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: [0, -8, 0] }}
-              transition={{
-                opacity: { delay: 0.6 + i * 0.25, duration: 0.4 },
-                scale: { delay: 0.6 + i * 0.25, duration: 0.4 },
-                y: { delay: 1 + i * 0.4, duration: 4, repeat: Infinity, ease: "easeInOut" },
-              }}
-              className={`absolute hidden whitespace-nowrap rounded-2xl px-4 py-2.5 font-texas text-base font-bold shadow-soft3 md:block md:text-lg ${
-                [
-                  "left-0 top-[8%] rounded-bl-none bg-secondary text-third",
-                  "right-0 top-[38%] rounded-br-none bg-third text-white",
-                  "bottom-[6%] left-[10%] rounded-tl-none bg-white text-primary ring-1 ring-third/10",
-                ][i]
-              }`}
-            >
-              {b}
-            </motion.span>
-          ))}
-          <Stamp text={h.stamp} size={118} className="absolute -bottom-4 right-[4%]" />
         </div>
       }
     />
@@ -71,7 +50,7 @@ export function ContactBodyV2() {
   const [subject, setSubject] = useState(contactPage.form.subjects[0]);
 
   return (
-    <section className="relative bg-white pb-24 md:pb-32">
+    <section className="relative bg-white pb-10 md:pb-14">
       <div className="container-tx">
         <Eyebrow>{contactV2.body.eyebrow}</Eyebrow>
         <Title lines={contactV2.body.title} size="md" />
@@ -85,31 +64,43 @@ export function ContactBodyV2() {
             viewport={inView}
             className="grid gap-4"
           >
-            {contactPage.channels.map((c, i) => (
-              <motion.li key={c.title} variants={fadeUp}>
-                <a
-                  href={`mailto:${c.value}`}
-                  data-cursor="link"
-                  className="group flex items-center gap-5 rounded-[1.75rem] bg-white p-5 shadow-soft3 ring-1 ring-third/10 transition-all duration-300 hover:-translate-y-1 hover:ring-secondary md:p-6"
-                >
-                  <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-primary text-secondary" aria-hidden>
-                    <svg viewBox="0 0 24 24" className="size-7" fill="currentColor">
-                      <path d={channelIcons[i]} />
-                    </svg>
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="display block text-2xl uppercase leading-none text-third md:text-[1.7rem]">{c.title}</span>
-                    <span className="mt-1.5 block break-words text-sm font-bold text-primary underline-offset-4 group-hover:underline">
-                      {c.value}
+            {contactPage.channels.map((c, i) => {
+              // Arrow goes to the channel's own page when it has one; otherwise it opens the email.
+              const pageHref = "href" in c ? c.href : undefined;
+              const arrowClass =
+                "grid size-10 shrink-0 place-items-center rounded-full border-2 border-third/10 text-third transition-colors hover:border-secondary hover:bg-secondary";
+              return (
+                <motion.li key={c.title} variants={fadeUp}>
+                  <div className="flex items-center gap-5 rounded-[1.75rem] bg-white p-5 shadow-soft3 ring-1 ring-third/10 transition-all duration-300 hover:-translate-y-1 hover:ring-secondary md:p-6">
+                    <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-primary text-secondary" aria-hidden>
+                      <svg viewBox="0 0 24 24" className="size-7" fill="currentColor">
+                        <path d={channelIcons[i]} />
+                      </svg>
                     </span>
-                    <span className="mt-0.5 block text-xs text-third/60">{c.note}</span>
-                  </span>
-                  <span className="grid size-10 shrink-0 place-items-center rounded-full border-2 border-third/10 text-third transition-colors group-hover:border-secondary group-hover:bg-secondary" aria-hidden>
-                    <BrandArrow />
-                  </span>
-                </a>
-              </motion.li>
-            ))}
+                    <span className="min-w-0 flex-1">
+                      <span className="display block text-2xl uppercase leading-none text-third md:text-[1.7rem]">{c.title}</span>
+                      <a
+                        href={`mailto:${c.value}`}
+                        data-cursor="link"
+                        className="mt-1.5 block break-words text-sm font-bold text-primary underline-offset-4 hover:underline"
+                      >
+                        {c.value}
+                      </a>
+                      <span className="mt-0.5 block text-xs text-third/60">{c.note}</span>
+                    </span>
+                    {pageHref ? (
+                      <Link href={pageHref} data-cursor="link" aria-label={`Go to ${c.title}`} className={arrowClass}>
+                        <BrandArrow />
+                      </Link>
+                    ) : (
+                      <a href={`mailto:${c.value}`} data-cursor="link" aria-label={`Email ${c.title}`} className={arrowClass}>
+                        <BrandArrow />
+                      </a>
+                    )}
+                  </div>
+                </motion.li>
+              );
+            })}
           </motion.ul>
 
           {/* Form */}

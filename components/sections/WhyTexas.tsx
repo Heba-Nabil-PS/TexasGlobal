@@ -10,7 +10,7 @@ import { LinesReveal } from "@/components/ui/TextReveal";
 
 export default function WhyTexas() {
   return (
-    <section id="why" className="relative bg-cream py-28 md:py-40">
+    <section id="why" className="relative bg-cream py-12 md:py-16">
       <div className="container-tx">
         <div className="max-w-3xl">
           <Reveal>

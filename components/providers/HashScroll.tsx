@@ -22,6 +22,7 @@
 
 import { useCallback, useEffect } from "react";
 import { useLenis } from "lenis/react";
+import { usePathname } from "next/navigation";
 
 /** how long the destination stays highlighted — matches the CSS animation */
 const FLASH_MS = 1800;
@@ -30,10 +31,12 @@ const GAP = 16;
 
 export default function HashScroll() {
   const lenis = useLenis();
+  const pathname = usePathname();
 
   const headerOffset = () => {
     const h = document.querySelector("header");
-    return (h instanceof HTMLElement ? h.getBoundingClientRect().height : 0) + GAP;
+    // bottom edge, not height: the nav floats a little below the top of the viewport
+    return (h instanceof HTMLElement ? Math.max(0, h.getBoundingClientRect().bottom) : 0) + GAP;
   };
 
   const flash = useCallback((el: HTMLElement) => {
@@ -96,14 +99,29 @@ export default function HashScroll() {
     return () => document.removeEventListener("click", onClick);
   }, [goTo]);
 
-  /* ---- deep link on arrival ---- */
+  /* ---- deep link on arrival (first load AND client-side navigation, e.g. the
+          nav's "Franchise with us" → /franchising#apply-form) ---- */
   useEffect(() => {
     if (!window.location.hash) return;
+    const hash = window.location.hash;
     // one frame for the layout, a beat more for the preloader to let go
-    const t = window.setTimeout(() => goTo(window.location.hash), 400);
-    return () => window.clearTimeout(t);
+    const t1 = window.setTimeout(() => goTo(hash), 400);
+    // images above the target can still push it down: correct once more if it drifted
+    const t2 = window.setTimeout(() => {
+      let el: HTMLElement | null = null;
+      try {
+        el = document.querySelector<HTMLElement>(hash);
+      } catch {
+        el = document.getElementById(hash.slice(1));
+      }
+      if (el && Math.abs(el.getBoundingClientRect().top - headerOffset()) > 12) goTo(hash);
+    }, 1700);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lenis]);
+  }, [lenis, pathname]);
 
   return null;
 }

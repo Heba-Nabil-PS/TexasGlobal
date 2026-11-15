@@ -12,13 +12,13 @@ const latest = newsPage.articles.slice(0, 4);
 
 export default function LatestNews() {
   return (
-    <section className="bg-cream-200 py-24 md:py-32">
+    <section className="bg-cream-200 py-10 md:py-14">
       <div className="container-tx">
         <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <SectionHeading
             eyebrow="Newsroom"
             heading="The latest from Texas."
-            body="New markets, new partners, new milestones — straight from the press room."
+            body="New markets, new partners, new milestones, straight from the press room."
           />
           <Button href="/news" variant="red" className="shrink-0">
             All news

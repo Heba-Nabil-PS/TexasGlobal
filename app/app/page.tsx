@@ -50,7 +50,7 @@ export default function AppPage() {
         >
           <Image
             src={banner.image}
-            alt="Satisfy your craving & order fast — download the app now"
+            alt="Satisfy your craving & order fast. Download the app now"
             width={1920}
             height={800}
             className="h-auto w-full object-cover object-center"
@@ -71,7 +71,7 @@ export default function AppPage() {
       </section>
 
       {/* ---------------- Discover more with the app ---------------- */}
-      <section id="features" className="scroll-mt-24 bg-white py-10 md:py-16">
+      <section id="features" className="scroll-mt-24 bg-white py-10 md:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-6 text-center md:mb-10">
             <motion.h2

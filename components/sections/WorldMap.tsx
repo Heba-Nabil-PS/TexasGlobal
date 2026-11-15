@@ -43,7 +43,7 @@ export default function WorldMap() {
   const py = (y: number) => `${(y / 500) * 100}%`;
 
   return (
-    <section className="relative overflow-hidden bg-cream-200 py-20 md:py-28">
+    <section className="relative overflow-hidden bg-cream-200 py-10 md:py-12">
       <div className="container-tx">
         <SectionHeading align="center" eyebrow={worldMap.eyebrow} heading={worldMap.heading} className="mx-auto" />
 

@@ -7,7 +7,7 @@ export const franchiseV2 = {
   hero: {
     eyebrow: "Franchise with a global leader",
     title: ["Own a piece of", "a [legend]."],
-    body: "Since 1952, one hand-battered recipe has grown from a single stand in San Antonio into 1,500+ restaurants across 25+ markets. Now we're opening the door to the next generation of partners.",
+    body: "Since 1952, Church's Texas Chicken has grown from a single San Antonio stand into 1,500+ restaurants across 25+ markets, serving crispy fried chicken cooked fresh. Now we're opening the door to the next generation of partners.",
     primary: { label: "Start your application", href: "#apply-form" },
     secondary: { label: "See the investment", href: "#investment" },
   },
@@ -19,15 +19,15 @@ export const franchiseV2 = {
   ],
   credentials: {
     eyebrow: "Trusted by the industry",
-    title: ["A brand partners [bank on]."],
-    body: "Recognised by the people who know franchising best — and backed by a support system built over seven decades.",
+    title: ["A brand partners", "[bank on.]"],
+    body: "Recognised by the people who know franchising best, and backed by a support system built over seven decades.",
     items: [
       { badge: "/assets/badge-ifa-member.svg", title: "IFA member", note: "International Franchise Association" },
       { badge: "/assets/badge-franchise-times.svg", title: "Top 400", note: "No. 64 · Franchise Times 2023" },
-      { badge: "/assets/badge-ifa-foty.svg", title: "Franchisee of the Year", note: "IFA award — Malaysia" },
+      { badge: "/assets/badge-ifa-foty.svg", title: "Franchisee of the Year", note: "IFA award, Malaysia" },
     ],
     reasons: [
-      { k: "Craveable product", v: "A recipe guests cross town for — the engine behind every P&L." },
+      { k: "Craveable product", v: "A recipe guests cross town for: the engine behind every P&L." },
       { k: "Proven model", v: "Playbooks refined across 1,500+ restaurants and 25+ markets." },
       { k: "Global buying power", v: "Local-first sourcing, backed by a worldwide supply chain." },
     ],
@@ -35,6 +35,7 @@ export const franchiseV2 = {
   apply: {
     eyebrow: "The path to opening",
     title: ["Four steps to", "[your first] restaurant."],
+    intro: "From the first conversation to opening day, our development team works alongside you at every step: territory, site, build and launch.",
     formEyebrow: "Get started",
     formTitle: ["Ready to make", "a [bold move?]"],
     formBody: "Share a few details and our development team will be in touch within 5 business days.",
@@ -54,7 +55,7 @@ export const contactV2 = {
   hero: {
     eyebrow: "Get in touch",
     title: ["Let's talk", "[crunch]."],
-    body: "Questions, feedback, press or partnerships — one global team, serving 25+ markets. Pick a channel and we'll get you to the right people, fast.",
+    body: "Questions, feedback, press or partnerships: one global team, serving 25+ markets. Pick a channel and we'll get you to the right people, fast.",
     bubbles: ["Franchise enquiry? 👋", "Press kit, please!", "Best biscuits ever."],
     stamp: "We're all ears",
   },
@@ -69,7 +70,7 @@ export const faqsV2 = {
     title: ["Questions?", "We've got [answers]."],
     search: "Search a question… e.g. halal, franchise, app",
   },
-  empty: "No answers match that search — try another word, or ask us directly.",
+  empty: "No answers match that search. Try another word, or ask us directly.",
   side: {
     title: "Still hungry for answers?",
     body: "Our team replies within 2 business days.",
@@ -78,7 +79,7 @@ export const faqsV2 = {
   cta: {
     eyebrow: "Still curious?",
     title: ["Can't find", "[your answer]?"],
-    body: "Talk to a real person on Team Texas — or find your local market for menus, hours and availability.",
+    body: "Talk to a real person on Team Texas, or find your local market for menus, hours and availability.",
     primary: { label: "Contact us", href: "/contact-us" },
     secondary: { label: "Find your market", href: "/find-your-market" },
   },
@@ -90,7 +91,7 @@ export const careersV2 = {
   hero: {
     eyebrow: "Careers at Texas Chicken",
     title: ["Join the [crew]", "behind the crunch."],
-    body: "40,000+ people in 25+ markets serve one recipe, made by hand, every day. From the fryer to the boardroom, this is where bold careers are built.",
+    body: "40,000+ people in 25+ markets serve crispy fried chicken, cooked fresh and made by hand, every day. From the fryer to the boardroom, this is where bold careers are built.",
     primary: { label: "See open roles", href: "#roles" },
     secondary: { label: "Our story", href: "/our-story" },
     stamp: "Join the crew",
@@ -104,23 +105,23 @@ export const careersV2 = {
   culture: {
     eyebrow: "Why Team Texas",
     title: ["We hire for heart.", "We [train for craft]."],
-    body: "Whether it's your first job or your next big move, you'll learn from people who care about doing things properly — and have fun doing it.",
+    body: "Whether it's your first job or your next big move, you'll learn from people who care about doing things properly, and have fun doing it.",
     points: [
       { title: "Real career paths", desc: "Most of our restaurant leaders started behind the counter. We promote from within.", image: "/assets/v2/signatures/sig-01.png" },
-      { title: "Learn the craft", desc: "Hands-on training through the Team Texas academy — hospitality skills that last.", image: "/assets/v2/signatures/sig-02.png" },
+      { title: "Learn the craft", desc: "Hands-on training through the Team Texas academy: hospitality skills that last.", image: "/assets/v2/signatures/sig-02.png" },
       { title: "Global opportunity", desc: "25+ markets and growing. Great people travel far with us.", image: "/assets/v2/signatures/sig-03.png" },
-      { title: "Culture that delivers", desc: "Bold brand, big hearts, high standards — and good food on every shift.", image: "/assets/v2/signatures/sig-04.png" },
+      { title: "Culture that delivers", desc: "Bold brand, big hearts, high standards, and good food on every shift.", image: "/assets/v2/signatures/sig-04.png" },
     ],
   },
   roles: {
     eyebrow: "Open roles",
     title: ["Find your [place]."],
-    note: "Corporate & support-office roles are listed alongside restaurant vacancies — use the filters to narrow down.",
+    note: "Corporate & support-office roles are listed alongside restaurant vacancies. Use the filters to narrow down.",
   },
   cta: {
     eyebrow: "Team Texas",
     title: ["Your career,", "[hand-crafted]."],
-    body: "Don't see the perfect role? Introduce yourself — we're always looking for bold people.",
+    body: "Don't see the perfect role? Introduce yourself. We're always looking for bold people.",
     primary: { label: "Get in touch", href: "/contact-us" },
     secondary: { label: "Meet the leadership", href: "/our-story/leadership" },
   },

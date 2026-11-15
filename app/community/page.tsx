@@ -30,12 +30,12 @@ export default function CommunityPage() {
       </PageHeroV2>
 
       {/* Pillars */}
-      <section className="bg-cream py-24 md:py-32">
+      <section className="bg-cream py-10 md:py-14">
         <div className="container-tx">
           <SectionHeading
             eyebrow="Our commitments"
             heading="Four ways we give back."
-            body="Every restaurant is a local business — run by local people, for a local community."
+            body="Every restaurant is a local business, run by local people, for a local community."
           />
           <motion.div
             variants={staggerContainer(0.1)}
@@ -63,7 +63,7 @@ export default function CommunityPage() {
       </section>
 
       {/* Initiatives — alternating rows */}
-      <section className="bg-cream-200 py-24 md:py-32">
+      <section className="bg-cream-200 py-10 md:py-14">
         <div className="container-tx">
           <SectionHeading
             eyebrow="On the ground"
@@ -114,7 +114,7 @@ export default function CommunityPage() {
       </section>
 
       {/* Pull quote */}
-      <section className="bg-tex-red py-24 text-cream md:py-32">
+      <section className="bg-tex-red py-10 text-cream md:py-14">
         <div className="container-tx text-center">
           <span className="display mx-auto block max-w-[18ch] text-3xl uppercase leading-tight md:text-5xl">
             &ldquo;Feed people well and treat your neighbours right. Everything else follows.&rdquo;
@@ -129,7 +129,7 @@ export default function CommunityPage() {
         eyebrow="Want to help?"
         heading="Good crunch."
         accent="Greater good."
-        body="Careers, partnerships, or community programs — let's do something good together."
+        body="Careers, partnerships or community programs: let's do something good together."
         primary={{ label: "Get in touch", href: "/contact-us" }}
         secondary={{ label: "Explore careers", href: "/careers" }}
         tone="ink"

@@ -7,11 +7,11 @@ import { appPage } from "@/lib/content";
 import { ease } from "@/lib/motion";
 
 /** "Find your nearest store" — light street-map bg, headline, CTA and floating pins. */
-export default function FindUs() {
+export default function FindUs({ showPins = true }: { showPins?: boolean }) {
   const { findUs } = appPage;
 
   return (
-    <section className="relative overflow-hidden bg-white py-14 md:py-24">
+    <section className="relative overflow-hidden bg-white py-10 md:py-12">
       <Image
         src={findUs.map}
         alt=""
@@ -79,7 +79,7 @@ export default function FindUs() {
       </div>
 
       {/* Floating map pins */}
-      {findUs.pins.map((p) => (
+      {showPins && findUs.pins.map((p) => (
         <motion.div
           key={p.src}
           className={`absolute z-10 hidden lg:block ${p.pos}`}

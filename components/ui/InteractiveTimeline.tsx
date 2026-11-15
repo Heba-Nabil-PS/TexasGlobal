@@ -150,7 +150,7 @@ export default function InteractiveTimeline({ items }: { items: TItem[] }) {
               key={it.year}
               role="tab"
               aria-selected={i === active}
-              aria-label={`${it.year} — ${it.title}`}
+              aria-label={`${it.year}, ${it.title}`}
               onClick={() => go(i)}
               className="group relative z-10 flex shrink-0 flex-col items-center gap-3"
             >

@@ -8,20 +8,20 @@ export const storyV2 = {
     /** [bracketed] words render in brand red (kit Title) */
     title: ["Born in Texas.", "Leading the [world]", "in crunch."],
     subtitle:
-      "One hand-battered recipe opened for business in San Antonio in 1952. Seven decades later it leads the bold-chicken category across 25+ markets — still marinated, hand-battered and fried fresh, exactly the way it started.",
+      "One hand-battered recipe opened for business in San Antonio in 1952. Seven decades later, Church's Texas Chicken serves its crispy fried chicken across 25+ markets, still marinated, hand-battered and cooked fresh, exactly the way it started: the taste of Texas, done right.",
     ctaPrimary: { label: "Taste the legacy", href: "/menu" },
-    ctaSecondary: { label: "Contact us", href: "/contact-us" },
+    ctaSecondary: { label: "Franchise with us", href: "/franchising#apply-form" },
   },
 
   /** Moving strip. Placeholder brand lines from packaging — confirm against the brand video. */
-  strip: ["Blazing new trails in flavor", "Bold Texas flavor", "Hand-battered", "Honest · Welcoming · Comfortable", "Since 1952"],
+  strip: ["The taste of Texas, done right", "Crispy fried chicken", "Cooked fresh", "Honest · Welcoming · Comfortable", "Since 1952"],
 
   heritage: {
     eyebrow: "Heritage & founding",
     title: ["One stand.", "One recipe.", "[One standard.]"],
     body: [
-      "In 1952, George W. Church opened a walk-up chicken stand across the street from the Alamo in San Antonio, Texas. No seating, no shortcuts — just chicken marinated, hand-battered to order and fried until the coating shattered.",
-      "That obsession with craft is the one thing we have never changed. Today the same recipe leads the category in 25+ markets, from the Americas to the Gulf and Southeast Asia — still made by hand, still fried fresh, one restaurant at a time.",
+      "In 1952, George W. Church opened a walk-up chicken stand across the street from the Alamo in San Antonio, Texas. No seating, no shortcuts, just chicken marinated, hand-battered to order and fried until the coating shattered.",
+      "That obsession with craft is the one thing we have never changed. Today the same recipe leads the category in 25+ markets, from the Americas to the Gulf and Southeast Asia, still made by hand, still cooked fresh, one restaurant at a time.",
     ],
     facts: [
       { k: "1952", v: "San Antonio, TX" },

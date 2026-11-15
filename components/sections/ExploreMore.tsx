@@ -14,7 +14,7 @@ const cards = [
 
 export default function ExploreMore() {
   return (
-    <section className="bg-cream-200 py-24 md:py-32">
+    <section className="bg-cream-200 py-10 md:py-14">
       <div className="container-tx">
         <SectionHeading
           eyebrow="Explore Texas"

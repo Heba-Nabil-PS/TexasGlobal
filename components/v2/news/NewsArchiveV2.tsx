@@ -37,7 +37,7 @@ export default function NewsArchiveV2() {
   };
 
   return (
-    <section className="relative bg-white py-20 md:py-28">
+    <section className="relative bg-white py-10 md:py-12">
       <div ref={topRef} className="container-tx scroll-mt-32">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
@@ -113,7 +113,6 @@ export default function NewsArchiveV2() {
                     <div className="mt-auto pt-4">
                       <span className="inline-flex items-center font-texas font-bold uppercase tracking-wide text-secondary group-hover:underline">
                         {newsV2.archive.readMore}
-                        <BrandArrow className="ms-1 size-4 transition-transform group-hover:translate-x-1" />
                       </span>
                     </div>
                   </div>

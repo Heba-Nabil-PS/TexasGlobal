@@ -1,93 +1,79 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import dynamic from "next/dynamic";
+import { useState } from "react";
 import Button from "@/components/ui/Button";
 import { Eyebrow, Title } from "@/components/v2/kit";
 import { globeV2 } from "@/lib/content-v2/home";
+import type { GlobeFocus } from "./EarthGlobe";
 
-const STEP_MS = 3600;
+// WebGL globe is client-only and loads its map data on demand.
+const EarthGlobe = dynamic(() => import("./EarthGlobe"), {
+  ssr: false,
+  loading: () => <div className="absolute inset-[4%] rounded-full bg-[#ececee]" />,
+});
 
 /**
- * Global footprint — bright, white canvas. The three globe renders cross-fade
- * with a turning motion so the globe reads as rotating (Americas → MEA/Europe →
- * Asia), and the active region + its markets are named beside it. A big
- * "25+ markets", and a co-branded CTA. No dark map, no
- * unexplained dots, and no focus on where we aren't.
+ * Global footprint — a real, interactive 3D globe (Three.js). The region menu
+ * turns the same globe to each continent; visitors can also drag it and click
+ * any country. Our markets are orange.
  */
 export default function GlobeV2() {
-  const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const visible = useInView(ref, { amount: 0.3 });
-  const frames = globeV2.frames;
+  const [active, setActive] = useState<string | null>(null);
+  const [focus, setFocus] = useState<GlobeFocus | null>(null);
 
-  useEffect(() => {
-    if (paused || !visible) return;
-    const t = setInterval(() => setI((n) => (n + 1) % frames.length), STEP_MS);
-    return () => clearInterval(t);
-  }, [paused, visible, frames.length]);
-
-  const f = frames[i];
+  const go = (r: (typeof globeV2.regions)[number]) => {
+    setActive(r.key);
+    setFocus((f) => ({ lat: r.lat, lon: r.lon, n: (f?.n ?? 0) + 1 }));
+  };
 
   return (
-    <section className="relative overflow-hidden bg-white py-12 md:py-16">
+    <section className="relative overflow-hidden bg-white pb-4 pt-10 md:pb-6 md:pt-12">
       <div className="container-tx text-center">
         <Eyebrow center>{globeV2.eyebrow}</Eyebrow>
         <Title lines={globeV2.titleLines} size="lg" className="mx-auto max-w-4xl" />
       </div>
 
-      <div ref={ref} className="container-tx mt-10 grid items-center gap-10 lg:mt-14 lg:grid-cols-[1fr_auto_1fr]">
-        {/* Region list — doubles as legend + manual control */}
-        <ul className="order-2 flex flex-col gap-3 lg:order-1" onMouseLeave={() => setPaused(false)}>
-          {frames.map((fr, n) => (
-            <li key={fr.region}>
-              <button
-                onMouseEnter={() => {
-                  setPaused(true);
-                  setI(n);
-                }}
-                onClick={() => setI(n)}
-                className={`w-full rounded-2xl border-2 px-5 py-4 text-left transition-all ${
-                  n === i ? "border-secondary bg-secondary/15 shadow-soft3" : "border-third/10 hover:border-third/30"
-                }`}
-              >
-                <span className="flex items-center gap-3">
-                  <span className={`size-3 rounded-full ${n === i ? "bg-primary" : "bg-third/20"}`} />
-                  <span className="display text-2xl text-third">{fr.region}</span>
-                </span>
-                <span className="mt-1 block pl-6 text-sm font-semibold uppercase tracking-wide text-third/60">{fr.markets}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
+      <div className="container-tx mt-10 grid items-center gap-10 lg:mt-12 lg:grid-cols-[1fr_auto_1fr]">
+        {/* Region menu */}
+        <nav aria-label="Explore by region" className="order-2 lg:order-1">
+          <ul className="flex flex-wrap justify-center gap-2 lg:flex-col lg:gap-3">
+            {globeV2.regions.map((r) => {
+              const on = r.key === active;
+              return (
+                <li key={r.key}>
+                  <button
+                    type="button"
+                    onClick={() => go(r)}
+                    aria-pressed={on}
+                    data-cursor="link"
+                    className={`w-full rounded-2xl border-2 px-4 py-2.5 text-left transition-all lg:px-5 lg:py-3.5 ${
+                      on ? "border-secondary bg-secondary/15 shadow-soft3" : "border-third/10 hover:border-third/30"
+                    }`}
+                  >
+                    <span className="flex items-center gap-3">
+                      <span className={`size-2.5 rounded-full transition-colors ${on ? "bg-primary" : "bg-third/20"}`} />
+                      <span className="display text-xl text-third lg:text-2xl">{r.label}</span>
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
 
         {/* The globe */}
-        <div className="relative order-1 mx-auto aspect-square w-[min(80vw,520px)] lg:order-2">
-          <div className="absolute inset-[6%] rounded-full bg-secondary/20 blur-3xl" />
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.div
-              key={f.src}
-              initial={{ opacity: 0, rotate: 18, scale: 0.94 }}
-              animate={{ opacity: 1, rotate: 0, scale: 1 }}
-              exit={{ opacity: 0, rotate: -18, scale: 0.94 }}
-              transition={{ duration: 1.1, ease: [0.65, 0, 0.35, 1] }}
-              className="absolute inset-0"
-            >
-              <Image src={f.src} alt={`Texas Chicken markets — ${f.region}`} fill sizes="520px" className="object-contain" />
-            </motion.div>
-          </AnimatePresence>
+        <div className="relative order-1 mx-auto aspect-square w-[min(88vw,540px)] lg:order-2">
+          <div aria-hidden className="absolute inset-x-[18%] -bottom-2 h-8 rounded-[50%] bg-third/15 blur-xl" />
+          <EarthGlobe focus={focus} onAutoplay={() => setActive(null)} className="absolute inset-0" />
         </div>
 
-        {/* Big number + CTAs */}
+        {/* Big number */}
         <div className="order-3 text-center lg:text-left">
           <div className="display text-7xl leading-none text-secondary md:text-8xl">{globeV2.stat}</div>
           <p className="mx-auto mt-4 max-w-sm text-lg leading-relaxed text-third/75 lg:mx-0 md:text-xl">{globeV2.body}</p>
         </div>
 
-        {/* CTAs — one row under the globe so both buttons sit side by side */}
         <div className="order-4 flex flex-wrap items-center justify-center gap-3 lg:col-span-3">
           <Button href={globeV2.ctaSecondary.href} variant="red" pulse>
             {globeV2.ctaSecondary.label}

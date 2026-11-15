@@ -12,11 +12,12 @@
  * transform plus a per-marker counter-scale, so text never stretches.
  */
 
-import BrandArrow from "@/components/ui/BrandArrow";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { marketPage, type BrandId, type Market, type MarketRegionId } from "@/lib/content";
+import BrandStar from "@/components/ui/BrandStar";
+import { Title } from "@/components/v2/kit";
+import { appPage, marketPage, type BrandId, type Market, type MarketRegionId } from "@/lib/content";
 import { ease } from "@/lib/motion";
 
 const GEO_URL = "/geo/world-countries.geo.json";
@@ -104,6 +105,7 @@ export default function MarketExplorer({
   focus,
   onFocus,
   onSeeAll,
+  pageTitle = false,
 }: {
   brand: BrandId | "all";
   onBrandChange: (b: BrandId | "all") => void;
@@ -112,6 +114,8 @@ export default function MarketExplorer({
   focus: string | null;
   onFocus: (code: string | null) => void;
   onSeeAll?: () => void;
+  /** first block on the page: render the heading as the page <h1> and clear the fixed nav */
+  pageTitle?: boolean;
 }) {
   const [shapes, setShapes] = useState<Shape[] | null>(null);
   const [hover, setHover] = useState<string | null>(null);
@@ -242,20 +246,30 @@ export default function MarketExplorer({
   };
 
   return (
-    <section className="relative overflow-hidden bg-cream py-20 md:py-28">
+    <section className={`relative overflow-hidden bg-cream ${pageTitle ? "pb-10 pt-32 md:pb-12 lg:pt-44" : "py-10 md:py-12"}`}>
       <div
         className="pointer-events-none absolute inset-0"
         style={{ background: "#ffffff" }}
       />
 
       <div className="container-tx relative z-10">
-        <SectionHeading
-          align="center"
-          eyebrow={copy.eyebrow}
-          heading={copy.heading}
-          body={copy.body}
-          className="mx-auto"
-        />
+        {pageTitle ? (
+          <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+            <span className="eyebrow text-tex-red">
+              <BrandStar /> {copy.eyebrow}
+            </span>
+            <Title as="h1" lines={copy.titleLines} size="lg" className="md:text-[5.4rem]" />
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-600 md:text-lg">{copy.body}</p>
+          </div>
+        ) : (
+          <SectionHeading
+            align="center"
+            eyebrow={copy.eyebrow}
+            heading={copy.heading}
+            body={copy.body}
+            className="mx-auto"
+          />
+        )}
 
         {/* ------------------------------ brand filter ------------------------- */}
         <div className="mt-9 flex justify-center">
@@ -538,10 +552,34 @@ export default function MarketExplorer({
                       className="group mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-[11px] font-extrabold uppercase tracking-caps text-cream transition-colors hover:bg-third"
                     >
                       {copy.visit}
-                      <span className="transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden>
-                        <BrandArrow dir="up-right" />
-                      </span>
                     </a>
+
+                    {/* app download — shared store links (appPage.badges) */}
+                    <div className="mt-5 border-t border-ink/10 pt-4">
+                      <p className="text-[10px] font-bold uppercase tracking-caps text-ink-400">Order on the app</p>
+                      <div className="mt-2.5 flex flex-wrap items-center gap-2">
+                        <a
+                          href={appPage.badges.appStoreHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Download on the App Store"
+                          data-cursor="link"
+                          className="transition-transform duration-200 hover:-translate-y-0.5"
+                        >
+                          <img src={appPage.badges.appStore} alt="Download on the App Store" className="h-9 w-auto" />
+                        </a>
+                        <a
+                          href={appPage.badges.googlePlayHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="Get it on Google Play"
+                          data-cursor="link"
+                          className="transition-transform duration-200 hover:-translate-y-0.5"
+                        >
+                          <img src={appPage.badges.googlePlay} alt="Get it on Google Play" className="h-9 w-auto" />
+                        </a>
+                      </div>
+                    </div>
                   </>
                 ) : (
                   <>
@@ -586,9 +624,6 @@ export default function MarketExplorer({
               className="group mt-6 inline-flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-caps text-primary"
             >
               {copy.seeAll}
-              <span className="transition-transform duration-200 group-hover:translate-y-0.5" aria-hidden>
-                <BrandArrow dir="down" />
-              </span>
             </button>
           </motion.div>
         </div>

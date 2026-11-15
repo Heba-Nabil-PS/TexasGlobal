@@ -26,7 +26,7 @@ export const newsV2 = {
   newsletter: {
     eyebrow: "Be first to the crunch",
     heading: ["New drops.", "New markets.", "[Straight to you.]"],
-    body: "Limited-time flavors, restaurant openings and global milestones, delivered before anyone else hears about them. No spam, just crunch.",
+    body: "New spicy sandwiches, wraps and limited-time flavors, restaurant openings and global milestones, delivered before anyone else hears about them. No spam, just crunch.",
     placeholder: "Your email address",
     cta: "Count me in",
     thanks: "You're on the list. Fresh news is on its way.",

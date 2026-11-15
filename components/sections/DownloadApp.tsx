@@ -12,7 +12,7 @@ import { staggerContainer, fadeUp, inView } from "@/lib/motion";
 
 export default function DownloadApp() {
   return (
-    <section className="relative overflow-hidden bg-ink py-24 text-cream md:py-32">
+    <section className="relative overflow-hidden bg-ink py-10 text-cream md:py-14">
       <div className="pointer-events-none absolute -left-32 top-1/3 h-[36rem] w-[36rem] rounded-full bg-tex-red/25 blur-[130px]" />
       <div className="pointer-events-none absolute -right-20 bottom-0 h-[30rem] w-[30rem] rounded-full bg-tex-yellow/10 blur-[120px]" />
 

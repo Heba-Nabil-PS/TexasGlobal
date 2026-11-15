@@ -39,7 +39,7 @@ export default function StoryPage() {
         eyebrow="Be part of the story"
         heading="70 years in."
         accent="Just getting warmed up."
-        body="Taste the recipe that started it all — or help us write the next chapter in your market."
+        body="Taste the recipe that started it all, or help us write the next chapter in your market."
         primary={{ label: "Explore the menu", href: "/menu" }}
         secondary={{ label: "Franchise with us", href: "/franchising" }}
         tone="ink"
@@ -54,7 +54,7 @@ export default function StoryPage() {
 /* ------------------------------------------------------------------ */
 function StoryFilm() {
   return (
-    <section className="bg-cream pb-12 md:pb-16">
+    <section className="bg-cream pb-10 md:pb-12">
       <div className="container-tx">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -88,7 +88,7 @@ function StoryFilm() {
 function MissionVision() {
   const { missionVision } = storyPage;
   return (
-    <section className="relative bg-cream px-4 py-12 md:py-16">
+    <section className="relative bg-cream px-4 pb-6 pt-12 md:pb-8 md:pt-12">
       <div className="container-tx md:px-6">
         <div className="grid gap-10 md:grid-cols-2 md:gap-16">
           {missionVision.items.map((item) => (
@@ -117,7 +117,7 @@ function MissionVision() {
 function LeadershipTeaser() {
   const { leadership } = storyPage;
   return (
-    <section id="leadership" className="scroll-mt-24 bg-ink py-24 text-cream md:py-32">
+    <section id="leadership" className="scroll-mt-24 bg-ink py-10 text-cream md:py-14">
       <div className="container-tx grid items-center gap-14 lg:grid-cols-[1fr_0.9fr]">
         <div>
           <span className="eyebrow text-tex-yellow">

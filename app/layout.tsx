@@ -7,6 +7,7 @@ import Preloader from "@/components/ui/Preloader";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
+import { DEFAULT_DESCRIPTION, KEYWORDS, SITE_NAME } from "@/lib/seo";
 
 const texas = localFont({
   src: [
@@ -22,15 +23,19 @@ const texas = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Texas Chicken — Hand-battered. Made fresh. Since 1952.",
-  description:
-    "Real Texas soul, served in 23 markets. Marinated, hand-breaded and fried fresh in every restaurant since 1952.",
+  // Per-page titles slot into the template; see lib/seo.ts and each route's layout.tsx.
+  title: { default: "Crispy Fried Chicken, Cooked Fresh | Church's Texas Chicken™", template: `%s | ${SITE_NAME}` },
+  description: DEFAULT_DESCRIPTION,
+  keywords: KEYWORDS,
+  applicationName: SITE_NAME,
   metadataBase: new URL("https://texaschicken.example"),
   openGraph: {
-    title: "Texas Chicken — Bold flavor, worldwide",
-    description: "Hand-battered chicken, fried fresh, since 1952.",
+    title: "Church's Texas Chicken™ | The taste of Texas, done right",
+    description: DEFAULT_DESCRIPTION,
     type: "website",
+    siteName: SITE_NAME,
   },
+  twitter: { card: "summary_large_image", title: "Church's Texas Chicken™", description: DEFAULT_DESCRIPTION },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

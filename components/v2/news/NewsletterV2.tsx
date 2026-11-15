@@ -1,6 +1,5 @@
 "use client";
 
-import BrandArrow from "@/components/ui/BrandArrow";
 import BrandStar from "@/components/ui/BrandStar";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,7 +25,7 @@ export default function NewsletterV2() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-white px-4 py-16 md:py-24">
+    <section className="relative overflow-hidden bg-white px-4 py-12 md:py-12">
       <div className="relative mx-auto max-w-[1300px] overflow-hidden rounded-[2.5rem] bg-secondary text-third">
         {/* Rooster stamp, oversized + slowly turning, as a watermark */}
         <motion.div
@@ -80,7 +79,7 @@ export default function NewsletterV2() {
                   data-cursor="link"
                   className="h-14 rounded-full bg-primary px-8 text-sm font-extrabold uppercase tracking-caps text-white transition-colors hover:bg-third"
                 >
-                  {n.cta} <BrandArrow />
+                  {n.cta}
                 </button>
               </form>
             )}

@@ -35,7 +35,7 @@ export function Section({
 }) {
   const bg = tone === "yellow" ? "bg-secondary text-third" : tone === "ink" ? "bg-third text-white" : "bg-white text-third";
   return (
-    <section id={id} className={`relative overflow-hidden py-20 md:py-28 ${bg} ${className}`}>
+    <section id={id} className={`relative overflow-hidden py-10 md:py-12 ${bg} ${className}`}>
       {children}
     </section>
   );

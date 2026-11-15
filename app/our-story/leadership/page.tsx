@@ -31,7 +31,7 @@ export default function LeadershipPage() {
       </PageHeroV2>
 
       {/* Intro + executive bios */}
-      <section className="bg-cream py-20 md:py-28">
+      <section className="bg-cream py-10 md:py-12">
         <div className="container-tx">
           <SectionHeading
             eyebrow="Leadership"
@@ -75,7 +75,7 @@ export default function LeadershipPage() {
       </section>
 
       {/* Press landing point */}
-      <section className="bg-ink py-16 text-cream md:py-20">
+      <section className="bg-ink py-12 text-cream md:py-14">
         <div className="container-tx flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
           <div className="max-w-xl">
             <span className="eyebrow text-tex-yellow">

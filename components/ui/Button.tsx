@@ -43,7 +43,7 @@ export default function Button({
   const isRoute = href.startsWith("/");
 
   return (
-    <Magnetic strength={0.35}>
+    <Magnetic strength={0.15} max={6}>
       {type ? (
         <button type={type} onClick={onClick} data-cursor="link" className={classes}>
           {children}

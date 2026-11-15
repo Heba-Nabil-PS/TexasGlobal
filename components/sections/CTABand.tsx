@@ -28,7 +28,7 @@ export default function CTABand({
 }) {
   const bg = tone === "red" ? "bg-tex-red" : "bg-ink";
   return (
-    <section className={`relative overflow-hidden ${bg} py-24 text-cream md:py-36`}>
+    <section className={`relative overflow-hidden ${bg} py-10 text-cream md:py-14`}>
       {video && (
         <>
           <video

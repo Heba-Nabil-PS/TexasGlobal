@@ -6,7 +6,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import Counter from "@/components/ui/Counter";
-import { Eyebrow, Lead, OutlineStar, Section, Stamp, Title } from "@/components/v2/kit";
+import { Eyebrow, Lead, OutlineStar, Section, Title } from "@/components/v2/kit";
 import { ClosingCta, HeroV2 } from "./shared";
 import { careersPage } from "@/lib/content";
 import { careersV2 } from "@/lib/content-v2/pages";
@@ -37,10 +37,6 @@ export function CareersHeroV2() {
               className="object-cover object-[72%_50%]"
             />
           </motion.div>
-          <Stamp text={h.stamp} size={130} className="absolute -bottom-8 -left-6 md:-left-10" />
-          <span className="display absolute -right-2 bottom-10 rotate-[-6deg] rounded-xl bg-secondary px-4 py-2 text-2xl uppercase text-third shadow-soft3 md:text-3xl">
-            Now hiring
-          </span>
         </div>
       }
     >
@@ -77,7 +73,7 @@ export function CareersCultureV2() {
           ))}
         </motion.div>
 
-        <div className="mt-24">
+        <div className="mt-14">
           <Eyebrow>{c.eyebrow}</Eyebrow>
           <Title lines={c.title} size="md" />
           <Lead>{c.body}</Lead>
@@ -118,7 +114,7 @@ export function CareersRolesV2() {
   const r = careersV2.roles;
 
   return (
-    <section id="roles" className="relative scroll-mt-28 bg-white py-20 md:py-28">
+    <section id="roles" className="relative scroll-mt-28 bg-white py-10 md:py-12">
       <div className="container-tx">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>

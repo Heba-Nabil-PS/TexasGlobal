@@ -39,7 +39,7 @@ export function FaqsBodyV2() {
   }, [q, group]);
 
   return (
-    <section id="faq-search" className="relative scroll-mt-28 bg-white pb-24 md:pb-32">
+    <section id="faq-search" className="relative scroll-mt-28 bg-white pb-10 md:pb-14">
       <div className="container-tx grid gap-12 lg:grid-cols-[1fr_340px]">
         <div>
           {/* Search */}

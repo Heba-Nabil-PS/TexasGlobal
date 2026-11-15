@@ -31,7 +31,7 @@ export function HeroV2({
   reverse?: boolean;
 }) {
   return (
-    <section className="relative overflow-hidden bg-white pb-16 pt-32 text-third md:pb-24 lg:pt-44">
+    <section className="relative overflow-hidden bg-white pb-12 pt-32 text-third md:pb-12 lg:pt-44">
       {decor}
       <div
         className={`container-tx relative grid items-center gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-8 ${
@@ -175,7 +175,7 @@ export function ClosingCta({
   image?: string;
 }) {
   return (
-    <section className="relative bg-white pb-24 pt-8 md:pb-32">
+    <section className="relative bg-white pb-10 pt-8 md:pb-14">
       <div className="container-tx">
         <div className="relative overflow-hidden rounded-[2.5rem] bg-secondary px-8 py-14 md:px-16 md:py-20">
           {/* sunburst rays */}

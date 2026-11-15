@@ -10,7 +10,7 @@ import { staggerContainer, fadeUp, inView } from "@/lib/motion";
 /** Home teaser for the menu — directional-reveal category cards. */
 export default function MenuCategories() {
   return (
-    <section className="bg-cream py-24 md:py-32">
+    <section className="bg-cream py-10 md:py-14">
       <div className="container-tx">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <SectionHeading

@@ -20,7 +20,7 @@ export default function NewAtTexas() {
   };
 
   return (
-    <section className="overflow-hidden bg-third py-20 text-cream md:py-28">
+    <section className="overflow-hidden bg-third py-10 text-cream md:py-12">
       <div className="container-tx">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">

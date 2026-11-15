@@ -16,7 +16,8 @@
 import BrandArrow from "@/components/ui/BrandArrow";
 import BrandStar from "@/components/ui/BrandStar";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import Image from "next/image";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import Counter from "@/components/ui/Counter";
 import OpportunityMap from "@/components/sections/OpportunityMap";
@@ -71,7 +72,7 @@ export default function FranchiseTabs() {
   };
 
   return (
-    <section className="bg-cream-200 pb-24 md:pb-32">
+    <section className="bg-cream-200 pb-10 md:pb-14">
       {/* ---- sticky tab bar ------------------------------------------- */}
       {/* The band echoes the nav rather than bleeding edge to edge: same
           1150px / px-8 box the desktop header uses, floating on the section. */}
@@ -202,31 +203,165 @@ function WhyUs() {
         </motion.ul>
       </div>
 
-      {/* recent openings — real locations named on the Why Us page */}
-      <motion.div
-        variants={staggerContainer(0.07)}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: "some" }}
-        className="rounded-[1.75rem] border border-ink/10 bg-paper p-8 shadow-soft3"
-      >
-        <span className="eyebrow text-tex-red"><BrandStar /> Opening around the world</span>
-        <ul className="mt-6 flex flex-col divide-y divide-ink/10">
-          {whyUs.openings.map((o, i) => (
-            <motion.li
-              key={o}
-              variants={fadeUp}
-              className="flex items-baseline gap-4 py-4 first:pt-0 last:pb-0"
-            >
-              <span className="display text-xl text-tex-yellow">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <span className="display text-lg uppercase leading-tight text-ink">{o}</span>
-            </motion.li>
-          ))}
-        </ul>
-      </motion.div>
+      {/* "See us opening around the world" — photo slider (from the Why Us page) */}
+      <OpeningsSlider />
     </div>
+  );
+}
+
+/** Line icons for the "partner we're looking for" cards — one per criterion. */
+function ProfileIcon({ name }: { name: string }) {
+  const paths: Record<string, React.ReactNode> = {
+    // storefront
+    store: (
+      <>
+        <path d="M4 4h16l1.5 5h-19z" />
+        <path d="M4.5 9v11h15V9" />
+        <path d="M10 20v-6h4v6" />
+      </>
+    ),
+    // several buildings
+    units: (
+      <>
+        <path d="M2 21h20" />
+        <path d="M4 21V9l5-3v15" />
+        <path d="M9 21V3l7 4v14" />
+        <path d="M16 21v-8l4 2v6" />
+      </>
+    ),
+    // map pin
+    site: (
+      <>
+        <path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z" />
+        <circle cx="12" cy="9" r="2.5" />
+      </>
+    ),
+    // heart
+    values: <path d="M12 20s-7.5-4.6-9.3-9.2C1.4 7.4 3.6 4 7 4c2 0 3.4 1.1 5 3 1.6-1.9 3-3 5-3 3.4 0 5.6 3.4 4.3 6.8C19.5 15.4 12 20 12 20z" />,
+  };
+  return (
+    <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      {paths[name]}
+    </svg>
+  );
+}
+
+const AUTOPLAY_MS = 4500;
+
+function OpeningsSlider() {
+  const slides = franchisePage.whyUs.openings;
+  const count = slides.length;
+  const reduce = useReducedMotion();
+  const [index, setIndex] = useState(0);
+  const [dir, setDir] = useState(1);
+  const [paused, setPaused] = useState(false);
+
+  const go = useCallback(
+    (to: number, d: number) => {
+      setDir(d);
+      setIndex(((to % count) + count) % count);
+    },
+    [count]
+  );
+
+  // Gentle autoplay; pauses on hover/focus and when the visitor prefers reduced motion.
+  useEffect(() => {
+    if (reduce || paused) return;
+    const t = window.setTimeout(() => go(index + 1, 1), AUTOPLAY_MS);
+    return () => window.clearTimeout(t);
+  }, [index, paused, reduce, go]);
+
+  const slide = slides[index];
+
+  return (
+    <motion.div
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: "some" }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+      className="flex flex-col"
+      aria-roledescription="carousel"
+      aria-label="See us opening around the world"
+    >
+      <span className="eyebrow text-tex-red"><BrandStar /> See us opening around the world</span>
+
+      <div className="relative mt-5 aspect-[4/3] overflow-hidden rounded-[1.75rem] bg-ink shadow-soft3">
+        <AnimatePresence initial={false} custom={dir}>
+          <motion.div
+            key={index}
+            custom={dir}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, x: `${dir * 8}%`, scale: 1.04 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, x: `${dir * -8}%` }}
+            transition={{ duration: 0.6, ease: ease.out }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.18}
+            onDragEnd={(_, info) => {
+              if (info.offset.x < -60) go(index + 1, 1);
+              else if (info.offset.x > 60) go(index - 1, -1);
+            }}
+            className="absolute inset-0 cursor-grab active:cursor-grabbing"
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${index + 1} of ${count}: ${slide.name}`}
+          >
+            <Image
+              src={slide.image}
+              alt={slide.name}
+              fill
+              sizes="(max-width: 1024px) 92vw, 42vw"
+              className="pointer-events-none select-none object-cover"
+              draggable={false}
+              priority={index === 0}
+            />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink/85 via-ink/30 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-6 md:p-7">
+              <p className="display text-2xl uppercase leading-none text-cream md:text-3xl">{slide.name}</p>
+              <span className="display shrink-0 text-lg text-tex-yellow">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* controls: arrows (looping), progress + counter */}
+      <div className="mt-5 flex items-center gap-4">
+        <button
+          aria-label="Previous opening"
+          onClick={() => go(index - 1, -1)}
+          className="flex size-12 shrink-0 items-center justify-center rounded-full border-2 border-ink text-xl text-ink transition-colors hover:bg-ink hover:text-cream"
+          data-cursor="link"
+        >
+          <BrandArrow dir="left" />
+        </button>
+        <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+          <div className="h-1 overflow-hidden rounded-full bg-ink/10">
+            <motion.div
+              className="h-full rounded-full bg-tex-red"
+              animate={{ width: `${((index + 1) / count) * 100}%` }}
+              transition={{ duration: 0.4 }}
+            />
+          </div>
+          <span className="text-[11px] font-bold uppercase tracking-caps text-ink/50">
+            {String(index + 1).padStart(2, "0")} / {String(count).padStart(2, "0")} · Swipe or use the arrows
+          </span>
+        </div>
+        <button
+          aria-label="Next opening"
+          onClick={() => go(index + 1, 1)}
+          className="flex size-12 shrink-0 items-center justify-center rounded-full border-2 border-ink text-xl text-ink transition-colors hover:bg-ink hover:text-cream"
+          data-cursor="link"
+        >
+          <BrandArrow />
+        </button>
+      </div>
+    </motion.div>
   );
 }
 
@@ -235,32 +370,42 @@ function Opportunities() {
   const { opportunities } = franchisePage;
   return (
     <div>
-      <PanelHeading eyebrow="Global opportunities" heading={opportunities.heading} />
-      <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-600 md:text-lg">
-        {opportunities.body}
-      </p>
+      {/* Intro + the US note side by side, so the right of the heading isn't empty */}
+      <div className="grid items-end gap-8 lg:grid-cols-[1.25fr_0.75fr] lg:gap-12">
+        <div>
+          <PanelHeading eyebrow="Global opportunities" heading={opportunities.heading} />
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-600 md:text-lg">
+            {opportunities.body}
+          </p>
+        </div>
+
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: "some" }}
+          className="flex flex-col items-start gap-5 rounded-[1.75rem] bg-tex-red p-7 text-cream shadow-soft3 md:p-8"
+        >
+          <span className="eyebrow text-tex-yellow"><BrandStar /> Looking at the U.S.?</span>
+          <p className="text-sm leading-relaxed text-cream/85">{opportunities.usNote}</p>
+          <div className="flex flex-wrap gap-3">
+            <Button
+              href={opportunities.usUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="yellow"
+            >
+              {opportunities.usCta}
+            </Button>
+            <Button href="/find-your-market" variant="ghostDark">
+              Explore the market map
+            </Button>
+          </div>
+        </motion.div>
+      </div>
 
       {/* Every country we do NOT trade in yet, on one interactive map. */}
       <OpportunityMap />
-
-      <div className="mt-12 flex flex-col items-start gap-5 rounded-[1.75rem] border border-tex-red bg-tex-red p-8 text-cream md:flex-row md:items-center md:justify-between">
-        <p className="max-w-xl text-sm leading-relaxed text-cream/85">
-          {opportunities.usNote}
-        </p>
-        <div className="flex shrink-0 flex-wrap gap-3">
-          <Button
-            href={opportunities.usUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="yellow"
-          >
-            {opportunities.usCta}
-          </Button>
-          <Button href="/find-your-market" variant="ghostDark">
-            Explore the market map
-          </Button>
-        </div>
-      </div>
     </div>
   );
 }
@@ -294,7 +439,9 @@ function Investment() {
             variants={fadeUp}
             className="rounded-[1.5rem] border border-ink/10 bg-paper p-6 shadow-soft3"
           >
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-tex-red text-sm text-cream"><BrandStar /></span>
+            <span className="grid size-12 place-items-center rounded-2xl bg-tex-red text-tex-yellow">
+              <ProfileIcon name={p.icon} />
+            </span>
             <h3 className="display mt-4 text-lg uppercase leading-tight text-ink">{p.title}</h3>
             <p className="mt-2 text-sm leading-relaxed text-ink-600">{p.desc}</p>
           </motion.div>
@@ -413,7 +560,7 @@ function Investment() {
                     v ? "text-ink" : "text-ink-400"
                   }`}
                 >
-                  {v ? money(v) : "—"}
+                  {v ? money(v) : "N/A"}
                 </span>
               </li>
             );
