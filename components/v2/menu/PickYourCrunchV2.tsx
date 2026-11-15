@@ -203,6 +203,7 @@ function Tray({ c, u, tl }: { c: BuildCategory; u: MotionValue<number>; tl: Tl }
         style={{ opacity: glowOpacity, scale: glowScale, background: `radial-gradient(closest-side, ${c.glow}, transparent)` }}
         className="absolute inset-[-12%] rounded-full blur-2xl"
       />
+      {/* back to front; the cut-outs carry their own shadows */}
       {c.pieces.map((p, k) => (
         <Piece key={p.key} p={p} k={k} n={c.pieces.length} u={u} tl={tl} />
       ))}
@@ -210,7 +211,8 @@ function Tray({ c, u, tl }: { c: BuildCategory; u: MotionValue<number>; tl: Tl }
   );
 }
 
-function pieceMotion(v: number, p: BuildPiece, k: number, n: number, tl: Tl) {
+/** build (e) and take-apart (o) progress of one piece */
+function piecePhase(v: number, k: number, n: number, tl: Tl) {
   // build: back-to-front stagger
   const span = tl.inB - tl.inA;
   const L = n > 1 ? span * 0.5 : span * 0.8;
@@ -225,18 +227,19 @@ function pieceMotion(v: number, p: BuildPiece, k: number, n: number, tl: Tl) {
     const b = tl.outA + (n > 1 ? ((n - 1 - k) * (ospan - Lo)) / (n - 1) : 0);
     o = inCubic(seg(v, b, b + Lo));
   }
+  return { e, o };
+}
 
-  // gentle depth parallax around the hold
-  const drift = (v - tl.hold) * p.depth * -0.05;
-
+function pieceMotion(v: number, p: BuildPiece, k: number, n: number, tl: Tl) {
+  const { e, o } = piecePhase(v, k, n, tl);
+  // once landed (e = 1) every piece is locked to the paper: no drift, no float
   const dx = p.from.dx * (1 - outCubic(e)) + p.to.dx * o;
-  const dy = p.from.dy * (1 - outBack(e, 1.1)) + p.to.dy * o + drift;
+  const dy = p.from.dy * (1 - outBack(e, 1.1)) + p.to.dy * o;
   const r = p.from.r * (1 - outCubic(e)) + p.to.r * o;
   const s = (p.from.s + (1 - p.from.s) * outBack(e, 1.7)) * (1 + (p.to.s - 1) * o);
   const opacity = seg(e, 0, 0.12) * (1 - seg(o, 0.45, 1));
   return { dx, dy, r, s, opacity };
 }
-
 function Piece({ p, k, n, u, tl }: { p: BuildPiece; k: number; n: number; u: MotionValue<number>; tl: Tl }) {
   const h = (p.w * p.ih) / p.iw; // artwork px
   // stage-relative offsets → % of the piece's own box (so no measuring)

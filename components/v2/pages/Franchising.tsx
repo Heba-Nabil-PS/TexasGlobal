@@ -119,13 +119,13 @@ export function FranchiseCredentialsV2() {
             <Lead>{c.body}</Lead>
           </div>
 
-          {/* awards on one warm panel, equal-height cards */}
+          {/* awards: equal-height cards */}
           <motion.div
             variants={staggerContainer(0.12)}
             initial="hidden"
             whileInView="show"
             viewport={inView}
-            className="grid gap-4 rounded-[2.5rem] bg-[#FFF4DC] p-4 sm:grid-cols-3 sm:p-5"
+            className="grid gap-4 sm:grid-cols-3"
           >
             {c.items.map((b) => (
               <motion.div
@@ -219,9 +219,13 @@ export function FranchiseApplyV2() {
                 src="https://churchschicken.franconnect.net/fc/extforms/franchiseewebsite?refLoc=ifrm"
                 title="Franchisee Website Form"
                 width="100%"
-                height={880}
                 loading="lazy"
-                className="block w-full rounded-[1.5rem] border-0"
+                // The form is cross-origin, so it can't report its height. Heights are the form's
+                // measured full height at each breakpoint's narrowest iframe width (+16px), so it
+                // never scrolls inside the frame. Its page background is #f0f0f0; brightness
+                // ×1.0625 (255/240) turns exactly that grey to white so any space left under the
+                // form blends into the card (the form itself is already white).
+                className="block h-[1960px] w-full rounded-[1.5rem] border-0 [filter:brightness(1.0625)] min-[360px]:h-[1596px] min-[400px]:h-[1426px] min-[480px]:h-[1226px] sm:h-[1056px] md:h-[944px] lg:h-[1056px] xl:h-[934px]"
               />
             </motion.div>
           </div>
