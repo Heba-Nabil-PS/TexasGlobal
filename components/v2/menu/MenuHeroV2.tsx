@@ -5,14 +5,14 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Button from "@/components/ui/Button";
-import { ShootingStar, Stamp } from "@/components/v2/kit";
+import { ShootingStar } from "@/components/v2/kit";
 import { menuV2 } from "@/lib/content-v2/menu";
 import { ease } from "@/lib/motion";
 
 const AUTOPLAY_MS = 5500;
 
 /**
- * Menu hero — full-bleed rotating banner (bone-in · Mexicana · tenders) with
+ * Menu hero — full-bleed rotating banner (bone-in · sides · Mexicana · tenders) with
  * live HTML title/CTA per slide, following the menu reference.
  */
 export default function MenuHeroV2() {
@@ -30,6 +30,12 @@ export default function MenuHeroV2() {
   }, [slides.length]);
 
   const s = slides[index];
+  // wash colour at a given alpha (0–1), scaled by the slide's wash strength
+  const w = (a: number) =>
+    s.wash +
+    Math.round(a * (s.washStrength ?? 1) * 255)
+      .toString(16)
+      .padStart(2, "0");
   const lead = s.tone === "light" ? "text-third" : "text-white";
   const accent = s.tone === "dark" ? "text-secondary" : s.tone === "warm" ? "text-third" : "text-primary";
   const body = s.tone === "light" ? "text-third/80" : "text-white/85";
@@ -64,7 +70,7 @@ export default function MenuHeroV2() {
           <div
             className="absolute inset-0"
             style={{
-              background: `linear-gradient(90deg, ${s.wash} 0%, ${s.wash}e6 22%, ${s.wash}80 42%, transparent 62%)`,
+              background: `linear-gradient(90deg, ${w(1)} 0%, ${w(0.9)} 22%, ${w(0.5)} 42%, transparent 62%)`,
             }}
           />
           {/* mobile: bottom wash instead */}
@@ -151,8 +157,6 @@ export default function MenuHeroV2() {
           </div>
         </div>
       </div>
-
-      <Stamp text="Bold Texas flavor" size={120} className="absolute right-[6%] top-32 z-20 hidden lg:block" />
     </section>
   );
 }

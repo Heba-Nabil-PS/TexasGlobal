@@ -12,35 +12,46 @@ export type HeroSlide = {
   tone: "light" | "dark" | "warm";
   /** colour the left-hand legibility wash fades from (sampled from the photo) */
   wash: string;
+  /** 0–1, how strong that wash is (default 1); lower keeps artwork on the left visible */
+  washStrength?: number;
 };
 
 export const menuV2 = {
   hero: {
     eyebrow: "The full line-up",
+    // photos: img/BIC.png, side.png, mexicana.png, tenders.png (2560px WebP)
     slides: [
       {
         key: "bone-in",
-        image: "/assets/v2/menu/banner-bone-in.png",
+        image: "/assets/v2/menu/hero-bic.webp",
         title: ["Bone-in", "chicken"],
         body: "Crispy fried chicken, marinated for hours, hand-battered to order and cooked fresh in small batches. The crunch that started it all in 1952.",
-        tone: "warm",
-        wash: "#e9962a",
+        tone: "dark",
+        wash: "#16110e",
+      },
+      {
+        key: "sides",
+        image: "/assets/v2/menu/hero-side.webp",
+        title: ["Bold", "sides"],
+        body: "Honey-butter biscuits, jalapeño poppers, coleslaw and mashed potatoes with gravy: the crew that makes every meal.",
+        tone: "light",
+        wash: "#aeaab0",
       },
       {
         key: "mexicana",
-        image: "/assets/v2/menu/banner-mexicana.png",
+        image: "/assets/v2/menu/hero-mexicana.webp",
         title: ["The", "Mexicana"],
         body: "Our spicy sandwich icon: a hand-battered fillet, melted cheese and a tortilla-chip crunch, stacked high on a toasted sesame bun.",
         tone: "dark",
-        wash: "#140f0d",
+        wash: "#0b0402",
       },
       {
         key: "tenders",
-        image: "/assets/v2/menu/banner-tenders.png",
+        image: "/assets/v2/menu/hero-tenders.webp",
         title: ["Crunchy", "tenders"],
         body: "Whole-muscle tenders in our signature crunchy coating, made for dipping, sharing and coming back for more.",
         tone: "light",
-        wash: "#f3e7d6",
+        wash: "#d6bea6",
       },
     ] as HeroSlide[],
     cta: { label: "Find a restaurant", href: "/find-your-market" },
