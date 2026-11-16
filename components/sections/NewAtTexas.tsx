@@ -56,20 +56,17 @@ export default function NewAtTexas() {
             key={item.title}
             data-card
             variants={fadeUp}
-            className="group relative aspect-[4/5] w-[78vw] shrink-0 snap-start overflow-hidden rounded-3xl bg-ink sm:w-[46vw] lg:w-[30vw] xl:w-[26vw]"
+            className="group relative aspect-square w-[78vw] shrink-0 snap-start overflow-hidden rounded-3xl bg-ink sm:w-[46vw] lg:w-[30vw] xl:w-[26vw]"
           >
             <Image
               src={item.image}
               alt={item.title}
               fill
               sizes="(max-width: 640px) 78vw, (max-width: 1024px) 46vw, 26vw"
-              className="object-cover transition-transform duration-700 group-hover:scale-110"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/10 to-transparent opacity-90" />
-            <div className="absolute inset-x-0 bottom-0 p-6">
-              <span className="eyebrow text-secondary">{item.tag}</span>
-              <h3 className="display mt-1 text-2xl uppercase text-cream md:text-3xl">{item.title}</h3>
-            </div>
+            {/* Product name is printed on the artwork — keep it for screen readers only */}
+            <h3 className="sr-only">{item.title}</h3>
           </motion.article>
         ))}
       </motion.div>

@@ -244,11 +244,9 @@ export const newAtTexas = {
   heading: ["New at", "Texas Chicken"],
   body: "We're always bringing new bold flavors. Discover our latest limited-time offers and meals, that bring the crunch like only Texas Chicken™ can.",
   items: [
-    { title: "Honey Sriracha", tag: "Sweet heat", image: "/assets/food-sandwich.png" },
-    { title: "BBQ Sauce Stacker", tag: "Covered in BBQ", image: "/assets/banner-tenders.png" },
-    { title: "The Mexicana", tag: "Spicy sandwich", image: "/assets/banner-mexicana.png" },
-    { title: "Bone-In Bucket", tag: "Original & Spicy", image: "/assets/banner-bonein.png" },
-    { title: "Honey-Butter Biscuits", tag: "Famous side", image: "/assets/food-biscuits.png" },
+    { title: "All-New Golden Dragon", tag: "Sandwich", image: "/assets/v2/whats-new/golden-dragon-2026.webp" },
+    { title: "Mexicana Loaded Fries", tag: "Loaded fries", image: "/assets/v2/whats-new/mexicana-loaded-fries-2026.webp" },
+    { title: "The Super Hero", tag: "Massively flavorful", image: "/assets/v2/whats-new/super-hero-2026.webp" },
   ],
 };
 
@@ -1179,15 +1177,11 @@ export const faqsPage = {
       title: "About the brand",
       items: [
         { q: "What is Texas Chicken™ origin?", a: "The original brand concept was first founded by George W. Church Sr. on April 17, 1952, in San Antonio, Texas, USA." },
-        { q: "Are Texas Chicken and Church's the same brand?", a: "Yes, it's a dual brand. Known as Church's Texas Chicken in the Americas and Texas Chicken across most international markets, with one shared recipe and heritage." },
-        { q: "How many markets are you in?", a: "We operate 1,500+ restaurants across 23 markets, run by independent franchisees in the Middle East, Asia Pacific and beyond." },
       ],
     },
     {
       title: "Menu & allergens",
       items: [
-        { q: "Is your chicken really hand-battered?", a: "Every piece is marinated, hand-breaded and fried fresh in-restaurant, never pre-made or held. That's the whole point." },
-        { q: "Do you have allergen and nutrition information?", a: "Yes. Allergen and nutrition details vary slightly by market and local supplier. Check your local market site or ask in-restaurant for the latest." },
         { q: "Does Texas Chicken™ serve halal chicken?", a: "Yes, all Texas Chicken™ signature meals are prepared using chicken. Our chicken is sourced from authorized suppliers who follow Texas Chicken™'s strict international food safety, quality, and halal standards." },
       ],
     },
@@ -1195,7 +1189,6 @@ export const faqsPage = {
       title: "App & rewards",
       items: [
         { q: "What can I do in the app?", a: "Features vary by market. Some examples are: Ordering ahead, skipping the line, earning rewards with every order, saving favorites for one-tap reorder, and unlocking members-only deals." },
-        { q: "How do rewards work?", a: "Every order stacks points you can redeem for free biscuits, sides and more. Rewards live inside the Texas Chicken app." },
         { q: "Is the app available in my market?", a: "App availability depends on your market. Use Find Your Market to check what's live near you." },
       ],
     },
@@ -1221,8 +1214,6 @@ export const faqsPage = {
       title: "Careers",
       items: [
         { q: "How do I get a job at Texas Chicken™?", a: "Find out more about being a Texas Chicken™ employee, and apply online in our careers section [Link](/careers)." },
-        { q: "Do you offer training?", a: "Absolutely. The Team Texas academy turns first jobs into hospitality careers with hands-on, in-restaurant training." },
-        { q: "Do you promote from within?", a: "Most of our restaurant leaders started behind the counter. Real career paths are part of the deal." },
       ],
     },
   ],

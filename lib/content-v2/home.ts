@@ -35,9 +35,9 @@ export const whatsNewV2 = {
   eyebrow: "Our core menu",
   title: "Crunch classics.",
   items: [
-    { title: "Golden Dragon", image: "/assets/v2/whats-new/golden-dragon-sq.webp", w: 500, h: 500 },
-    { title: "Mexicana Loaded Fries", image: "/assets/v2/whats-new/mexicana-loaded-fries-sq.webp", w: 500, h: 500 },
-    { title: "The Super Hero", image: "/assets/v2/whats-new/super-hero-sq.webp", w: 500, h: 500 },
+    { title: "Golden Dragon", image: "/assets/v2/whats-new/golden-dragon-2026.webp", w: 1000, h: 1000 },
+    { title: "Mexicana Loaded Fries", image: "/assets/v2/whats-new/mexicana-loaded-fries-2026.webp", w: 1000, h: 1000 },
+    { title: "The Super Hero", image: "/assets/v2/whats-new/super-hero-2026.webp", w: 1000, h: 1000 },
   ],
   // closing tile: styled like the LTO photos (maroon wall, orange floor)
   fullMenu: {

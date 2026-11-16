@@ -141,7 +141,7 @@ function EndCard() {
     <Link
       href="/menu"
       data-cursor="link"
-      className="group flex aspect-square w-[82vw] max-w-[420px] shrink-0 snap-center flex-col items-center justify-center gap-5 rounded-[2rem] bg-[linear-gradient(160deg,#872c33_0%,#67161b_100%)] shadow-soft3 text-cream md:h-full md:max-h-[58vh] md:w-auto md:max-w-none"
+      className="group flex aspect-square w-[82vw] max-w-[420px] shrink-0 snap-center flex-col items-center justify-center gap-5 rounded-[2rem] bg-[#94332b] shadow-soft3 text-cream md:h-full md:max-h-[58vh] md:w-auto md:max-w-none"
     >
       <span className="display text-center text-4xl leading-[0.9]">
         See the
