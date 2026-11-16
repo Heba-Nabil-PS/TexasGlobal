@@ -14,6 +14,8 @@ export type HeroSlide = {
   wash: string;
   /** 0–1, how strong that wash is (default 1); lower keeps artwork on the left visible */
   washStrength?: number;
+  /** force the body paragraph to white regardless of tone */
+  bodyWhite?: boolean;
 };
 
 export const menuV2 = {
@@ -31,11 +33,14 @@ export const menuV2 = {
       },
       {
         key: "sides",
-        image: "/assets/v2/menu/hero-side.webp",
+        image: "/assets/v2/menu/hero-sides.webp",
         title: ["Bold", "sides"],
         body: "Honey-butter biscuits, jalapeño poppers, coleslaw and mashed potatoes with gravy: the crew that makes every meal.",
         tone: "light",
-        wash: "#aeaab0",
+        // photo already has a clean yellow field on the left, so no desktop wash
+        wash: "#dc991d",
+        washStrength: 0,
+        bodyWhite: true,
       },
       {
         key: "mexicana",

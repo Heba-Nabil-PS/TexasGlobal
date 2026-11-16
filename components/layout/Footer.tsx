@@ -98,7 +98,9 @@ function AppRewardsBand() {
           transition={{ duration: 0.8 }}
           className="mx-auto flex size-28 items-center justify-center rounded-full bg-third md:mx-0 md:size-32"
         >
-          <Image src="/assets/icons/rewards.svg" alt="" width={64} height={64} className="size-14 brightness-0 invert md:size-16" />
+          <svg viewBox="0 0 24 24" className="size-14 text-white md:size-16" fill="currentColor" aria-hidden>
+            <path d="M12 2.5l2.94 5.96 6.58.96-4.76 4.64 1.12 6.55L12 17.52l-5.88 3.09 1.12-6.55L2.48 9.42l6.58-.96L12 2.5z" />
+          </svg>
         </motion.div>
         <div className="text-center md:text-left">
           <p className="display text-4xl leading-[0.9] md:text-5xl">
@@ -149,18 +151,18 @@ export default function Footer() {
             </div>
             <div className="relative flex flex-wrap items-center justify-center gap-3 md:justify-end">
               <Link
-                href="/franchising#apply-form"
+                href="/find-your-market"
                 data-cursor="link"
                 className="rounded-full border-2 border-third px-7 py-[14px] font-texas text-sm font-extrabold uppercase tracking-caps text-third transition-colors hover:bg-third hover:text-white"
               >
-                Franchise with us
+                Find your market
               </Link>
               <Link
-                href="/find-your-market"
+                href="/franchising#apply-form"
                 data-cursor="link"
                 className="rounded-full bg-third px-7 py-4 font-texas text-sm font-extrabold uppercase tracking-caps text-white transition-colors hover:bg-primary"
               >
-                Find your market
+                Franchise with us
               </Link>
             </div>
           </div>

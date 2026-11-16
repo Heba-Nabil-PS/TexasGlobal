@@ -41,7 +41,6 @@ export default function StoryPage() {
         accent="Just getting warmed up."
         body="Taste the recipe that started it all, or help us write the next chapter in your market."
         primary={{ label: "Explore the menu", href: "/menu" }}
-        secondary={{ label: "Franchise with us", href: "/franchising" }}
         tone="ink"
         video="/assets/home/hero-reference.mp4"
       />

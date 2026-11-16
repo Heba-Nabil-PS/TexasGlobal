@@ -38,7 +38,7 @@ export default function MenuHeroV2() {
       .padStart(2, "0");
   const lead = s.tone === "light" ? "text-third" : "text-white";
   const accent = s.tone === "dark" ? "text-secondary" : s.tone === "warm" ? "text-third" : "text-primary";
-  const body = s.tone === "light" ? "text-third/80" : "text-white/85";
+  const body = s.bodyWhite ? "text-white" : s.tone === "light" ? "text-third/80" : "text-white/85";
 
   return (
     <section

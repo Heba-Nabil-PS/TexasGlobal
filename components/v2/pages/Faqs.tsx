@@ -1,15 +1,47 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "@/components/ui/Button";
-import { OutlineStar, Title } from "@/components/v2/kit";
+import { Title } from "@/components/v2/kit";
 import { ClosingCta } from "./shared";
 import { faqsPage } from "@/lib/content";
 import { faqsV2 } from "@/lib/content-v2/pages";
 
 const fix = (s: string) => faqsV2.fixes.reduce((t, [a, b]) => t.replace(a, b), s);
-const GROUPS = faqsPage.groups.map((g) => ({ ...g, items: g.items.map((i) => ({ q: i.q, a: fix(i.a) })) }));
+const LINK = /\[([^\]]+)\]\(([^)]+)\)/g;
+/** Answers may carry inline `[label](href)` links; `plain` is what search matches against. */
+const GROUPS = faqsPage.groups.map((g) => ({
+  ...g,
+  items: g.items.map((i) => {
+    const a = fix(i.a);
+    return { q: i.q, a, plain: a.replace(LINK, "$1") };
+  }),
+}));
+
+/** Render an answer: blank lines split paragraphs, `[label](href)` becomes a link. */
+function Answer({ text }: { text: string }) {
+  return (
+    <div className="space-y-4 px-6 pb-6 text-lg leading-relaxed text-third/85 md:px-8">
+      {text.split(/\n{2,}/).map((para, p) => {
+        const parts: React.ReactNode[] = [];
+        let last = 0;
+        for (const m of para.matchAll(LINK)) {
+          parts.push(para.slice(last, m.index));
+          parts.push(
+            <Link key={m.index} href={m[2]} className="font-bold text-primary underline underline-offset-4 hover:text-third">
+              {m[1]}
+            </Link>,
+          );
+          last = m.index! + m[0].length;
+        }
+        parts.push(para.slice(last));
+        return <p key={p}>{parts}</p>;
+      })}
+    </div>
+  );
+}
 
 /* ---------------------------------------------------------------- hero */
 export function FaqsHeroV2() {
@@ -33,7 +65,7 @@ export function FaqsBodyV2() {
     return GROUPS.filter((g) => group === "All" || g.title === group)
       .map((g) => ({
         ...g,
-        items: g.items.filter((i) => !term || i.q.toLowerCase().includes(term) || i.a.toLowerCase().includes(term)),
+        items: g.items.filter((i) => !term || i.q.toLowerCase().includes(term) || i.plain.toLowerCase().includes(term)),
       }))
       .filter((g) => g.items.length);
   }, [q, group]);
@@ -83,8 +115,7 @@ export function FaqsBodyV2() {
             {results.length === 0 && <p className="rounded-3xl bg-secondary/15 p-8 text-lg text-third/80">{faqsV2.empty}</p>}
             {results.map((g) => (
               <div key={g.title}>
-                <h2 className="display flex items-center gap-3 text-4xl uppercase text-third md:text-5xl">
-                  <span className="size-3 rotate-45 bg-primary" />
+                <h2 className="display text-4xl uppercase text-third md:text-5xl">
                   {g.title}
                 </h2>
                 <div className="mt-6 space-y-3">
@@ -117,7 +148,7 @@ export function FaqsBodyV2() {
                               exit={{ height: 0, opacity: 0 }}
                               transition={{ duration: 0.3 }}
                             >
-                              <p className="px-6 pb-6 text-lg leading-relaxed text-third/85 md:px-8">{item.a}</p>
+                              <Answer text={item.a} />
                             </motion.div>
                           )}
                         </AnimatePresence>
@@ -133,7 +164,6 @@ export function FaqsBodyV2() {
         {/* Sticky side card */}
         <aside className="lg:sticky lg:top-36 lg:self-start">
           <div className="relative overflow-hidden rounded-[2.5rem] bg-primary p-8 pt-10 text-white">
-            <OutlineStar className="absolute -right-10 -top-10 size-48 opacity-70" />
             <p className="display relative text-4xl uppercase leading-[0.95]">{faqsV2.side.title}</p>
             <p className="relative mt-3 text-white/80">{faqsV2.side.body}</p>
             <div className="relative mt-6">

@@ -318,12 +318,14 @@ export default function EarthGlobe({
 
       const ray = new THREE.Raycaster();
       const ndc = new THREE.Vector2();
-      const pickAt = (e: PointerEvent) => {
+      // only markets (orange) are interactive; other countries behave like ocean
+      const hitAt = (e: PointerEvent) => {
         const r = canvas.getBoundingClientRect();
         ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
         ray.setFromCamera(ndc, camera);
         const h = ray.intersectObject(sphere, false)[0];
-        return h && h.uv ? pick(h.uv.x, h.uv.y) : -1;
+        const idx = h && h.uv ? pick(h.uv.x, h.uv.y) : -1;
+        return { idx: idx >= 0 && countries[idx].market ? idx : -1, point: h?.point };
       };
 
       // click a country to select it: it's highlighted and its name popup sits on
@@ -358,9 +360,13 @@ export default function EarthGlobe({
         canvas.setPointerCapture(e.pointerId);
         canvas.style.cursor = "grabbing";
       };
+      // hovering a country opens its popup straight away; passing over ocean keeps
+      // the current popup open so its link stays reachable.
       const onMove = (e: PointerEvent) => {
         if (!dragging) {
-          canvas.style.cursor = pickAt(e) >= 0 ? "pointer" : "grab";
+          const { idx, point } = hitAt(e);
+          canvas.style.cursor = idx >= 0 ? "pointer" : "grab";
+          if (idx >= 0 && idx !== selected && point && e.pointerType === "mouse") select(idx, point);
           return;
         }
         const now = performance.now();
@@ -382,12 +388,11 @@ export default function EarthGlobe({
         if (idleSince - last.t > 80) vel.x = vel.y = 0;
         if (moved < 6) {
           vel.x = vel.y = 0;
-          const r = canvas.getBoundingClientRect();
-          ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
-          ray.setFromCamera(ndc, camera);
-          const h = ray.intersectObject(sphere, false)[0];
-          const idx = h && h.uv ? pick(h.uv.x, h.uv.y) : -1;
-          select(idx === selected ? -1 : idx, h?.point);
+          const { idx, point } = hitAt(e);
+          // with a mouse the popup already opened on hover, so a click keeps it;
+          // on touch, tapping the same country again closes it
+          const toggleOff = idx === selected && e.pointerType !== "mouse";
+          select(toggleOff ? -1 : idx, point);
         }
       };
       canvas.addEventListener("pointerenter", onEnter);

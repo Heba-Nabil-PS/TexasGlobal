@@ -13,7 +13,7 @@ import { storyPage } from "@/lib/content";
 import { ease, fadeUp, inView, staggerContainer } from "@/lib/motion";
 
 /* ------------------------------------------------------------------ */
-/* Hero — bright brand-yellow stage, product-dominant composition      */
+/* Hero — clean white stage, product-dominant composition              */
 /* ------------------------------------------------------------------ */
 export function StoryHeroV2({
   title = storyV2.hero.title,
@@ -29,13 +29,7 @@ export function StoryHeroV2({
   const foodY = useTransform(scrollYProgress, [0, 1], [0, 140]);
 
   return (
-    <section ref={ref} className="relative flex items-center overflow-hidden bg-[#FFF4DC] pb-10 pt-32 text-third md:pb-14 md:pt-36 lg:min-h-[100svh]">
-      {/* Light warm tint (not full brand yellow) so the yellow menu bar stays visible;
-          a soft yellow glow sits behind the 1952 photo. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-[10%] top-1/2 size-[70vw] max-w-[900px] -translate-y-1/2 rounded-full bg-secondary/35 blur-[90px] lg:size-[55vw]"
-      />
+    <section ref={ref} className="relative flex items-center overflow-hidden bg-white pb-10 pt-32 text-third md:pb-14 md:pt-36 lg:min-h-[100svh]">
 
       <div className="container-tx relative z-10 grid w-full items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
         <div>

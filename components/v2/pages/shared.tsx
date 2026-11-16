@@ -21,6 +21,7 @@ export function HeroV2({
   visual,
   decor,
   reverse = false,
+  className = "pb-12 pt-32 lg:pt-44",
 }: {
   eyebrow: string;
   title: string[];
@@ -29,9 +30,11 @@ export function HeroV2({
   visual: ReactNode;
   decor?: ReactNode;
   reverse?: boolean;
+  /** vertical padding / sizing of the section (defaults to the standard hero spacing) */
+  className?: string;
 }) {
   return (
-    <section className="relative overflow-hidden bg-white pb-12 pt-32 text-third md:pb-12 lg:pt-44">
+    <section className={`relative overflow-hidden bg-white text-third ${className}`}>
       {decor}
       <div
         className={`container-tx relative grid items-center gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-8 ${

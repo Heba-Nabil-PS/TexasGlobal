@@ -12,7 +12,7 @@ export const aboutV2 = {
   titleLines: ["From one Texas stand", "to [25+ markets] worldwide."],
   body: "In 1952 one San Antonio stand served crispy fried chicken, hand-battered and cooked fresh to order. Seven decades on, Church's Texas Chicken brings that same taste of Texas, done right, to 25+ markets across the Americas, the Middle East, Africa and Asia, still made by hand, in small batches, in every restaurant.",
   stats: [
-    { value: 1952, suffix: "", label: "Born in Texas" },
+    { value: 1952, suffix: "", label: "Born in Texas", year: true },
     { value: 25, suffix: "+", label: "Markets" },
     { value: 70, suffix: "+", label: "Years of legacy" },
     { value: 100, suffix: "%", label: "Hand-battered" },

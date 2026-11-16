@@ -59,7 +59,7 @@ export default function AboutV2() {
   );
 }
 
-/** Punchier counters: tilted cards, big numbers, 1–3 word labels, one yellow hero card. */
+/** Punchier counters: tilted black cards, big yellow numbers, 1–3 word labels. */
 function StatCards() {
   return (
     <motion.div
@@ -70,20 +70,16 @@ function StatCards() {
       className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4"
     >
       {aboutV2.stats.map((s, i) => {
-        // balanced: yellow, black, yellow, black
-        const hero = i % 2 === 0;
         return (
           <motion.div
             key={s.label}
             variants={fadeUp}
             whileHover={{ y: -6, rotate: 0 }}
             style={{ rotate: i % 2 ? 1.5 : -1.5 }}
-            className={`relative flex flex-col justify-between overflow-hidden rounded-2xl p-4 shadow-soft3 md:p-5 ${
-              hero ? "bg-secondary text-third" : "bg-third text-white"
-            }`}
+            className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-third p-4 text-white shadow-soft3 md:p-5"
           >
-            <div className={`display text-[2.6rem] leading-none md:text-5xl ${hero ? "text-primary" : "text-secondary"}`}>
-              <Counter value={s.value} suffix={s.suffix} />
+            <div className="display text-[2.6rem] leading-none text-secondary md:text-5xl">
+              <Counter value={s.value} suffix={s.suffix} grouping={!("year" in s && s.year)} />
             </div>
             <div className="mt-3 text-sm font-extrabold uppercase leading-tight tracking-wide">{s.label}</div>
           </motion.div>

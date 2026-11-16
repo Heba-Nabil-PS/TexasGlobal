@@ -9,11 +9,14 @@ export default function Counter({
   suffix = "",
   duration = 1600,
   className,
+  grouping = true,
 }: {
   value: number;
   suffix?: string;
   duration?: number;
   className?: string;
+  /** thousands separators ("40,000"); turn off for years ("1952") */
+  grouping?: boolean;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.6 });
@@ -35,7 +38,7 @@ export default function Counter({
 
   return (
     <span ref={ref} className={className}>
-      {display.toLocaleString()}
+      {grouping ? display.toLocaleString() : display}
       {suffix}
     </span>
   );

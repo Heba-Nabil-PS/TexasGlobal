@@ -388,19 +388,14 @@ function Opportunities() {
         >
           <span className="eyebrow text-tex-yellow"><BrandStar /> Looking at the U.S.?</span>
           <p className="text-sm leading-relaxed text-cream/85">{opportunities.usNote}</p>
-          <div className="flex flex-wrap gap-3">
-            <Button
-              href={opportunities.usUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="yellow"
-            >
-              {opportunities.usCta}
-            </Button>
-            <Button href="/find-your-market" variant="ghostDark">
-              Explore the market map
-            </Button>
-          </div>
+          <Button
+            href={opportunities.usUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="yellow"
+          >
+            {opportunities.usCta}
+          </Button>
         </motion.div>
       </div>
 

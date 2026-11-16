@@ -85,8 +85,8 @@ export const crunchBuild: BuildCategory[] = [
     blurb: "Bone-in pieces and hand-battered tenders, with sides and a drink.",
     href: "/find-your-market",
     combo: { src: `${dir}/chicken/combo.webp`, iw: 735, ih: 480 },
-    bg: ["#fffaf1", "#ffe6b8"],
-    glow: "#ffd27a",
+    bg: ["#ffffff", "#ffffff"],
+    glow: "#ffffff",
     ink: "dark",
     pieces: [
       tray("chicken", { dx: 0.9, dy: 0.25, r: 18, s: 0.9 }, { dx: -1.1, dy: 0.15, r: -12, s: 0.9 }),
@@ -106,8 +106,8 @@ export const crunchBuild: BuildCategory[] = [
     blurb: "Crispy chicken sandwiches and wraps, built bold and stacked high.",
     href: "/find-your-market",
     combo: { src: `${dir}/burger/combo.webp`, iw: 732, ih: 479 },
-    bg: ["#fff7f1", "#ffd6c2"],
-    glow: "#ffb48a",
+    bg: ["#ffffff", "#ffffff"],
+    glow: "#ffffff",
     ink: "dark",
     pieces: [
       tray("burger", { dx: 1.1, dy: 0.1, r: 14, s: 0.95 }, { dx: -1.1, dy: 0.15, r: -12, s: 0.9 }),
@@ -126,8 +126,8 @@ export const crunchBuild: BuildCategory[] = [
     blurb: "Fries, coleslaw, honey-butter biscuits and the rest of the crew.",
     href: "/find-your-market",
     combo: { src: `${dir}/sides/combo.webp`, iw: 800, ih: 421 },
-    bg: ["#fffcef", "#fbe7a6"],
-    glow: "#f8d06a",
+    bg: ["#ffffff", "#ffffff"],
+    glow: "#ffffff",
     ink: "dark",
     pieces: [
       tray("sides", { dx: 1.05, dy: 0.3, r: 20, s: 0.9 }, { dx: -1.1, dy: 0.2, r: -14, s: 0.9 }),
@@ -146,8 +146,8 @@ export const crunchBuild: BuildCategory[] = [
     blurb: "Something sweet to finish the crunch.",
     href: "/find-your-market",
     combo: { src: `${dir}/desserts/combo.webp`, iw: 744, ih: 420 },
-    bg: ["#fff8f4", "#f0d6c8"],
-    glow: "#e9b9a0",
+    bg: ["#ffffff", "#ffffff"],
+    glow: "#ffffff",
     ink: "dark",
     pieces: [
       tray("desserts", { dx: -1.05, dy: 0.25, r: -22, s: 0.9 }, { dx: 1.1, dy: 0.2, r: 14, s: 0.9 }),

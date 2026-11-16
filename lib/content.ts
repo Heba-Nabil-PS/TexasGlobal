@@ -992,10 +992,10 @@ export const contactPage = {
     subtitle: "Questions, feedback, press or partnerships? We're all ears. Reach the right team below.",
   },
   channels: [
-    { title: "General enquiries", value: "hello@texaschicken.example", note: "We reply within 2 business days." },
-    { title: "Franchising", value: "franchise@texaschicken.example", note: "For market & partnership opportunities.", href: "/franchising" },
-    { title: "Press & media", value: "press@texaschicken.example", note: "Newsroom, assets and interviews.", href: "/news" },
-    { title: "Careers", value: "careers@texaschicken.example", note: "Join a team of 40,000+.", href: "/careers" },
+    { title: "Franchising", note: "For market & partnership opportunities.", href: "/franchising#apply-form" },
+    { title: "Press & media", note: "Newsroom, assets and interviews.", href: "/news" },
+    { title: "Careers", note: "Join a team of 40,000+.", href: "/careers" },
+    { title: "FAQs", note: "Quick answers to common questions.", href: "/faqs" },
   ],
   hq: {
     label: "Global support office",
@@ -1178,7 +1178,7 @@ export const faqsPage = {
     {
       title: "About the brand",
       items: [
-        { q: "Where did Texas Chicken start?", a: "In 1952, George W. Church opened his first stand across from the Alamo in San Antonio, Texas. That hand-battered, fried-fresh craft is still the heart of everything we do." },
+        { q: "What is Texas Chicken™ origin?", a: "The original brand concept was first founded by George W. Church Sr. on April 17, 1952, in San Antonio, Texas, USA." },
         { q: "Are Texas Chicken and Church's the same brand?", a: "Yes, it's a dual brand. Known as Church's Texas Chicken in the Americas and Texas Chicken across most international markets, with one shared recipe and heritage." },
         { q: "How many markets are you in?", a: "We operate 1,500+ restaurants across 23 markets, run by independent franchisees in the Middle East, Asia Pacific and beyond." },
       ],
@@ -1188,13 +1188,13 @@ export const faqsPage = {
       items: [
         { q: "Is your chicken really hand-battered?", a: "Every piece is marinated, hand-breaded and fried fresh in-restaurant, never pre-made or held. That's the whole point." },
         { q: "Do you have allergen and nutrition information?", a: "Yes. Allergen and nutrition details vary slightly by market and local supplier. Check your local market site or ask in-restaurant for the latest." },
-        { q: "Is the food halal?", a: "Our restaurants across the MENA and APAC regions are certified halal. Certification is displayed in-restaurant and on local market sites." },
+        { q: "Does Texas Chicken™ serve halal chicken?", a: "Yes, all Texas Chicken™ signature meals are prepared using chicken. Our chicken is sourced from authorized suppliers who follow Texas Chicken™'s strict international food safety, quality, and halal standards." },
       ],
     },
     {
       title: "App & rewards",
       items: [
-        { q: "What can I do in the app?", a: "Order ahead, skip the line, earn rewards on every order, save favourites for one-tap reorder, and unlock members-only deals." },
+        { q: "What can I do in the app?", a: "Features vary by market. Some examples are: Ordering ahead, skipping the line, earning rewards with every order, saving favorites for one-tap reorder, and unlocking members-only deals." },
         { q: "How do rewards work?", a: "Every order stacks points you can redeem for free biscuits, sides and more. Rewards live inside the Texas Chicken app." },
         { q: "Is the app available in my market?", a: "App availability depends on your market. Use Find Your Market to check what's live near you." },
       ],
@@ -1202,15 +1202,25 @@ export const faqsPage = {
     {
       title: "Franchising",
       items: [
-        { q: "Can I open a Texas Chicken franchise?", a: "Yes, we're actively expanding. We look for partners with local market knowledge, operational capability and a passion for the brand." },
-        { q: "What support do franchisees get?", a: "End-to-end: site selection, build-out, training, marketing and an operational playbook that keeps the crunch consistent from day one." },
-        { q: "How do I apply?", a: "Head to our Franchising page and submit an inquiry. Our development team will be in touch to align on territory and investment." },
+        { q: "I am interested in becoming a franchisee, how do I apply?", a: "Click on [Get Started](/franchising#apply-form) to begin the application process. We look forward to hearing from you." },
+        { q: "What happens after I submit my online application?", a: "You will receive an email notification letting you know we received your application. From there, our team will review your information and reach out with next steps." },
+        { q: "What markets are available to franchise?", a: "Please review the available markets in the [Global Opportunities](/franchising#opportunities) section of this website." },
+        { q: "Do I need to have restaurant experience?", a: "Yes, multi-unit restaurant experience with a portfolio of brands is preferred; however, at least multi-unit retail business ownership is required. For Private Equity firms, an Operating Principal (company or individual) with an equity stake must be approved for consideration." },
+        { q: "How much money can I make?", a: "We cannot provide financial performance representations on our website." },
+        { q: "Will Church's Texas Chicken™ and Texas Chicken™ provide financing for my restaurants?", a: "We do not directly engage with the franchisee to source financing. If there is support needed for the preparation of business plans that the financial institution requires, our team will assist to the best of our abilities." },
+        { q: "Will Church's Texas Chicken™ and Texas Chicken™ help me find a location?", a: "We directly support each franchisee with the creation of a strategic market plan to identify trade areas to source sites and build restaurants. It is the responsibility of each franchisee to work with local real estate professionals and developers to source and secure future restaurant locations." },
+        { q: "What demographic does Church's Texas Chicken™ and Texas Chicken™ look for?", a: "Fast Food Fanatics: Food is a passion. Love to try new foods and favor fresh ingredients. First to try restaurants and are an influencer for friends & family. Seek variety in food & restaurant landscapes. Visit their preferred brands often.\n\nAND\n\nConscious Families: Like variety but largely support their go-to chains. Seek out good value, not necessarily the cheapest. Appreciate the ability to customize their experience. Not only low price, but value focus. Enjoy sharing experiences with family and trying something new." },
+        { q: "Can I open a single Church's Texas Chicken™ and Texas Chicken™ location?", a: "The number of restaurants required to develop will be determined based upon the potential of the development area. We always do multi-restaurant development agreements." },
+        { q: "How much does it cost to open a Church's Texas Chicken™ and Texas Chicken™ location?", a: "We offer multiple types of venues, from food courts to free-standing with drive-thru locations. In general, the cost per location can be $250,000 to $1,200,000 (not including land). Of course, these costs can vary based upon many factors in your local market." },
+        { q: "Is there an initial franchise fee to open a Church's Texas Chicken™ and Texas Chicken™ restaurant?", a: "The Initial Franchise Fee is $25,000 per restaurant, which is comprised of $10,000 for the upfront development fee and $15,000 for the Franchise fee to be paid before the opening of each restaurant." },
+        { q: "How many employees do I need to run a Church's Texas Chicken™ and Texas Chicken™ location?", a: "A typical Church's Texas Chicken™ and Texas Chicken™ shift operates with a staff of 4 to 8 team members and 1 or 2 management persons." },
+        { q: "What are the typical hours of operation?", a: "Most locations operate from 10 a.m. to 10 p.m., but hours vary across locations depending on market and trade area." },
       ],
     },
     {
       title: "Careers",
       items: [
-        { q: "How do I apply for a job?", a: "Browse open roles on our Careers page and apply directly. We hire across restaurants, corporate and support-office teams." },
+        { q: "How do I get a job at Texas Chicken™?", a: "Find out more about being a Texas Chicken™ employee, and apply online in our careers section [Link](/careers)." },
         { q: "Do you offer training?", a: "Absolutely. The Team Texas academy turns first jobs into hospitality careers with hands-on, in-restaurant training." },
         { q: "Do you promote from within?", a: "Most of our restaurant leaders started behind the counter. Real career paths are part of the deal." },
       ],

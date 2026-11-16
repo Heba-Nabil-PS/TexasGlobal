@@ -1,46 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useMotionValue, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { PRELOADER_DONE } from "@/components/ui/Preloader";
 import { Eyebrow, Lead, Section, Title } from "@/components/v2/kit";
 import { ClosingCta, HeroV2 } from "./shared";
+import BurgerScrub, { BURGER } from "./BurgerScrub";
 import { franchiseV2 } from "@/lib/content-v2/pages";
 import { fadeUp, inView, staggerContainer } from "@/lib/motion";
 
 /** The preloader curtain is still clearing the hero for this long after it starts to lift. */
 const PRELOADER_LIFT_MS = 500;
 
-/* Cut-out plates, placed as % of the final 1667×874 composition. Back to front. */
-const PLATES = [
-  {
-    src: "/assets/v2/franchising/tender.png",
-    box: { left: "0%", top: "-5.15%", width: "56.02%" },
-    from: { x: "-55%", rotate: -7 },
-    delay: 0.25,
-  },
-  {
-    src: "/assets/v2/franchising/biscuits.png",
-    box: { left: "59.03%", top: "12.7%", width: "39.1%" },
-    from: { x: "55%", rotate: 7 },
-    delay: 0.45,
-  },
-  {
-    src: "/assets/v2/franchising/bic.png",
-    box: { left: "21.54%", top: "8.81%", width: "57.08%" },
-    from: { y: "-55%", scale: 1.12 },
-    delay: 0.75,
-  },
-];
-
-/** The side plates slide in, then the bone-in plate drops onto them to complete the spread. */
-function PlatesBuild() {
-  const reduced = useReducedMotion();
+/** true once the preloader has lifted (immediately on client-side navigation) */
+function usePreloaderReady() {
   const [ready, setReady] = useState(false);
-
-  // On a full page load, hold the build until the preloader lifts so it isn't played behind it.
   useEffect(() => {
     if (document.documentElement.dataset.preloaded) {
       setReady(true);
@@ -56,50 +32,73 @@ function PlatesBuild() {
       window.clearTimeout(timer);
     };
   }, []);
-
-  return (
-    <div
-      role="img"
-      aria-label="Plates of Texas Chicken tenders, bone-in fried chicken and honey-butter biscuits"
-      className="relative mx-auto aspect-[1667/874] w-full"
-    >
-      {PLATES.map((p) => (
-        <motion.div
-          key={p.src}
-          initial={reduced ? false : { opacity: 0, ...p.from }}
-          animate={ready ? { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 } : undefined}
-          transition={{
-            opacity: { duration: 0.35, delay: p.delay },
-            default: { type: "spring", stiffness: 120, damping: 15, delay: p.delay },
-          }}
-          className="absolute aspect-[881/780]"
-          style={p.box}
-        >
-          <Image src={p.src} alt="" fill priority sizes="(max-width:1024px) 55vw, 28vw" className="object-contain" />
-        </motion.div>
-      ))}
-    </div>
-  );
+  return ready;
 }
 
+function useWide() {
+  const [wide, setWide] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const sync = () => setWide(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  return wide;
+}
+
+/** share of the pinned scroll that drives the explosion; the rest is a short hold */
+const EXPLODE_END = 0.85;
+
 /* ------------------------------------------------------------- hero + proof */
+/**
+ * Franchising hero: the Mexicana bursts apart layer by layer as you scroll
+ * (BurgerScrub), and stacks back together as you scroll up.
+ *  - desktop: the hero pins for one extra screen while the burger explodes
+ *  - mobile/tablet: no pin; the burger explodes as it travels up the screen
+ */
 export function FranchiseHeroV2() {
   const h = franchiseV2.hero;
+  const reduced = useReducedMotion();
+  const ready = usePreloaderReady();
+  const wide = useWide();
+  const pinRef = useRef<HTMLDivElement>(null);
+  const visRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress: pinP } = useScroll({ target: pinRef, offset: ["start start", "end end"] });
+  const { scrollYProgress: visP } = useScroll({ target: visRef, offset: ["start 0.55", "end 0.3"] });
+  const pinned = useTransform(pinP, (p) => Math.min(1, p / EXPLODE_END));
+  const still = useMotionValue(0);
+  const progress = reduced ? still : wide ? pinned : visP;
+
   return (
     <>
-      <HeroV2
-        eyebrow={h.eyebrow}
-        title={h.title}
-        body={h.body}
-        decor={
-          <div aria-hidden className="pointer-events-none absolute -right-[18vw] top-24 size-[62vw] max-w-[1000px] rounded-full bg-secondary/15" />
-        }
-        visual={<PlatesBuild />}
-      >
-        <Button href={h.primary.href} variant="red" pulse>
-          {h.primary.label}
-        </Button>
-      </HeroV2>
+      <div ref={pinRef} className="relative lg:h-[200svh]">
+        <div className="lg:sticky lg:top-0 lg:h-svh">
+          <HeroV2
+            eyebrow={h.eyebrow}
+            title={h.title}
+            body={h.body}
+            className="pb-12 pt-32 lg:flex lg:h-full lg:items-center lg:pb-4 lg:pt-28"
+            visual={
+              <motion.div
+                ref={visRef}
+                initial={reduced ? false : { opacity: 0, y: 40, scale: 0.94 }}
+                animate={ready ? { opacity: 1, y: 0, scale: 1 } : undefined}
+                transition={{ type: "spring", stiffness: 110, damping: 18 }}
+                className="mx-auto w-[min(88vw,520px)] lg:-my-6 lg:w-[min(120%,calc((100svh-104px)*var(--burger-ar)))] lg:max-w-none xl:-mr-8"
+                style={{ ["--burger-ar" as string]: BURGER.width / BURGER.height }}
+              >
+                <BurgerScrub key={wide ? "pin" : "flow"} progress={progress} />
+              </motion.div>
+            }
+          >
+            <Button href={h.primary.href} variant="red" pulse>
+              {h.primary.label}
+            </Button>
+          </HeroV2>
+        </div>
+      </div>
       {/* Proof stat tiles removed per client (data still in franchiseV2.proof). */}
     </>
   );
@@ -119,26 +118,17 @@ export function FranchiseCredentialsV2() {
             <Lead>{c.body}</Lead>
           </div>
 
-          {/* awards: equal-height cards */}
+          {/* awards: logos only, no cards or captions */}
           <motion.div
             variants={staggerContainer(0.12)}
             initial="hidden"
             whileInView="show"
             viewport={inView}
-            className="grid gap-4 sm:grid-cols-3"
+            className="grid grid-cols-3 items-center gap-6 md:gap-10"
           >
             {c.items.map((b) => (
-              <motion.div
-                key={b.title}
-                variants={fadeUp}
-                whileHover={{ y: -6 }}
-                className="flex h-full flex-col items-center rounded-[1.75rem] bg-white px-5 py-6 text-center shadow-soft3 ring-1 ring-third/5"
-              >
-                <div className="relative h-20 w-full md:h-24">
-                  <Image src={b.badge} alt={b.title} fill sizes="200px" className="object-contain" />
-                </div>
-                <p className="display mt-5 text-xl uppercase leading-tight text-primary md:text-2xl">{b.title}</p>
-                <p className="mt-1.5 text-sm leading-snug text-third/60">{b.note}</p>
+              <motion.div key={b.title} variants={fadeUp} whileHover={{ y: -6 }} className="relative h-24 w-full md:h-32">
+                <Image src={b.badge} alt={`${b.title}: ${b.note}`} fill sizes="240px" className="object-contain" />
               </motion.div>
             ))}
           </motion.div>
