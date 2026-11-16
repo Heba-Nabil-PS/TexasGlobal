@@ -47,8 +47,8 @@ function useWide() {
   return wide;
 }
 
-/** share of the pinned scroll that drives the explosion; the rest is a short hold */
-const EXPLODE_END = 0.85;
+/** share of the pinned scroll that drives the opening (1 = all of it: no dead hold at the end) */
+const EXPLODE_END = 1;
 
 /* ------------------------------------------------------------- hero + proof */
 /**
@@ -85,9 +85,9 @@ export function FranchiseHeroV2() {
                 ref={visRef}
                 initial={reduced ? false : { opacity: 0, y: 40, scale: 0.94 }}
                 animate={ready ? { opacity: 1, y: 0, scale: 1 } : undefined}
-                transition={{ type: "spring", stiffness: 110, damping: 18 }}
+                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
                 className="mx-auto w-[min(88vw,520px)] lg:-my-6 lg:w-[min(120%,calc((100svh-104px)*var(--burger-ar)))] lg:max-w-none xl:-mr-8"
-                style={{ ["--burger-ar" as string]: BURGER.width / BURGER.height }}
+                style={{ ["--burger-ar" as string]: BURGER.aspect }}
               >
                 <BurgerScrub key={wide ? "pin" : "flow"} progress={progress} />
               </motion.div>

@@ -28,7 +28,7 @@ export const storyV2 = {
       { k: "25+", v: "Markets worldwide" },
       { k: "100%", v: "Hand-battered" },
     ],
-    photo: "/assets/story/george-sr.webp",
+    photo: "/assets/story/george-sr-v2.webp",
     photoAlt: "George W. Church, founder of Texas Chicken",
     photoCaption: "San Antonio, TX · 1952",
     stamp: "/assets/v2/stamp-jal-icon.svg",

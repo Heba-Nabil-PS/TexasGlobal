@@ -2,34 +2,48 @@
 
 import { useEffect, useRef } from "react";
 import { motion, useMotionValueEvent, useTransform, type MotionValue } from "framer-motion";
+import manifest from "./burger-manifest.json";
 
 /**
- * The Mexicana, exploding layer by layer as you scroll — a transparent image
- * sequence from the brand video (img/video.MP4, 3.96 s → 1.08 s: the closed
- * sandwich from the end of the clip, opening back up), checkerboard keyed out,
- * every frame re-scaled so the sandwich keeps filling the box.
- * Frame 0 = closed sandwich, last frame = layers apart. The frame shown is a
- * pure function of `progress` (0–1), so scrolling up closes it again exactly;
- * neighbouring frames are crossfaded so the scrub stays smooth.
+ * The Mexicana opening layer by layer as you scroll — a transparent image
+ * sequence drawn to a canvas, built from the brand video (img/video.MP4,
+ * 4.05 s back to 2.40 s: the closed sandwich from the end of the clip,
+ * opening to its widest):
+ *  - motion-interpolated to 120 fps, so even the fast "snap" where the top
+ *    bun lifts has in-between frames
+ *  - frames picked at equal visual change, so every bit of scroll moves the
+ *    sandwich by the same amount (no dead zones, no jumps)
+ *  - frames are shown crisp (never blended); the framing (gentle zoom-out as
+ *    it opens) comes from a pre-smoothed camera path interpolated continuously
+ * Frame 0 = closed, last = fully open; the picture is a pure function of
+ * `progress` (0–1), so scrolling up closes it again exactly.
  */
-export const BURGER = { count: 32, width: 760, height: 1040, dir: "/assets/v2/franchising/burger" };
+type Cam = [number, number, number, number];
+export const BURGER = {
+  count: manifest.count,
+  width: manifest.width,
+  height: manifest.height,
+  aspect: manifest.aspect, // canvas width / height
+  dir: "/assets/v2/franchising/burger",
+};
+const CAMS = manifest.cams as Cam[];
 
 const src = (i: number) => `${BURGER.dir}/${String(i).padStart(3, "0")}.webp`;
-const ok = (im: HTMLImageElement | null | undefined): im is HTMLImageElement => !!im && im.complete && im.naturalWidth > 0;
 
 export default function BurgerScrub({ progress, className = "" }: { progress: MotionValue<number>; className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const frames = useRef<(HTMLImageElement | null)[]>([]);
+  const ready = useRef<boolean[]>([]); // loaded AND decoded (drawing never blocks on a decode)
   const current = useRef(0); // fractional frame position
   const raf = useRef(0);
 
   const frame = useTransform(progress, (p) => (p <= 0 ? 0 : p >= 1 ? 1 : p) * (BURGER.count - 1));
 
-  /** nearest loaded frame to i (the sequence may still be streaming in) */
+  /** nearest decoded frame to i (the sequence may still be streaming in) */
   const nearest = (i: number) => {
     for (let d = 0; d < BURGER.count; d++) {
-      if (ok(frames.current[i - d])) return frames.current[i - d]!;
-      if (ok(frames.current[i + d])) return frames.current[i + d]!;
+      if (ready.current[i - d]) return frames.current[i - d]!;
+      if (ready.current[i + d]) return frames.current[i + d]!;
     }
     return null;
   };
@@ -40,23 +54,18 @@ export default function BurgerScrub({ progress, className = "" }: { progress: Mo
     const ctx = c?.getContext("2d");
     if (!c || !ctx) return;
     const f = current.current;
-    const i = Math.floor(f);
-    // blend only through the middle of each step: smooth, but no long doubled image
-    const r = f - i;
-    const t = r <= 0.3 ? 0 : r >= 0.7 ? 1 : ((r - 0.3) / 0.4) ** 2 * (3 - 2 * ((r - 0.3) / 0.4));
-    const a = nearest(t >= 1 ? i + 1 : i);
-    if (!a) return;
-    const b = t > 0.01 && t < 1 ? frames.current[i + 1] : null;
+    const img = nearest(Math.round(f));
+    if (!img) return;
+    // camera: continuous between frames
+    const i0 = Math.floor(f), i1 = Math.min(BURGER.count - 1, i0 + 1), t = f - i0;
+    const a = CAMS[i0], b = CAMS[i1];
+    const x = a[0] + (b[0] - a[0]) * t, y = a[1] + (b[1] - a[1]) * t;
+    const w = a[2] + (b[2] - a[2]) * t, h = a[3] + (b[3] - a[3]) * t;
+    // map the camera view onto the canvas (parts of the view outside the image are just empty)
+    const sx = c.width / w, sy = c.height / h;
     ctx.clearRect(0, 0, c.width, c.height);
-    if (ok(b) && b !== a) {
-      // a at full strength, b over it: no see-through dip mid-fade
-      ctx.drawImage(a, 0, 0, c.width, c.height);
-      ctx.globalAlpha = t;
-      ctx.drawImage(b, 0, 0, c.width, c.height);
-      ctx.globalAlpha = 1;
-    } else {
-      ctx.drawImage(a, 0, 0, c.width, c.height);
-    }
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(img, -x * sx, -y * sy, BURGER.width * sx, BURGER.height * sy);
   };
   const schedule = () => {
     if (!raf.current) raf.current = requestAnimationFrame(draw);
@@ -67,15 +76,14 @@ export default function BurgerScrub({ progress, className = "" }: { progress: Mo
     schedule();
   });
 
-  // canvas backing size follows its CSS size × DPR (capped at the source size)
+  // canvas backing size = its CSS size × DPR
   useEffect(() => {
     const c = canvasRef.current;
     if (!c) return;
     const ro = new ResizeObserver(() => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const w = Math.min(BURGER.width, Math.round(c.clientWidth * dpr));
-      c.width = w;
-      c.height = Math.round((w * BURGER.height) / BURGER.width);
+      c.width = Math.max(1, Math.round(c.clientWidth * dpr));
+      c.height = Math.max(1, Math.round(c.width / BURGER.aspect));
       schedule();
     });
     ro.observe(c);
@@ -83,7 +91,7 @@ export default function BurgerScrub({ progress, className = "" }: { progress: Mo
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // load frame 0 first, then a coarse pass (every 6th) so scrubbing works early, then the rest
+  // frame 0 first, then a coarse pass (every 4th) so scrubbing works early, then the rest
   useEffect(() => {
     let cancelled = false;
     current.current = frame.get();
@@ -97,13 +105,17 @@ export default function BurgerScrub({ progress, className = "" }: { progress: Mo
       const i = order[next++];
       const img = new Image();
       img.decoding = "async";
-      img.onload = img.onerror = () => {
-        if (cancelled) return;
-        if (Math.abs(i - current.current) <= 6) schedule();
-        pump();
-      };
       img.src = src(i);
       frames.current[i] = img;
+      img
+        .decode()
+        .then(() => {
+          if (cancelled) return;
+          ready.current[i] = true;
+          if (Math.abs(i - current.current) <= 4) schedule();
+        })
+        .catch(() => {})
+        .finally(() => !cancelled && pump());
     };
     // a few parallel lanes sharing one queue
     for (let lane = 0; lane < 4; lane++) pump();
@@ -120,7 +132,14 @@ export default function BurgerScrub({ progress, className = "" }: { progress: Mo
       role="img"
       aria-label="The Mexicana chicken sandwich, its layers lifting apart"
       className={`block h-auto w-full ${className}`}
-      style={{ aspectRatio: `${BURGER.width} / ${BURGER.height}` }}
+      style={{
+        aspectRatio: `${BURGER.aspect}`,
+        // soften the canvas edges so a crumb drifting out never shows a hard cut
+        maskImage: "linear-gradient(to right, transparent, #000 4%, #000 96%, transparent), linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent)",
+        maskComposite: "intersect",
+        WebkitMaskImage: "linear-gradient(to right, transparent, #000 4%, #000 96%, transparent), linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent)",
+        WebkitMaskComposite: "source-in",
+      }}
     />
   );
 }
