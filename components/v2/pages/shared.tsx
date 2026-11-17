@@ -21,7 +21,7 @@ export function HeroV2({
   visual,
   decor,
   reverse = false,
-  className = "pb-12 pt-32 lg:pt-44",
+  className = "pb-10 pt-24 md:pb-12 md:pt-32 lg:pt-44",
 }: {
   eyebrow: string;
   title: string[];
@@ -37,7 +37,7 @@ export function HeroV2({
     <section className={`relative overflow-hidden bg-white text-third ${className}`}>
       {decor}
       <div
-        className={`container-tx relative grid items-center gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-8 ${
+        className={`container-tx relative grid items-center gap-8 md:gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-8 ${
           reverse ? "lg:[&>*:first-child]:order-2" : ""
         }`}
       >
@@ -46,12 +46,13 @@ export function HeroV2({
           <Title as="h1" lines={title} size="lg" className="md:text-[5.4rem]" />
           <Lead>{body}</Lead>
           {children && (
-            <motion.div variants={fadeUp} initial="hidden" animate="show" className="mt-9 flex flex-wrap items-center gap-4">
+            <motion.div variants={fadeUp} initial="hidden" animate="show" className="btn-row mt-7 flex flex-wrap items-center gap-3 md:mt-9 md:gap-4">
               {children}
             </motion.div>
           )}
         </div>
-        <div className="relative">{visual}</div>
+        {/* single-column below lg: cap the visual so tablets don't get a full-screen photo */}
+        <div className="relative mx-auto w-full max-w-xl lg:max-w-none">{visual}</div>
       </div>
     </section>
   );
@@ -178,26 +179,26 @@ export function ClosingCta({
   image?: string;
 }) {
   return (
-    <section className="relative bg-white pb-10 pt-8 md:pb-14">
+    <section className="relative bg-white pb-8 pt-4 md:pb-14 md:pt-8">
       <div className="container-tx">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-secondary px-8 py-14 md:px-16 md:py-20">
+        <div className="relative overflow-hidden rounded-[2rem] bg-secondary px-6 py-9 sm:px-8 sm:py-14 md:rounded-[2.5rem] md:px-16 md:py-20">
           {/* sunburst rays */}
           <div
             aria-hidden
             className="pointer-events-none absolute -right-40 -top-40 size-[46rem] animate-[spin_60s_linear_infinite] opacity-25"
             style={{ background: "repeating-conic-gradient(#fff 0deg 8deg, transparent 8deg 20deg)", borderRadius: "9999px" }}
           />
-          <div className="relative grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="relative grid items-center gap-4 md:gap-10 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
               <span className="eyebrow text-primary"><BrandStar /> {eyebrow}</span>
               <Title lines={title} size="md" className="md:text-[4rem]" />
-              <p className="mt-5 max-w-lg text-lg leading-relaxed text-third/80">{body}</p>
-              <div className="mt-8 flex flex-wrap gap-4">{children}</div>
+              <p className="mt-4 max-w-lg text-base leading-relaxed text-third/80 md:mt-5 md:text-lg">{body}</p>
+              <div className="btn-row mt-6 flex flex-wrap gap-3 md:mt-8 md:gap-4">{children}</div>
             </div>
             <motion.div
-              initial={{ opacity: 0, x: 40, rotate: 4 }}
-              whileInView={{ opacity: 1, x: 0, rotate: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
+              initial={{ opacity: 0, y: 24, rotate: 4 }}
+              whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
               className="relative aspect-[3/2] w-full"
             >

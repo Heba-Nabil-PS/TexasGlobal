@@ -30,9 +30,10 @@ export default function Featured({
   return (
     <>
       {/* Mobile — native swipe carousel */}
-      <section id="featured" className="bg-cream py-12 md:hidden">
+      <section id="featured" className="bg-cream pb-6 pt-10 md:hidden">
         <Heading note={note} />
-        <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* gutter matches .container-tx so the first card lines up with the heading */}
+        <div className="mt-5 flex snap-x snap-mandatory scroll-px-[clamp(20px,5vw,56px)] gap-3 overflow-x-auto px-[clamp(20px,5vw,56px)] pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {cards}
           {endCard}
         </div>
@@ -121,9 +122,9 @@ function FeaturedCard({ item }: { item: (typeof featured.items)[number] }) {
     <motion.article
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0 }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative aspect-square w-[82vw] max-w-[440px] shrink-0 snap-center overflow-hidden rounded-[28px] bg-ink shadow-pop md:h-full md:max-h-[58vh] md:w-auto md:max-w-none"
+      className="group relative aspect-square w-[82vw] max-w-[440px] shrink-0 snap-start md:snap-center overflow-hidden rounded-[28px] bg-ink shadow-pop md:h-full md:max-h-[58vh] md:w-auto md:max-w-none"
     >
       <Image
         src={item.image}
@@ -141,7 +142,7 @@ function EndCard() {
     <Link
       href="/menu"
       data-cursor="link"
-      className="group flex aspect-square w-[82vw] max-w-[420px] shrink-0 snap-center flex-col items-center justify-center gap-5 rounded-[2rem] bg-[#94332b] shadow-soft3 text-cream md:h-full md:max-h-[58vh] md:w-auto md:max-w-none"
+      className="group flex aspect-square w-[82vw] max-w-[420px] shrink-0 snap-start md:snap-center flex-col items-center justify-center gap-5 rounded-[2rem] bg-[#94332b] shadow-soft3 text-cream md:h-full md:max-h-[58vh] md:w-auto md:max-w-none"
     >
       <span className="display text-center text-4xl leading-[0.9]">
         See the

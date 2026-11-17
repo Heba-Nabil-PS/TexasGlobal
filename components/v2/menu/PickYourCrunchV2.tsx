@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { AnimatePresence, motion, useInView, useMotionValueEvent, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useLenis } from "lenis/react";
 import { STAGE, crunchBuild, type BuildCategory, type BuildPiece } from "@/lib/content-v2/crunch-build";
 
@@ -89,9 +89,138 @@ function usePrefersReducedMotion() {
   return reduce;
 }
 
+/** Same breakpoint as the side-by-side stage in globals.css (.crunch-grid). null until mounted. */
+function useWideStage() {
+  const [wide, setWide] = useState<boolean | null>(null);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px), (orientation: landscape) and (min-width: 640px)");
+    const sync = () => setWide(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  return wide;
+}
+
 export default function PickYourCrunchV2() {
   const reduce = usePrefersReducedMotion();
-  return reduce ? <StaticCrunch /> : <CrunchBuilder />;
+  const wide = useWideStage();
+  if (reduce) return <StaticCrunch />;
+  // Phones/portrait tablets: no scroll-scrubbing, the brand videos just play.
+  // (Before mount we don't know yet; reserve roughly the player's height.)
+  if (wide === null) return <section aria-hidden className="min-h-[100svh] bg-white" />;
+  return wide ? <CrunchBuilder /> : <CrunchPlayer />;
+}
+
+/* ---------- phones: autoplay player ---------- */
+
+/**
+ * One compact stage instead of a ~9-screen pinned scrub: the active category's
+ * brand video plays on its own while the section is on screen, then hands over
+ * to the next category. The rail shows progress and switches on tap.
+ */
+function CrunchPlayer() {
+  const ref = useRef<HTMLElement>(null);
+  const visible = useInView(ref, { amount: 0.35 });
+  const [i, setI] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const c = crunchBuild[i];
+  const n = crunchBuild.length;
+
+  const go = (k: number) => {
+    setProgress(0);
+    setI(((k % n) + n) % n);
+  };
+
+  return (
+    <section ref={ref} aria-labelledby="crunch-heading" className="bg-white pb-10 pt-8 text-third">
+      <h2 id="crunch-heading" className="sr-only">
+        Pick your crunch: menu categories
+      </h2>
+      <div className="container-tx">
+        {/* copy: sized to its content (1-line titles leave no gap); the video
+            below glides to its new position via layout animation */}
+        <div className="relative">
+          {/* popLayout: the outgoing copy is lifted out of flow at once, so the
+              height changes in one step (no collapse-to-zero bounce) */}
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.div
+              key={c.id}
+              layout
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="flex flex-col"
+            >
+              <span className="text-xs font-extrabold uppercase tracking-caps text-third/40">
+                {two(i + 1)} / {two(n)}
+              </span>
+              <h3 className="display mt-1 text-[clamp(2.4rem,11vw,3.4rem)] uppercase leading-[0.86] text-primary">
+                {c.title.map((t) => (
+                  <span key={t} className="block">
+                    {t}
+                  </span>
+                ))}
+              </h3>
+              <span aria-hidden className="mt-3 block h-1 w-24 rounded-full bg-secondary" />
+              <p className="mt-2 text-base leading-snug text-third/70">{c.blurb}</p>
+              <a href={c.href} data-cursor="link" className="mt-2 inline-flex items-center gap-2 text-sm font-extrabold uppercase tracking-caps">
+                Find it near you <span aria-hidden>→</span>
+              </a>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* the brand video at its own 16:9, studio backdrop keyed out to the page white */}
+        <motion.div layout transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} className="relative mt-2 aspect-video">
+          {c.video ? (
+            <KeyedVideo
+              key={c.id}
+              video={c.video}
+              playing={visible}
+              label={c.title.join(" ")}
+              onProgress={setProgress}
+              onEnded={() => go(i + 1)}
+            />
+          ) : (
+            <Image src={c.combo.src} alt={c.title.join(" ")} fill sizes="90vw" className="object-contain p-4" />
+          )}
+        </motion.div>
+
+        {/* rail: tap to switch; the live one fills as its video plays */}
+        <motion.ol layout transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} className="mt-4 grid grid-cols-4 gap-2" aria-label="Menu categories">
+          {crunchBuild.map((cat, k) => {
+            const live = k === i;
+            return (
+              <li key={cat.id}>
+                <button
+                  type="button"
+                  onClick={() => go(k)}
+                  aria-current={live ? "step" : undefined}
+                  aria-label={cat.short}
+                  className={`relative flex w-full flex-col items-center gap-1.5 rounded-2xl px-1 pb-2 pt-1.5 transition-colors ${live ? "bg-primary/10" : ""}`}
+                >
+                  <span className={`relative block size-12 overflow-hidden rounded-full bg-white ring-2 transition-shadow ${live ? "ring-primary" : "ring-ink/10"}`}>
+                    <Image src={cat.combo.src} alt="" fill sizes="48px" className="scale-[1.35] object-contain" />
+                  </span>
+                  <span className={`text-center text-[10px] font-extrabold uppercase leading-tight tracking-caps ${live ? "text-primary" : "text-third/60"}`}>
+                    {cat.short}
+                  </span>
+                  <span aria-hidden className="absolute inset-x-3 bottom-0.5 h-[2px] overflow-hidden rounded-full bg-transparent">
+                    <span
+                      className="block h-full origin-left rounded-full bg-tex-yellow"
+                      style={{ transform: `scaleX(${live ? progress : k < i ? 1 : 0})`, transition: "transform 250ms linear" }}
+                    />
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </motion.ol>
+      </div>
+    </section>
+  );
 }
 
 function CrunchBuilder() {
@@ -121,7 +250,7 @@ function CrunchBuilder() {
     <section
       ref={ref}
       aria-labelledby="crunch-heading"
-      className="relative bg-white text-third"
+      className="crunch-section relative bg-white text-third"
       style={{ height: `${TL.U * 100}svh` }}
     >
       <h2 id="crunch-heading" className="sr-only">
@@ -245,6 +374,71 @@ function fitBackdrop(data: Uint8ClampedArray, gw: number, gh: number) {
  */
 const PLATE_GAIN = 0.955; // < 1 pushes the near-backdrop (noise, compression) fully to white
 
+type CrunchVideo = NonNullable<BuildCategory["video"]>;
+
+/** From an *empty* backdrop frame on `v`: fit the studio backdrop and render (1 − gain·backdrop). */
+function makePlate(v: HTMLVideoElement, video: CrunchVideo) {
+  // sample the empty first frame small, fit the backdrop, render 1 − gain·backdrop full size
+  const gw = 48, gh = Math.round((48 * video.h) / video.w);
+  const s = document.createElement("canvas");
+  s.width = gw; s.height = gh;
+  const sx = s.getContext("2d", { willReadFrequently: true })!;
+  sx.drawImage(v, 0, 0, gw, gh);
+  const co = fitBackdrop(sx.getImageData(0, 0, gw, gh).data, gw, gh);
+  const W = 212, H = Math.round((W * video.h) / video.w); // smooth surface: low res is plenty, scaled up bilinear
+  const p = document.createElement("canvas");
+  p.width = W; p.height = H;
+  const px = p.getContext("2d")!;
+  const img = px.createImageData(W, H);
+  for (let j = 0; j < H; j++) {
+    const y = j / (H - 1) - 0.5;
+    for (let i = 0; i < W; i++) {
+      const x = i / (W - 1) - 0.5;
+      const b = [1, x, y, x * x, x * y, y * y];
+      const o = (j * W + i) * 4;
+      for (let ch = 0; ch < 3; ch++) {
+        const bg = co[ch].reduce((t, w, q) => t + w * b[q], 0);
+        img.data[o + ch] = 255 - Math.min(255, bg * PLATE_GAIN);
+      }
+      img.data[o + 3] = 255;
+    }
+  }
+  px.putImageData(img, 0, 0);
+  return p;
+}
+
+/** Draw the current video frame divided by the backdrop: grey studio → pure white page. */
+function paintKeyed(c: HTMLCanvasElement | null, v: HTMLVideoElement | null, p: HTMLCanvasElement | null, video: CrunchVideo) {
+  const lift = 1 - (video.shadow ?? 1); // how much of the grey shadow to wash out
+  const ctx = c?.getContext("2d", { willReadFrequently: lift > 0 });
+  if (!v || !c || !ctx || !p || v.readyState < 2) return;
+  ctx.globalCompositeOperation = "source-over";
+  ctx.drawImage(v, 0, 0, c.width, c.height);
+  ctx.globalCompositeOperation = "color-dodge"; // frame / (gain × backdrop)
+  ctx.drawImage(p, 0, 0, c.width, c.height);
+  ctx.globalCompositeOperation = "source-over";
+  if (lift > 0) {
+    // lighten the cast shadows: neutral (unsaturated) mid-to-light greys move toward white;
+    // colourful food, dark sauce and pure whites are left alone
+    const img = ctx.getImageData(0, 0, c.width, c.height);
+    const d = img.data;
+    for (let i = 0; i < d.length; i += 4) {
+      const r = d[i], g = d[i + 1], b = d[i + 2];
+      const mx = r > g ? (r > b ? r : b) : g > b ? g : b;
+      const mn = r < g ? (r < b ? r : b) : g < b ? g : b;
+      if (mx === 255 && mn === 255) continue;
+      const sat = mx ? (mx - mn) / mx : 0;
+      const w = clamp01((0.16 - sat) / 0.1) * clamp01(((r + g + b) / 765 - 0.3) / 0.25) * lift;
+      if (w <= 0) continue;
+      d[i] = r + (255 - r) * w;
+      d[i + 1] = g + (255 - g) * w;
+      d[i + 2] = b + (255 - b) * w;
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+}
+
+
 function VideoTray({ video, u, tl }: { video: NonNullable<BuildCategory["video"]>; u: MotionValue<number>; tl: Tl }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -252,15 +446,7 @@ function VideoTray({ video, u, tl }: { video: NonNullable<BuildCategory["video"]
   const target = useRef(0); // 0–1 through the clip
   const raf = useRef(0);
 
-  const paint = () => {
-    const v = videoRef.current, c = canvasRef.current, p = plate.current;
-    const ctx = c?.getContext("2d");
-    if (!v || !c || !ctx || !p || v.readyState < 2) return;
-    ctx.globalCompositeOperation = "source-over";
-    ctx.drawImage(v, 0, 0, c.width, c.height);
-    ctx.globalCompositeOperation = "color-dodge"; // frame / (gain × backdrop)
-    ctx.drawImage(p, 0, 0, c.width, c.height);
-  };
+  const paint = () => paintKeyed(canvasRef.current, videoRef.current, plate.current, video);
 
   const seek = () => {
     raf.current = 0;
@@ -286,33 +472,7 @@ function VideoTray({ video, u, tl }: { video: NonNullable<BuildCategory["video"]
     target.current = seg(u.get(), tl.inA, tl.vEnd);
 
     const buildPlate = () => {
-      // sample the empty first frame small, fit the backdrop, render 1 − gain·backdrop full size
-      const gw = 48, gh = Math.round((48 * video.h) / video.w);
-      const s = document.createElement("canvas");
-      s.width = gw; s.height = gh;
-      const sx = s.getContext("2d", { willReadFrequently: true })!;
-      sx.drawImage(v, 0, 0, gw, gh);
-      const co = fitBackdrop(sx.getImageData(0, 0, gw, gh).data, gw, gh);
-      const W = 212, H = Math.round((W * video.h) / video.w); // smooth surface: low res is plenty, scaled up bilinear
-      const p = document.createElement("canvas");
-      p.width = W; p.height = H;
-      const px = p.getContext("2d")!;
-      const img = px.createImageData(W, H);
-      for (let j = 0; j < H; j++) {
-        const y = j / (H - 1) - 0.5;
-        for (let i = 0; i < W; i++) {
-          const x = i / (W - 1) - 0.5;
-          const b = [1, x, y, x * x, x * y, y * y];
-          const o = (j * W + i) * 4;
-          for (let ch = 0; ch < 3; ch++) {
-            const bg = co[ch].reduce((t, w, q) => t + w * b[q], 0);
-            img.data[o + ch] = 255 - Math.min(255, bg * PLATE_GAIN);
-          }
-          img.data[o + 3] = 255;
-        }
-      }
-      px.putImageData(img, 0, 0);
-      plate.current = p;
+      plate.current = makePlate(v, video);
     };
 
     const onSeeked = () => {
@@ -372,7 +532,11 @@ function VideoTray({ video, u, tl }: { video: NonNullable<BuildCategory["video"]
         width={video.w}
         height={video.h}
         className="block h-full w-full object-contain"
-        style={{ maskImage: `${edgeX}, ${edgeY}`, maskComposite: "intersect", WebkitMaskImage: `${edgeX}, ${edgeY}`, WebkitMaskComposite: "source-in" }}
+        style={{
+          // per-video framing so every tray reads at the same size, standing on the same line
+          transform: video.scale && video.scale !== 1 ? `scale(${video.scale})` : undefined,
+          transformOrigin: "50% 65%",
+          maskImage: `${edgeX}, ${edgeY}`, maskComposite: "intersect", WebkitMaskImage: `${edgeX}, ${edgeY}`, WebkitMaskComposite: "source-in" }}
       />
       <video ref={videoRef} muted playsInline preload="auto" disablePictureInPicture aria-hidden className="pointer-events-none absolute left-0 top-0 h-px w-px opacity-0" />
     </motion.div>
@@ -571,6 +735,121 @@ function Char({ ch, j, m, u, tl }: { ch: string; j: number; m: number; u: Motion
     <motion.span style={{ transform }} className="inline-block origin-bottom-left will-change-transform">
       {ch === " " ? " " : ch}
     </motion.span>
+  );
+}
+
+/**
+ * Phone player video: plays in real time (no scrubbing) and paints each frame
+ * through the same backdrop key as the desktop stage, so the food sits on the
+ * white page instead of in a grey box. Plays only while `playing` (on screen).
+ */
+function KeyedVideo({
+  video,
+  playing,
+  label,
+  onProgress,
+  onEnded,
+}: {
+  video: CrunchVideo;
+  playing: boolean;
+  label: string;
+  onProgress: (p: number) => void;
+  onEnded: () => void;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const plate = useRef<HTMLCanvasElement | null>(null);
+  const [ready, setReady] = useState(false); // plate built, first frame painted
+
+  // 1) first (empty) frame → backdrop plate, then paint it
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const onLoaded = () => {
+      v.currentTime = 0.001;
+    };
+    const onSeeked = () => {
+      if (plate.current) return;
+      try {
+        plate.current = makePlate(v, video);
+      } catch {
+        return;
+      }
+      paintKeyed(canvasRef.current, v, plate.current, video);
+      setReady(true);
+    };
+    v.addEventListener("loadeddata", onLoaded);
+    v.addEventListener("seeked", onSeeked);
+    if (v.readyState >= 2) onLoaded();
+    return () => {
+      v.removeEventListener("loadeddata", onLoaded);
+      v.removeEventListener("seeked", onSeeked);
+    };
+  }, [video]);
+
+  // 2) play/pause with visibility; repaint every decoded frame while playing
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v || !ready) return;
+    if (!playing) {
+      v.pause();
+      return;
+    }
+    type RVFC = HTMLVideoElement & {
+      requestVideoFrameCallback?: (cb: () => void) => number;
+      cancelVideoFrameCallback?: (h: number) => void;
+    };
+    const vv = v as RVFC;
+    let handle = 0;
+    let stopped = false;
+    const tick = () => {
+      if (stopped) return;
+      paintKeyed(canvasRef.current, v, plate.current, video);
+      if (v.duration) onProgress(v.currentTime / v.duration);
+      handle = vv.requestVideoFrameCallback ? vv.requestVideoFrameCallback(tick) : requestAnimationFrame(tick);
+    };
+    v.play().then(tick).catch(() => {});
+    return () => {
+      stopped = true;
+      v.pause();
+      if (vv.cancelVideoFrameCallback) vv.cancelVideoFrameCallback(handle);
+      else cancelAnimationFrame(handle);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playing, ready, video]);
+
+  // soft edges: whatever is left of the backdrop never ends in a hard line
+  const edgeX = "linear-gradient(to right, transparent, #000 6%, #000 94%, transparent)";
+  const edgeY = "linear-gradient(to bottom, transparent, #000 6%, #000 94%, transparent)";
+
+  return (
+    <>
+      <canvas
+        ref={canvasRef}
+        width={720}
+        height={Math.round((720 * video.h) / video.w)}
+        role="img"
+        aria-label={label}
+        className={`absolute inset-0 h-full w-full transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`}
+        style={{
+          maskImage: `${edgeX}, ${edgeY}`,
+          maskComposite: "intersect",
+          WebkitMaskImage: `${edgeX}, ${edgeY}`,
+          WebkitMaskComposite: "source-in",
+        }}
+      />
+      <video
+        ref={videoRef}
+        src={video.src}
+        muted
+        playsInline
+        preload="auto"
+        disablePictureInPicture
+        aria-hidden
+        onEnded={onEnded}
+        className="pointer-events-none absolute left-0 top-0 h-px w-px opacity-0"
+      />
+    </>
   );
 }
 

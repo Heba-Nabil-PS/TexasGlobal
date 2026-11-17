@@ -104,7 +104,7 @@ export default function MenuHeroV2() {
           </motion.div>
         </AnimatePresence>
 
-        <div className="mt-8 flex flex-wrap items-center gap-4">
+        <div className="btn-row mt-8 flex flex-wrap items-center gap-4">
           <Button href={cta.href} variant="yellow" pulse>
             {cta.label}
           </Button>
@@ -119,7 +119,7 @@ export default function MenuHeroV2() {
       </div>
 
       <div className="absolute inset-x-0 bottom-0 z-20">
-        <div className="container-tx flex justify-end pb-6">
+        <div className="container-tx flex justify-center pb-6 md:justify-end">
           {/* Dots + arrows */}
           <div className="flex items-center gap-3">
             <button

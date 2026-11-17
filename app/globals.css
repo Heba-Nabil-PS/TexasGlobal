@@ -37,10 +37,64 @@
 
 @layer components {
   .container-tx {
+    --gutter: clamp(20px, 5vw, 56px);
     width: 100%;
     max-width: 1360px;
     margin-inline: auto;
-    padding-inline: clamp(20px, 5vw, 56px);
+    padding-inline: var(--gutter);
+  }
+
+  /* Filter/chip rows: one swipeable line on phones (bleeds to the screen
+     edge so it reads as scrollable), a normal wrapping row from md up.
+     Replaces 3+2+1 ragged wraps that ate vertical space. */
+  .chip-row {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    margin-inline: calc(var(--gutter, 20px) * -1);
+    padding-inline: var(--gutter, 20px);
+    scroll-padding-inline: var(--gutter, 20px);
+    /* room for focus rings / shadows that overflow:auto would clip */
+    padding-block: 4px;
+    margin-block: -4px;
+  }
+  .chip-row::-webkit-scrollbar {
+    display: none;
+  }
+  .chip-row > * {
+    flex: none;
+    scroll-snap-align: start;
+  }
+  /* Button groups: on phones every button in a group is the same width and
+     shares the same left/right edges (stacked, full width), instead of
+     ragged pills of different lengths wrapping wherever they happen to. */
+  @media (max-width: 639px) {
+    .btn-row {
+      display: flex !important;
+      flex-direction: column;
+      align-items: stretch !important;
+      gap: 0.75rem !important;
+      width: 100%;
+    }
+    .btn-row > *,
+    .btn-row > * > a,
+    .btn-row > * > button {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .chip-row {
+      flex-wrap: wrap;
+      overflow: visible;
+      margin-inline: 0;
+      padding-inline: 0;
+    }
   }
 
   .display {
@@ -89,6 +143,17 @@ html.lenis body {
 }
 .lenis.lenis-stopped {
   overflow: hidden;
+}
+
+/* ------------------------------------------------------------------
+   Phones: animated filter: blur() repaints the whole layer every frame
+   and is the main source of reveal jank on mid-range Android. Keep the
+   fade + rise, drop the blur. (framer writes it inline, hence !important.)
+   ------------------------------------------------------------------ */
+@media (max-width: 767px), (hover: none) {
+  [style*="blur("] {
+    filter: none !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -171,15 +236,29 @@ html.lenis body {
    Stacked (copy over food) on portrait phones/tablets; side by side on
    desktops and on any landscape screen ≥ 640px ("wide").
    ------------------------------------------------------------------ */
+/* Phones (stacked): copy + food sit together as one centred group; the rail
+   stays on the bottom edge (thumb reach). The empty band that centring leaves
+   above the group (--slack) is tucked under the intro section with a negative
+   margin, so scrolling in from the intro shows no gap either. */
+.crunch-section {
+  --copy-h: clamp(220px, 31svh, 250px); /* 220 min: 3-line titles + link never clip on 667px phones */
+  --food-w: min(108vw, calc((69svh - 196px) * 1.5));
+  /* 134 = 78 top (nav) + 56 bottom; the tray art has ~25px of empty space at
+     its foot, so the rail can sit closer than its own height (~76px). */
+  --slack: max(0px, calc((100svh - 134px - var(--copy-h) - var(--food-w) * 0.6625 - 12px) / 2));
+  margin-top: calc(var(--slack) * -1);
+}
 .crunch-stage { --cx: 50%; --cy: 64%; }
-.crunch-area { top: 78px; bottom: 80px; }
-.crunch-grid { grid-template-rows: auto minmax(0, 1fr); gap: 0.5rem; }
-.crunch-copy { height: clamp(196px, 31svh, 250px); }
+.crunch-area { top: 78px; bottom: 56px; }
+.crunch-grid { grid-template-rows: auto auto; align-content: center; gap: 12px; }
+.crunch-copy { height: var(--copy-h); }
 .crunch-layer { justify-content: flex-start; }
 .crunch-title { font-size: clamp(2.6rem, 12vw, 3.8rem); }
-.crunch-food { width: min(108vw, calc((69svh - 196px) * 1.5)); }
+.crunch-food { width: var(--food-w); }
 
 @media (min-width: 768px) {
+  .crunch-section { margin-top: 0; }
+  .crunch-grid { grid-template-rows: auto minmax(0, 1fr); align-content: stretch; gap: 0.5rem; }
   .crunch-area { bottom: 96px; }
   .crunch-copy { height: clamp(250px, 32svh, 390px); }
   .crunch-food { width: min(100%, calc((68svh - 250px) * 1.5)); }
@@ -187,8 +266,9 @@ html.lenis body {
 }
 
 @media (min-width: 1024px), (orientation: landscape) and (min-width: 640px) {
+  .crunch-section { margin-top: 0; }
   .crunch-stage { --cx: 69%; --cy: 54%; }
-  .crunch-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: minmax(0, 1fr); gap: 2rem; }
+  .crunch-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: minmax(0, 1fr); align-content: stretch; gap: 2rem; }
   .crunch-copy { height: 100%; }
   .crunch-layer { justify-content: center; }
   .crunch-title { font-size: clamp(2.4rem, min(6.8vw, 10.5svh), 7.2rem); }

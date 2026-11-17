@@ -116,18 +116,18 @@ export function CareersRolesV2() {
   return (
     <section id="roles" className="relative scroll-mt-28 bg-white py-10 md:py-12">
       <div className="container-tx">
-        <div className="flex flex-wrap items-end justify-between gap-6">
+        <div className="flex flex-wrap items-end justify-between gap-5 md:gap-6">
           <div>
             <Eyebrow>{r.eyebrow}</Eyebrow>
             <Title lines={r.title} size="md" />
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="chip-row w-[calc(100%_+_2*var(--gutter))] gap-2 md:w-auto">
             {careersPage.filters.map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
                 data-cursor="link"
-                className={`rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-caps transition-colors ${
+                className={`rounded-full px-4 py-2.5 text-xs font-bold uppercase tracking-caps transition-colors md:px-5 ${
                   filter === f ? "bg-secondary text-third" : "bg-third/5 text-third/70 hover:bg-third/10"
                 }`}
               >
@@ -137,7 +137,7 @@ export function CareersRolesV2() {
           </div>
         </div>
 
-        <motion.div layout className="mt-10 grid gap-4 md:grid-cols-2">
+        <motion.div layout className="mt-6 grid gap-3 md:mt-10 md:grid-cols-2 md:gap-4">
           <AnimatePresence mode="popLayout">
             {roles.map((role) => (
               <motion.a
@@ -149,11 +149,11 @@ export function CareersRolesV2() {
                 transition={{ duration: 0.35, ease: ease.out }}
                 href="/contact-us"
                 data-cursor="link"
-                className="group flex items-center justify-between gap-4 rounded-3xl border-2 border-third/10 bg-white p-6 transition-colors hover:border-secondary hover:bg-secondary/10"
+                className="group flex items-center justify-between gap-4 rounded-3xl border-2 border-third/10 bg-white p-5 transition-colors md:p-6 hover:border-secondary hover:bg-secondary/10"
               >
                 <div>
                   <span className="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-caps text-primary">{role.type}</span>
-                  <h3 className="display mt-3 text-3xl uppercase leading-none text-third">{role.title}</h3>
+                  <h3 className="display mt-2.5 text-[1.7rem] uppercase leading-none text-third md:mt-3 md:text-3xl">{role.title}</h3>
                   <p className="mt-2 flex items-center gap-2 text-sm text-third/60">
                     <svg viewBox="0 0 24 24" className="size-4 text-primary" fill="currentColor" aria-hidden>
                       <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z" />
@@ -161,7 +161,7 @@ export function CareersRolesV2() {
                     {role.location} · {role.commitment}
                   </p>
                 </div>
-                <span className="grid size-12 shrink-0 place-items-center rounded-full bg-third text-xl text-white transition-transform group-hover:translate-x-1 group-hover:bg-primary">
+                <span className="grid size-10 shrink-0 place-items-center rounded-full bg-third text-lg md:size-12 md:text-xl text-white transition-transform group-hover:translate-x-1 group-hover:bg-primary">
                   <BrandArrow />
                 </span>
               </motion.a>
@@ -169,7 +169,7 @@ export function CareersRolesV2() {
           </AnimatePresence>
         </motion.div>
 
-        <p className="mt-8 text-sm text-third/50">{r.note}</p>
+        <p className="mt-6 text-sm text-third/50 md:mt-8">{r.note}</p>
       </div>
     </section>
   );

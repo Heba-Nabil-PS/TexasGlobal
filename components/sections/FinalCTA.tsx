@@ -68,7 +68,7 @@ export default function FinalCTA({ primaryHref = "/find-your-market" }: { primar
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: ease.out, delay: 0.32 }}
-          className="mt-10 flex flex-wrap items-center justify-center gap-4"
+          className="btn-row mt-10 flex flex-wrap items-center justify-center gap-4"
         >
           <Button href={primaryHref} variant="yellow">
             {finalCta.ctaPrimary}

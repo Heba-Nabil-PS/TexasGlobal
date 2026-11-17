@@ -39,7 +39,7 @@ export default function NewsArchiveV2() {
   return (
     <section className="relative bg-white py-10 md:py-12">
       <div ref={topRef} className="container-tx scroll-mt-32">
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between md:gap-6">
           <div>
             <Eyebrow>{newsV2.archive.eyebrow}</Eyebrow>
             <Title lines={newsV2.archive.heading} size="md" />
@@ -50,7 +50,7 @@ export default function NewsArchiveV2() {
         </div>
 
         {/* Category chips */}
-        <div className="mt-10 flex flex-wrap gap-3">
+        <div className="chip-row mt-6 gap-2 md:mt-10 md:gap-3">
           {chips.map((c) => {
             const active = c === filter;
             return (
@@ -63,7 +63,7 @@ export default function NewsArchiveV2() {
                   setPage(0);
                 }}
                 data-cursor="link"
-                className={`rounded-full border-2 px-5 py-2 text-xs font-extrabold uppercase tracking-caps transition-colors ${
+                className={`rounded-full border-2 px-4 py-2 text-xs font-extrabold md:px-5 uppercase tracking-caps transition-colors ${
                   active ? "border-primary bg-primary text-white" : "border-third/15 text-third/70 hover:border-secondary hover:text-third"
                 }`}
               >
@@ -81,7 +81,7 @@ export default function NewsArchiveV2() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.4, ease: ease.out }}
-            className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+            className="mt-6 grid gap-5 sm:grid-cols-2 md:mt-12 md:gap-8 lg:grid-cols-3"
           >
             {current.map((a) => (
               <article
@@ -101,18 +101,18 @@ export default function NewsArchiveV2() {
                       {a.category}
                     </span>
                   </div>
-                  <div className="flex flex-1 flex-col p-6">
-                    <div className="mb-3 flex items-center text-sm text-gray-500">
+                  <div className="flex flex-1 flex-col p-5 md:p-6">
+                    <div className="mb-2 flex items-center text-sm text-gray-500 md:mb-3">
                       <CalendarIcon />
                       {a.date}
                     </div>
-                    <h3 className="mb-3 line-clamp-3 font-texas text-xl font-bold text-gray-900 transition-colors group-hover:text-secondary">
+                    <h3 className="mb-2 line-clamp-3 font-texas text-xl font-bold leading-snug text-gray-900 transition-colors group-hover:text-primary md:mb-3">
                       {a.title}
                     </h3>
-                    <p className="mb-4 line-clamp-3 text-gray-600">{a.excerpt}</p>
+                    <p className="line-clamp-3 text-gray-600">{a.excerpt}</p>
                     <div className="mt-auto pt-4">
-                      <span className="inline-flex items-center font-texas font-bold uppercase tracking-wide text-secondary group-hover:underline">
-                        {newsV2.archive.readMore}
+                      <span className="inline-flex items-center gap-1.5 font-texas font-bold uppercase tracking-wide text-primary group-hover:underline">
+                        {newsV2.archive.readMore} <BrandArrow />
                       </span>
                     </div>
                   </div>
@@ -126,7 +126,7 @@ export default function NewsArchiveV2() {
 
         {/* Pagination */}
         {pages > 1 && (
-          <nav aria-label="Stories pages" className="mt-14 flex items-center justify-center gap-2">
+          <nav aria-label="Stories pages" className="mt-8 flex items-center justify-center gap-1.5 md:mt-14 md:gap-2">
             <PageBtn label={<><BrandArrow dir="left" /> Prev</>} disabled={page === 0} onClick={() => goTo(page - 1)} />
             {Array.from({ length: pages }, (_, p) => (
               <PageBtn key={p} label={String(p + 1)} active={p === page} onClick={() => goTo(p)} round />
@@ -159,7 +159,7 @@ function PageBtn({
       disabled={disabled}
       aria-current={active ? "page" : undefined}
       data-cursor="link"
-      className={`${round ? "size-12" : "h-12 px-5"} rounded-full border-2 font-texas text-sm font-bold uppercase tracking-wide transition-colors disabled:pointer-events-none disabled:opacity-30 ${
+      className={`${round ? "size-11 md:size-12" : "inline-flex h-11 items-center gap-1.5 whitespace-nowrap px-4 md:h-12 md:px-5"} rounded-full border-2 font-texas text-sm font-bold uppercase tracking-wide transition-colors disabled:pointer-events-none disabled:opacity-30 ${
         active ? "border-primary bg-primary text-white" : "border-third text-third hover:border-secondary hover:bg-secondary"
       }`}
     >

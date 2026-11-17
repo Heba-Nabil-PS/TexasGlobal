@@ -51,7 +51,7 @@ export default function MarketFinder({
   }, [query, region, brand]);
 
   const selectCls =
-    "w-full cursor-pointer appearance-none rounded-full border border-ink/12 bg-cream px-5 py-3.5 pr-10 text-sm font-bold text-ink outline-none transition-colors focus:border-primary";
+    "w-full cursor-pointer appearance-none rounded-full border border-ink/12 bg-cream px-4 py-3.5 pr-9 text-sm sm:px-5 sm:pr-10 font-bold text-ink outline-none transition-colors focus:border-primary";
 
   return (
     <section className="relative overflow-hidden bg-cream-200 py-10 md:py-12">
@@ -67,17 +67,17 @@ export default function MarketFinder({
           initial="hidden"
           whileInView="show"
           viewport={inView}
-          className="mx-auto max-w-4xl rounded-[28px] border border-ink/10 bg-paper p-7 text-center shadow-soft3 md:p-10"
+          className="mx-auto max-w-4xl rounded-[28px] border border-ink/10 bg-paper p-5 text-center shadow-soft3 sm:p-7 md:p-10"
         >
           <span className="eyebrow justify-center text-tex-red">
             <BrandStar /> {copy.eyebrow}
           </span>
-          <h2 className="display mt-4 text-4xl uppercase leading-[0.95] text-ink md:text-5xl">{copy.heading}</h2>
+          <h2 className="display mt-3 text-4xl uppercase leading-[0.95] text-ink md:mt-4 md:text-5xl">{copy.heading}</h2>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-ink-600 md:text-base">{copy.body}</p>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr]">
+          <div className="mt-6 grid grid-cols-2 gap-2.5 sm:gap-4 md:mt-8 lg:grid-cols-[1.6fr_1fr_1fr]">
             {/* search */}
-            <label className="group flex items-center gap-3 rounded-full border border-ink/12 bg-cream px-5 py-3.5 transition-colors focus-within:border-primary sm:col-span-2 lg:col-span-1">
+            <label className="group flex items-center gap-3 rounded-full border border-ink/12 bg-cream px-5 py-3.5 transition-colors focus-within:border-primary col-span-2 lg:col-span-1">
               <svg viewBox="0 0 24 24" className="size-5 shrink-0 text-ink-400" fill="none" aria-hidden>
                 <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
                 <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -107,7 +107,7 @@ export default function MarketFinder({
                   </option>
                 ))}
               </select>
-              <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-ink-400" aria-hidden>
+              <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink-400 sm:right-5" aria-hidden>
                 <BrandArrow dir="down" />
               </span>
             </div>
@@ -127,7 +127,7 @@ export default function MarketFinder({
                   </option>
                 ))}
               </select>
-              <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-ink-400" aria-hidden>
+              <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink-400 sm:right-5" aria-hidden>
                 <BrandArrow dir="down" />
               </span>
             </div>
@@ -135,7 +135,7 @@ export default function MarketFinder({
         </motion.div>
 
         {/* -------------------------------- results ----------------------------- */}
-        <motion.div layout className="mx-auto mt-12 grid max-w-6xl gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <motion.div layout className="mx-auto mt-6 grid max-w-6xl gap-2 sm:grid-cols-2 sm:gap-3 md:mt-12 lg:grid-cols-4">
           <AnimatePresence mode="popLayout" initial={false}>
             {results.map((m, i) => {
               const active = focus === m.code;
@@ -147,7 +147,7 @@ export default function MarketFinder({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.94 }}
                   transition={{ duration: 0.4, ease: ease.out, delay: Math.min(i * 0.025, 0.3) }}
-                  className={`group relative flex items-center gap-4 rounded-2xl border bg-paper px-4 py-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-soft3 ${
+                  className={`group relative flex items-center gap-3 rounded-2xl border bg-paper px-3.5 py-3 transition-all sm:gap-4 sm:px-4 sm:py-4 duration-300 hover:-translate-y-1 hover:shadow-soft3 ${
                     active ? "border-primary shadow-soft3 ring-2 ring-primary/25" : "border-secondary/45 hover:border-primary"
                   }`}
                 >
@@ -155,7 +155,7 @@ export default function MarketFinder({
                     src={`/assets/flags/${m.code}.svg`}
                     alt=""
                     className="shrink-0 rounded-full shadow-sm ring-1 ring-ink/10 transition-transform duration-300 group-hover:scale-105"
-                    style={{ width: 42, height: 42 }}
+                    style={{ width: "clamp(34px, 9vw, 42px)", height: "clamp(34px, 9vw, 42px)" }}
                   />
 
                   {/* whole card links out to that market's own site */}

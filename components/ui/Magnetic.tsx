@@ -29,7 +29,10 @@ export default function Magnetic({
 
   const clamp = (v: number) => Math.max(-max, Math.min(max, v));
 
-  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    // Mouse/pen only: on touch a tap would leave the button stuck off-centre
+    // (there is no "leave" on a phone).
+    if (e.pointerType === "touch") return;
     const el = ref.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
@@ -49,8 +52,8 @@ export default function Magnetic({
       ref={ref}
       className={className}
       style={{ x: sx, y: sy }}
-      onMouseMove={onMove}
-      onMouseLeave={reset}
+      onPointerMove={onMove}
+      onPointerLeave={reset}
     >
       {children}
     </motion.div>

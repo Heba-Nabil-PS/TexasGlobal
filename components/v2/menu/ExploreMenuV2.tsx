@@ -47,7 +47,7 @@ export default function ExploreMenuV2() {
   const [left, right] = lines[1].split("|");
 
   return (
-    <section id="pick-your-crunch" className="relative scroll-mt-24 overflow-hidden bg-white pb-6 pt-6 text-third md:pb-4 md:pt-10">
+    <section id="pick-your-crunch" className="relative z-10 scroll-mt-24 overflow-hidden bg-white pb-0 pt-6 text-third md:pb-4 md:pt-10">
       {/* mobile-only small text */}
       <p className="eyebrow w-full justify-center text-third md:hidden">
         <ShootingStar className="size-5" /> {eyebrow}

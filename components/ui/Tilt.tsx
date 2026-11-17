@@ -34,7 +34,8 @@ export default function Tilt({
       `radial-gradient(circle at ${x}% ${y}%, rgba(255,255,255,0.35), transparent 45%)`
   );
 
-  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "touch") return; // no hover on phones: a tap would freeze the card tilted
     const el = ref.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
@@ -50,13 +51,16 @@ export default function Tilt({
     <motion.div
       ref={ref}
       className={className}
-      onMouseMove={onMove}
-      onMouseLeave={reset}
+      onPointerMove={onMove}
+      onPointerLeave={reset}
       style={{ rotateX: rx, rotateY: ry, transformStyle: "preserve-3d", transformPerspective: 900 }}
       whileHover={{ scale }}
       transition={{ type: "spring", stiffness: 200, damping: 18 }}
     >
-      <div style={{ transform: "translateZ(40px)", transformStyle: "preserve-3d" }} className="relative h-full w-full">
+      {/* The 40px lift only reads with a pointer. On touch it just magnifies the
+          card ~5% at rest (900px perspective), pushing it past the page gutter
+          and softening the text, so it is applied for hover devices only. */}
+      <div style={{ transformStyle: "preserve-3d" }} className="relative h-full w-full [@media(hover:hover)]:[transform:translateZ(40px)]">
         {children}
         {glare && (
           <motion.div

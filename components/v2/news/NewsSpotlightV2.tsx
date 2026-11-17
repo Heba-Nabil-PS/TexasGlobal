@@ -123,7 +123,7 @@ function MobileCarousel({ slides }: { slides: Slide[] }) {
   return (
     <section className="relative overflow-hidden bg-white pb-10 pt-10 md:hidden">
       <Header aside={<SliderControls index={i} count={slides.length} onPrev={() => go(i - 1)} onNext={() => go(i + 1)} />} />
-      <div className="container-tx mt-12">
+      <div className="container-tx mt-6">
         <div
           onPointerDown={(e) => (startX.current = e.clientX)}
           onPointerUp={(e) => {
@@ -144,7 +144,7 @@ function MobileCarousel({ slides }: { slides: Slide[] }) {
               key={s.href + k}
               slide={s}
               className={`w-[86vw] transition-opacity duration-500 ${k === i ? "opacity-100" : "opacity-50"}`}
-              imageClass="h-[360px]"
+              imageClass="h-[min(300px,72vw)]"
             />
           ))}
         </div>

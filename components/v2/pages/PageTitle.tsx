@@ -6,7 +6,7 @@ import { ease } from "@/lib/motion";
 /** Plain page title (no banner) — for utility pages: Privacy, Terms, Sitemap. */
 export default function PageTitle({ title }: { title: string }) {
   return (
-    <section className="bg-white pb-4 pt-36 text-third md:pt-44">
+    <section className="bg-white pb-4 pt-28 text-third md:pt-44">
       <div className="container-tx">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}

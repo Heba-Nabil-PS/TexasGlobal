@@ -42,7 +42,7 @@ export default function DownloadApp() {
             ))}
           </motion.ul>
 
-          <div className="mt-9 flex flex-wrap gap-4">
+          <div className="btn-row mt-9 flex flex-wrap gap-4">
             <Button href="/menu" variant="yellow">
               Get the app
             </Button>

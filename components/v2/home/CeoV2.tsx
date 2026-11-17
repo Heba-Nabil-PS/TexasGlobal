@@ -11,8 +11,8 @@ import { staggerContainer, fadeUp, inView, ease } from "@/lib/motion";
  */
 export default function CeoV2() {
   return (
-    <section className="relative overflow-hidden bg-white py-10 md:py-12">
-      <div className="container-tx relative grid items-center gap-14 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
+    <section className="relative overflow-hidden bg-white pb-10 pt-4 md:py-12">
+      <div className="container-tx relative grid items-center gap-8 md:gap-14 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
         <div className="max-w-xl lg:justify-self-end">
           <Title lines={ceoV2.titleLines} size="lg" className="!mt-0" />
 
@@ -21,20 +21,20 @@ export default function CeoV2() {
             initial="hidden"
             whileInView="show"
             viewport={inView}
-            className="mt-8 space-y-4 border-l-[3px] border-primary pl-6"
+            className="mt-6 space-y-4 border-l-[3px] border-primary pl-5 md:mt-8 md:pl-6"
           >
             {ceoV2.body.map((p, i) => (
               <motion.p
                 key={i}
                 variants={fadeUp}
-                className={`leading-relaxed text-third/80 ${i === 0 ? "text-xl font-bold uppercase text-third" : "text-base md:text-lg"}`}
+                className={`leading-relaxed text-third/80 ${i === 0 ? "text-lg font-bold uppercase leading-snug text-third md:text-xl" : "text-base md:text-lg"}`}
               >
                 {p}
               </motion.p>
             ))}
           </motion.div>
 
-          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={inView} className="mt-8 pl-6">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={inView} className="mt-6 pl-5 md:mt-8 md:pl-6">
             <div className="display text-3xl text-third md:text-4xl">{ceoV2.name}</div>
             <div className="mt-1.5 text-sm font-extrabold uppercase tracking-caps text-primary md:text-base">{ceoV2.role}</div>
           </motion.div>

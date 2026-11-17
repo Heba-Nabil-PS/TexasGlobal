@@ -53,8 +53,9 @@ export default function StoryPage() {
 /* ------------------------------------------------------------------ */
 function StoryFilm() {
   return (
-    <section className="bg-cream pb-10 md:pb-12">
-      <div className="container-tx">
+    <section className="bg-cream pb-2 md:pb-12">
+      {/* Phones: bleed the wide film edge to edge so it isn't a thin strip. */}
+      <div className="container-tx px-0 md:px-[var(--gutter)]">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -87,9 +88,9 @@ function StoryFilm() {
 function MissionVision() {
   const { missionVision } = storyPage;
   return (
-    <section className="relative bg-cream px-4 pb-6 pt-12 md:pb-8 md:pt-12">
-      <div className="container-tx md:px-6">
-        <div className="grid gap-10 md:grid-cols-2 md:gap-16">
+    <section className="relative bg-cream pb-6 pt-6 md:pb-8 md:pt-12">
+      <div className="container-tx">
+        <div className="grid gap-8 md:grid-cols-2 md:gap-16">
           {missionVision.items.map((item) => (
             <motion.div
               key={item.alt}
@@ -100,8 +101,8 @@ function MissionVision() {
               className="relative rounded-2xl"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.titleImage} alt={item.alt} className="mb-5 h-24 w-auto sm:h-28 md:h-32" />
-              <p className="text-xl leading-relaxed text-ink-600">{item.body}</p>
+              <img src={item.titleImage} alt={item.alt} className="mb-3 h-20 w-auto sm:mb-5 sm:h-28 md:h-32" />
+              <p className="text-lg leading-relaxed text-ink-600 md:text-xl">{item.body}</p>
             </motion.div>
           ))}
         </div>
@@ -117,7 +118,7 @@ function LeadershipTeaser() {
   const { leadership } = storyPage;
   return (
     <section id="leadership" className="scroll-mt-24 bg-ink py-10 text-cream md:py-14">
-      <div className="container-tx grid items-center gap-14 lg:grid-cols-[1fr_0.9fr]">
+      <div className="container-tx grid items-center gap-8 md:gap-14 lg:grid-cols-[1fr_0.9fr]">
         <div>
           <span className="eyebrow text-tex-yellow">
             <BrandStar /> {leadership.eyebrow}
@@ -141,14 +142,14 @@ function LeadershipTeaser() {
           initial="hidden"
           whileInView="show"
           viewport={inView}
-          className="grid grid-cols-2 gap-4 sm:grid-cols-3"
+          className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4"
         >
           {leadershipPage.execs.slice(0, 6).map((e) => (
             <motion.div
               key={e.name}
               variants={fadeUp}
               whileHover={{ y: -6 }}
-              className="group flex flex-col items-center gap-3 rounded-2xl border border-cream/10 bg-cream/[0.03] p-5 text-center"
+              className="group flex flex-col items-center gap-3 rounded-2xl border border-cream/10 bg-cream/[0.03] p-4 text-center sm:p-5"
             >
               <span className="relative size-20 overflow-hidden rounded-full ring-2 ring-cream/10 transition-all duration-300 group-hover:ring-tex-yellow">
                 <Image

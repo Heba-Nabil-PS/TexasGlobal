@@ -41,7 +41,9 @@ export default function AppPage() {
   return (
     <>
       {/* ---------------- Banner (full-bleed hero image + badges) ---------------- */}
-      <section className="relative flex items-center justify-center">
+      {/* Below lg the banner is a short wide strip; push it under the fixed mobile
+          header so the logos don't sit on top of the artwork's own headline. */}
+      <section className="relative flex items-center justify-center pt-[72px] lg:pt-0">
         <motion.div
           initial={{ opacity: 0, scale: 1.03 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -71,9 +73,9 @@ export default function AppPage() {
       </section>
 
       {/* ---------------- Discover more with the app ---------------- */}
-      <section id="features" className="scroll-mt-24 bg-white py-10 md:py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-6 text-center md:mb-10">
+      <section id="features" className="scroll-mt-24 bg-white py-8 md:py-12">
+        <div className="container-tx max-w-7xl">
+          <div className="mb-5 text-center md:mb-10">
             <motion.h2
               variants={fadeUp}
               initial="hidden"
@@ -90,13 +92,13 @@ export default function AppPage() {
             initial="hidden"
             whileInView="show"
             viewport={inView}
-            className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3"
+            className="grid gap-3 md:grid-cols-2 md:gap-8 lg:grid-cols-3"
           >
             {discover.features.map((f) => (
               <motion.div
                 key={f.title}
                 variants={fadeUp}
-                className="relative min-h-[168px] overflow-hidden rounded-2xl border border-black/5 bg-primary p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                className="relative min-h-[132px] overflow-hidden rounded-2xl border border-black/5 bg-primary p-6 transition-all md:min-h-[168px] md:p-8 duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 {/* Real animated GIF (unoptimized keeps the animation) */}
                 <Image
@@ -108,8 +110,8 @@ export default function AppPage() {
                   className="object-contain object-right"
                 />
                 <div className="relative z-10 max-w-[62%]">
-                  <h3 className="mb-2 text-2xl font-extrabold uppercase text-white">{f.title}</h3>
-                  <p className="leading-relaxed text-white">{f.desc}</p>
+                  <h3 className="mb-1.5 text-xl font-extrabold uppercase leading-tight text-white md:mb-2 md:text-2xl">{f.title}</h3>
+                  <p className="text-[15px] leading-snug text-white/90 md:text-base md:leading-relaxed md:text-white">{f.desc}</p>
                 </div>
               </motion.div>
             ))}

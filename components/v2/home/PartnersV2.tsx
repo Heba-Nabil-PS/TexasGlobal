@@ -47,7 +47,7 @@ export default function PartnersV2() {
 /** Dark scrolling strip of region names — also used on its own on the home page. */
 export function RegionsStripV2({ className = "" }: { className?: string }) {
   return (
-    <div className={`bg-third py-6 ${className}`}>
+    <div className={`bg-third py-4 md:py-6 ${className}`}>
       <Marquee duration={24}>
         {partnersV2.regions.map((m) => (
           <span key={m} className="flex items-center" data-cursor="hover">

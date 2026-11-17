@@ -7,6 +7,30 @@ import { ease } from "@/lib/motion";
 
 export const PRELOADER_DONE = "preloader:done";
 
+/** ms the curtain takes to lift after PRELOADER_DONE fires */
+const PRELOADER_LIFT_MS = 500;
+
+/** true once the preloader has lifted (immediately on client-side navigation) */
+export function usePreloaderReady(liftMs = PRELOADER_LIFT_MS) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (document.documentElement.dataset.preloaded) {
+      setReady(true);
+      return;
+    }
+    let timer = 0;
+    const onDone = () => {
+      timer = window.setTimeout(() => setReady(true), liftMs);
+    };
+    window.addEventListener(PRELOADER_DONE, onDone, { once: true });
+    return () => {
+      window.removeEventListener(PRELOADER_DONE, onDone);
+      window.clearTimeout(timer);
+    };
+  }, [liftMs]);
+  return ready;
+}
+
 /**
  * Cinematic preloader — a counter races 0→100 while assets settle, then the
  * curtain lifts and hands off into the hero. Sets the pace for everything after.
@@ -18,7 +42,9 @@ export default function Preloader() {
   useEffect(() => {
     let raf = 0;
     const start = performance.now();
-    const total = 1600;
+    // Phones: the count-up is pure wait time on a slower connection, so keep
+    // the ritual but halve it.
+    const total = window.matchMedia("(max-width: 1023px), (hover: none)").matches ? 900 : 1600;
     const tick = (now: number) => {
       const p = Math.min(1, (now - start) / total);
       // easeOutExpo

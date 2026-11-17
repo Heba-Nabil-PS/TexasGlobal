@@ -60,7 +60,15 @@ export type BuildCategory = {
    * brand video scrubbed by scroll instead of the piece-by-piece build
    * (shot on a light-grey studio background, which is flattened to white live)
    */
-  video?: { src: string; w: number; h: number };
+  video?: {
+    src: string;
+    w: number;
+    h: number;
+    /** framing: shrink a clip shot closer than the others so all trays match (default 1) */
+    scale?: number;
+    /** strength of the clip's cast shadows, 0–1 (default 1 = as shot) */
+    shadow?: number;
+  };
 };
 
 export const STAGE = { w: 800, y0: 70, h: 530 };
@@ -154,6 +162,7 @@ export const crunchBuild: BuildCategory[] = [
     blurb: "Something sweet to finish the crunch.",
     href: "/find-your-market",
     combo: { src: `${dir}/desserts/combo.webp`, iw: 744, ih: 420 },
+    video: { src: "/assets/v2/crunch/video/desserts.mp4", w: 1280, h: 720, scale: 0.76, shadow: 0.45 },
     bg: ["#ffffff", "#ffffff"],
     glow: "#ffffff",
     ink: "dark",

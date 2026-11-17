@@ -39,7 +39,7 @@ export default function PageHeroV2({
       body={subtitle ?? ""}
       decor={<div aria-hidden className="pointer-events-none absolute -right-[16vw] top-20 size-[58vw] max-w-[940px] rounded-full bg-secondary/15" />}
       visual={
-        <div className="relative mx-auto aspect-square w-full max-w-[500px]">
+        <div className="relative mx-auto aspect-square w-full max-w-[min(340px,86vw)] sm:max-w-[500px]">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -56,7 +56,7 @@ export default function PageHeroV2({
               <Image src={image} alt={imageAlt} fill priority sizes="(max-width:1024px) 90vw, 40vw" className="object-contain drop-shadow-[0_28px_36px_rgba(45,41,38,0.3)]" />
             </motion.div>
           </motion.div>
-          <Stamp text={stamp} size={120} className="absolute -left-2 bottom-4 md:-left-6" />
+          <Stamp text={stamp} size={120} className="absolute -left-2 bottom-4 origin-bottom-left scale-[0.8] sm:scale-100 md:-left-6" />
         </div>
       }
     >

@@ -34,7 +34,7 @@ export default function GlobeV2() {
         <Title lines={globeV2.titleLines} size="lg" className="mx-auto max-w-4xl" />
       </div>
 
-      <div className="container-tx mt-10 grid items-center gap-10 lg:mt-12 lg:grid-cols-[1fr_auto_1fr]">
+      <div className="container-tx mt-6 grid items-center gap-6 md:mt-10 md:gap-10 lg:mt-12 lg:grid-cols-[1fr_auto_1fr]">
         {/* Region menu */}
         <nav aria-label="Explore by region" className="order-2 lg:order-1">
           <ul className="flex flex-wrap justify-center gap-2 lg:flex-col lg:gap-3">
@@ -47,13 +47,13 @@ export default function GlobeV2() {
                     onClick={() => go(r)}
                     aria-pressed={on}
                     data-cursor="link"
-                    className={`w-full rounded-2xl border-2 px-4 py-2.5 text-left transition-all lg:px-5 lg:py-3.5 ${
+                    className={`w-full rounded-2xl border-2 px-3 py-2 text-left transition-all md:px-4 md:py-2.5 lg:px-5 lg:py-3.5 ${
                       on ? "border-secondary bg-secondary/15 shadow-soft3" : "border-third/10 hover:border-third/30"
                     }`}
                   >
-                    <span className="flex items-center gap-3">
-                      <span className={`size-2.5 rounded-full transition-colors ${on ? "bg-primary" : "bg-third/20"}`} />
-                      <span className="display text-xl text-third lg:text-2xl">{r.label}</span>
+                    <span className="flex items-center gap-2 md:gap-3">
+                      <span className={`size-2 rounded-full md:size-2.5 transition-colors ${on ? "bg-primary" : "bg-third/20"}`} />
+                      <span className="display whitespace-nowrap text-base text-third md:text-xl lg:text-2xl">{r.label}</span>
                     </span>
                   </button>
                 </li>
@@ -70,11 +70,11 @@ export default function GlobeV2() {
 
         {/* Big number */}
         <div className="order-3 text-center lg:text-left">
-          <div className="display text-7xl leading-none text-secondary md:text-8xl">{globeV2.stat}</div>
-          <p className="mx-auto mt-4 max-w-sm text-lg leading-relaxed text-third/75 lg:mx-0 md:text-xl">{globeV2.body}</p>
+          <div className="display text-6xl leading-none text-secondary md:text-8xl">{globeV2.stat}</div>
+          <p className="mx-auto mt-3 max-w-sm text-base md:mt-4 leading-relaxed text-third/75 lg:mx-0 md:text-xl">{globeV2.body}</p>
         </div>
 
-        <div className="order-4 flex flex-wrap items-center justify-center gap-3 lg:col-span-3">
+        <div className="btn-row order-4 flex flex-wrap items-center justify-center gap-3 lg:col-span-3">
           <Button href={globeV2.ctaSecondary.href} variant="red" pulse>
             {globeV2.ctaSecondary.label}
           </Button>

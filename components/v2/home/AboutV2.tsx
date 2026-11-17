@@ -13,27 +13,29 @@ import { staggerContainer, fadeUp, inView } from "@/lib/motion";
 /** Home "Our story": global-leadership headline, white canvas, stat cards, tray video. */
 export default function AboutV2() {
   return (
-    <section id="about" className="relative overflow-hidden bg-white pb-10 pt-10 md:pb-12 md:pt-14">
+    <section id="about" className="relative overflow-hidden bg-white pb-0 pt-10 md:pb-12 md:pt-14">
       <div className="container-tx relative">
-        <div className="grid items-center gap-14 lg:grid-cols-[1fr_1.05fr]">
+        <div className="grid items-center gap-2 md:gap-14 lg:grid-cols-[1fr_1.05fr]">
           <div>
             <Eyebrow>{aboutV2.eyebrow}</Eyebrow>
             <Title lines={aboutV2.titleLines} size="md" className="md:!text-[3.6vw]" />
 
-            <p className="mt-7 max-w-xl text-lg leading-relaxed text-third/70">
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-third/70 md:mt-7 md:text-lg">
               <WordsReveal text={aboutV2.body} />
             </p>
 
             <StatCards />
 
-            <Reveal delay={0.15} className="mt-10 flex flex-wrap items-center gap-4">
+            <Reveal delay={0.15} className="btn-row mt-7 flex flex-wrap items-center gap-4 md:mt-10">
               <Button href={about.cta.primary.href} variant="yellow">
                 {about.cta.primary.label}
               </Button>
             </Reveal>
           </div>
 
-          <div className="relative h-[380px] md:h-[620px]">
+          {/* Phones/tablets: box = the video's own 1080x800 ratio, so no letterbox
+              space above/below the tray. Desktop keeps the tall column. */}
+          <div className="relative mx-auto -mb-[6%] aspect-[1080/800] w-full max-w-xl lg:mb-0 lg:aspect-auto lg:h-[620px] lg:max-w-none">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -67,7 +69,7 @@ function StatCards() {
       initial="hidden"
       whileInView="show"
       viewport={inView}
-      className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4"
+      className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 md:mt-10"
     >
       {aboutV2.stats.map((s, i) => {
         return (

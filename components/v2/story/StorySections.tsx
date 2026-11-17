@@ -29,7 +29,7 @@ export function StoryHeroV2({
   const foodY = useTransform(scrollYProgress, [0, 1], [0, 140]);
 
   return (
-    <section ref={ref} className="relative flex items-center overflow-hidden bg-[#fff4d6] pb-10 pt-32 text-third md:pb-14 md:pt-36 lg:min-h-[100svh]">
+    <section ref={ref} className="relative flex items-center overflow-hidden bg-[#fff4d6] pb-10 pt-24 text-third md:pb-14 md:pt-36 lg:min-h-[100svh]">
 
       <div className="container-tx relative z-10 grid w-full items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
         <div>
@@ -54,7 +54,7 @@ export function StoryHeroV2({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: ease.out, delay: 0.65 }}
-            className="mt-8 flex flex-wrap gap-4"
+            className="btn-row mt-8 flex flex-wrap gap-4"
           >
             <Button href={storyV2.hero.ctaPrimary.href} variant="red">
               {storyV2.hero.ctaPrimary.label}
@@ -111,34 +111,34 @@ export function HeritageV2() {
 
   return (
     <Section>
-      <div ref={ref} className="container-tx grid items-center gap-16 lg:grid-cols-[1fr_1fr] lg:gap-20">
+      <div ref={ref} className="container-tx grid items-center gap-8 md:gap-16 lg:grid-cols-[1fr_1fr] lg:gap-20">
         {/* Collage */}
-        <div className="relative mx-auto h-[460px] w-full max-w-[560px] sm:h-[560px]">
+        <div className="relative mx-auto h-[min(400px,108vw)] w-full max-w-[560px] sm:h-[560px]">
           {/* yellow note */}
           <motion.div
             initial={{ opacity: 0, rotate: 14, y: -20 }}
             whileInView={{ opacity: 1, rotate: 7, y: 0 }}
             viewport={inView}
             transition={{ duration: 0.8, ease: ease.pop }}
-            className="absolute right-[2%] top-[2%] z-10 bg-secondary px-6 py-5 text-third shadow-soft3"
+            className="absolute right-[2%] top-[2%] z-10 bg-secondary px-4 py-3.5 text-third shadow-soft3 sm:px-6 sm:py-5"
           >
-            <p className="display text-4xl leading-[0.85] md:text-5xl">Est.<br />1952</p>
-            <p className="mt-2 text-xs font-bold uppercase tracking-caps">San Antonio, TX</p>
+            <p className="display text-3xl leading-[0.85] sm:text-4xl md:text-5xl">Est.<br />1952</p>
+            <p className="mt-2 text-[10px] font-bold sm:text-xs uppercase tracking-caps">San Antonio, TX</p>
           </motion.div>
           {/* polaroid */}
           <motion.figure
             style={{ rotate: photoRot }}
-            className="absolute left-[2%] top-[8%] z-[5] w-[64%] bg-white p-3 pb-12 shadow-pop"
+            className="absolute left-[4%] top-[8%] z-[5] w-[62%] bg-white p-2.5 pb-10 shadow-pop sm:p-3 sm:pb-12"
           >
             <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-third">
               <Image src={h.photo} alt={h.photoAlt} fill sizes="(max-width:1024px) 60vw, 30vw" className="object-cover" />
             </div>
-            <figcaption className="display absolute inset-x-0 bottom-3 text-center text-lg uppercase text-third/80">
+            <figcaption className="display absolute inset-x-0 bottom-2.5 text-center text-base uppercase text-third/80 sm:bottom-3 sm:text-lg">
               {h.photoCaption}
             </figcaption>
           </motion.figure>
           {/* stamps */}
-          <div className="absolute bottom-[2%] left-[0%] z-30 w-28 sm:w-32">
+          <div className="absolute bottom-[2%] left-[0%] z-30 w-24 sm:w-32">
             <div className="relative aspect-square animate-[spin_26s_linear_infinite]">
               <Image src={h.stamp} alt="Bold Texas Flavor" fill sizes="128px" className="object-contain" />
             </div>
@@ -149,9 +149,9 @@ export function HeritageV2() {
         <div>
           <Eyebrow>{h.eyebrow}</Eyebrow>
           <Title lines={h.title} />
-          <motion.div variants={staggerContainer(0.12)} initial="hidden" whileInView="show" viewport={inView} className="mt-7 max-w-xl space-y-4">
+          <motion.div variants={staggerContainer(0.12)} initial="hidden" whileInView="show" viewport={inView} className="mt-5 max-w-xl space-y-4 md:mt-7">
             {h.body.map((p, i) => (
-              <motion.p key={i} variants={fadeUp} className="text-lg leading-relaxed text-third/75">
+              <motion.p key={i} variants={fadeUp} className="text-base leading-relaxed text-third/75 md:text-lg">
                 {p}
               </motion.p>
             ))}
@@ -161,12 +161,12 @@ export function HeritageV2() {
             initial="hidden"
             whileInView="show"
             viewport={inView}
-            className="mt-10 flex flex-wrap gap-x-10 gap-y-6"
+            className="mt-7 grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:gap-x-10 sm:gap-y-6 md:mt-10"
           >
             {h.facts.map((f) => (
-              <motion.div key={f.k} variants={fadeUp} className="border-l-4 border-secondary pl-4">
-                <dt className="display text-5xl leading-none text-primary">{f.k}</dt>
-                <dd className="mt-1 text-xs font-bold uppercase tracking-caps text-third/60">{f.v}</dd>
+              <motion.div key={f.k} variants={fadeUp} className="border-l-4 border-secondary pl-3 sm:pl-4">
+                <dt className="display text-[2.4rem] leading-none text-primary sm:text-5xl">{f.k}</dt>
+                <dd className="mt-1 text-[10px] font-bold leading-tight sm:text-xs uppercase tracking-caps text-third/60">{f.v}</dd>
               </motion.div>
             ))}
           </motion.dl>

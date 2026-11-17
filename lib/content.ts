@@ -43,6 +43,8 @@ export const site = {
   // secondary links (mobile drawer only)
   topNav: [
     { label: "Careers", href: "/careers" },
+    { label: "News", href: "/news" },
+    { label: "FAQs", href: "/faqs" },
   ],
   // red circle in the nav: straight to the franchise application form
   cta: { label: "Franchise with us", href: "/franchising#apply-form" },

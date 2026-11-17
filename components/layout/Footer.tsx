@@ -129,38 +129,38 @@ export default function Footer() {
       {/* Brand band */}
       {showBand && pathname !== "/" && (
         <div className="relative overflow-hidden bg-secondary text-third">
-          <div className="mx-auto grid max-w-7xl items-center gap-6 px-6 py-10 md:grid-cols-[auto_1fr_auto] md:py-8 lg:px-8">
+          <div className="mx-auto grid max-w-7xl items-center gap-4 px-5 py-8 sm:px-6 md:grid-cols-[auto_1fr_auto] md:gap-6 lg:px-8">
             <motion.div
               initial={{ rotate: -20, opacity: 0 }}
               whileInView={{ rotate: 0, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative mx-auto size-28 md:mx-0 md:size-32"
+              className="relative mx-auto size-20 md:mx-0 md:size-32"
             >
               <Image src="/assets/v2/stamp-bold-texas-flavor.png" alt="Bold Texas Flavor" fill sizes="128px" className="object-contain opacity-80 brightness-0" />
             </motion.div>
             <div className="text-center md:text-left">
-              <p className="display text-4xl leading-[0.9] md:text-5xl">
+              <p className="display text-[2.1rem] leading-[0.9] md:text-5xl">
                 Bold Texas flavor.
                 <br />
                 <span className="text-primary">25+ markets. One crunch.</span>
               </p>
-              <p className="mt-3 max-w-lg text-sm font-semibold uppercase tracking-caps text-third/70 md:text-base">
+              <p className="mx-auto mt-2.5 max-w-lg text-xs font-semibold uppercase tracking-caps text-third/70 md:mx-0 md:mt-3 md:text-base">
                 Hand-battered since 1952. Find the one closest to you.
               </p>
             </div>
-            <div className="relative flex flex-wrap items-center justify-center gap-3 md:justify-end">
+            <div className="btn-row relative mx-auto grid w-full max-w-sm grid-cols-2 gap-2.5 md:mx-0 md:flex md:w-auto md:max-w-none md:flex-wrap md:items-center md:justify-end md:gap-3">
               <Link
                 href="/find-your-market"
                 data-cursor="link"
-                className="rounded-full border-2 border-third px-7 py-[14px] font-texas text-sm font-extrabold uppercase tracking-caps text-third transition-colors hover:bg-third hover:text-white"
+                className="whitespace-nowrap rounded-full border-2 border-third px-3 py-3.5 text-center font-texas text-sm font-extrabold md:px-7 md:py-[14px] uppercase tracking-caps text-third transition-colors hover:bg-third hover:text-white"
               >
                 Find your market
               </Link>
               <Link
                 href="/franchising#apply-form"
                 data-cursor="link"
-                className="rounded-full bg-third px-7 py-4 font-texas text-sm font-extrabold uppercase tracking-caps text-white transition-colors hover:bg-primary"
+                className="whitespace-nowrap rounded-full border-2 border-third bg-third px-3 py-3.5 text-center font-texas text-sm font-extrabold md:px-7 md:py-[14px] uppercase tracking-caps text-white transition-colors hover:bg-primary"
               >
                 Franchise with us
               </Link>
@@ -169,7 +169,7 @@ export default function Footer() {
         </div>
       )}
 
-      <div className="px-4 pb-4 pt-10 sm:px-6 lg:px-8">
+      <div className="px-5 pb-4 pt-8 sm:px-6 md:pt-10 lg:px-8">
         <div className="mx-auto max-w-7xl">
           {/* Mobile accordion */}
           <div className="space-y-2 md:hidden">

@@ -7,7 +7,7 @@ import { whatsNewV2 } from "@/lib/content-v2/home";
 
 /** One size for every tile in the row: square, filling the pinned row (max 58vh) on desktop. */
 const TILE =
-  "relative aspect-square w-[82vw] max-w-[420px] shrink-0 snap-center overflow-hidden rounded-[2rem] shadow-soft3 md:h-full md:max-h-[58vh] md:w-auto md:max-w-none";
+  "relative aspect-square w-[82vw] max-w-[420px] shrink-0 snap-start overflow-hidden md:snap-center rounded-[2rem] shadow-soft3 md:h-full md:max-h-[58vh] md:w-auto md:max-w-none";
 
 /**
  * What's new — the pinned horizontal gallery from Featured, carrying the square
@@ -22,7 +22,9 @@ export default function WhatsNewCardsV2() {
           key={item.title}
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
+          // amount 0: in the phone carousel the next card only peeks in (~10%);
+          // it must already be visible or nobody knows the row swipes.
+          viewport={{ once: true, amount: 0 }}
           transition={{ duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
           whileHover={{ y: -8 }}
           className={`${TILE} bg-third ring-1 ring-third/5`}

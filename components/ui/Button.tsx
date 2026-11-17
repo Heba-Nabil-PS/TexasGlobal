@@ -37,7 +37,7 @@ export default function Button({
   /** slow halo that keeps drawing the eye until the button is hovered */
   pulse?: boolean;
 }) {
-  const classes = `relative inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-sm font-extrabold uppercase tracking-caps transition-colors duration-200 ease-out ${styles[variant]} ${pulse ? "cta-pulse" : ""} ${className ?? ""}`;
+  const classes = `relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full px-5 py-3.5 text-sm font-extrabold uppercase tracking-caps sm:px-8 sm:py-4 transition-colors duration-200 ease-out ${styles[variant]} ${pulse ? "cta-pulse" : ""} ${className ?? ""}`;
 
   // Internal routes → client-side <Link>; hash/external → plain <a>
   const isRoute = href.startsWith("/");

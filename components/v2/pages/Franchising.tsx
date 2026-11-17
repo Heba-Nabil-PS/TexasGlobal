@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useMotionValue, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { animate, motion, useInView, useMotionValue, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Button from "@/components/ui/Button";
-import { PRELOADER_DONE } from "@/components/ui/Preloader";
+import { usePreloaderReady } from "@/components/ui/Preloader";
 import { Eyebrow, Lead, Section, Title } from "@/components/v2/kit";
 import { ClosingCta, HeroV2 } from "./shared";
 import BurgerScrub, { BURGER } from "./BurgerScrub";
@@ -12,28 +12,6 @@ import { franchiseV2 } from "@/lib/content-v2/pages";
 import { fadeUp, inView, staggerContainer } from "@/lib/motion";
 
 /** The preloader curtain is still clearing the hero for this long after it starts to lift. */
-const PRELOADER_LIFT_MS = 500;
-
-/** true once the preloader has lifted (immediately on client-side navigation) */
-function usePreloaderReady() {
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    if (document.documentElement.dataset.preloaded) {
-      setReady(true);
-      return;
-    }
-    let timer = 0;
-    const onDone = () => {
-      timer = window.setTimeout(() => setReady(true), PRELOADER_LIFT_MS);
-    };
-    window.addEventListener(PRELOADER_DONE, onDone, { once: true });
-    return () => {
-      window.removeEventListener(PRELOADER_DONE, onDone);
-      window.clearTimeout(timer);
-    };
-  }, []);
-  return ready;
-}
 
 function useWide() {
   const [wide, setWide] = useState(false);
@@ -47,6 +25,23 @@ function useWide() {
   return wide;
 }
 
+/** Time-driven 0→1→0 loop for the burger on phones; paused while off screen. */
+function useAutoplay(ref: React.RefObject<HTMLElement | null>, enabled: boolean) {
+  const mv = useMotionValue(0);
+  const visible = useInView(ref, { amount: 0.3 });
+  useEffect(() => {
+    if (!enabled || !visible) return;
+    const controls = animate(mv, [0, 1, 1, 0, 0], {
+      duration: 6,
+      times: [0, 0.32, 0.6, 0.88, 1], // open 1.9s · hold 1.7s · close 1.7s · rest 0.7s
+      ease: "easeInOut",
+      repeat: Infinity,
+    });
+    return () => controls.stop();
+  }, [enabled, visible, mv]);
+  return mv;
+}
+
 /** share of the pinned scroll that drives the opening (1 = all of it: no dead hold at the end) */
 const EXPLODE_END = 1;
 
@@ -55,7 +50,8 @@ const EXPLODE_END = 1;
  * Franchising hero: the Mexicana bursts apart layer by layer as you scroll
  * (BurgerScrub), and stacks back together as you scroll up.
  *  - desktop: the hero pins for one extra screen while the burger explodes
- *  - mobile/tablet: no pin; the burger explodes as it travels up the screen
+ *  - mobile/tablet: no scroll link at all; the sequence plays on its own like a
+ *    looping video (open, hold, close, rest) while it is on screen
  */
 export function FranchiseHeroV2() {
   const h = franchiseV2.hero;
@@ -66,10 +62,10 @@ export function FranchiseHeroV2() {
   const visRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress: pinP } = useScroll({ target: pinRef, offset: ["start start", "end end"] });
-  const { scrollYProgress: visP } = useScroll({ target: visRef, offset: ["start 0.55", "end 0.3"] });
   const pinned = useTransform(pinP, (p) => Math.min(1, p / EXPLODE_END));
   const still = useMotionValue(0);
-  const progress = reduced ? still : wide ? pinned : visP;
+  const auto = useAutoplay(visRef, ready && !wide && !reduced);
+  const progress = reduced ? still : wide ? pinned : auto;
 
   return (
     <>
@@ -79,14 +75,14 @@ export function FranchiseHeroV2() {
             eyebrow={h.eyebrow}
             title={h.title}
             body={h.body}
-            className="pb-12 pt-32 lg:flex lg:h-full lg:items-center lg:pb-4 lg:pt-28"
+            className="pb-8 pt-24 md:pb-12 md:pt-32 lg:flex lg:h-full lg:items-center lg:pb-4 lg:pt-28"
             visual={
               <motion.div
                 ref={visRef}
                 initial={reduced ? false : { opacity: 0, y: 40, scale: 0.94 }}
                 animate={ready ? { opacity: 1, y: 0, scale: 1 } : undefined}
                 transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                className="mx-auto w-[min(88vw,520px)] lg:-my-6 lg:w-[min(120%,calc((100svh-104px)*var(--burger-ar)))] lg:max-w-none xl:-mr-8"
+                className="mx-auto -my-[9%] w-[min(88vw,520px)] lg:-my-6 lg:w-[min(120%,calc((100svh-104px)*var(--burger-ar)))] lg:max-w-none xl:-mr-8"
                 style={{ ["--burger-ar" as string]: BURGER.aspect }}
               >
                 <BurgerScrub key={wide ? "pin" : "flow"} progress={progress} />

@@ -5,8 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useEffect, useState } from "react";
-import { nav, site } from "@/lib/content";
+import { footer, nav } from "@/lib/content";
 import { ease } from "@/lib/motion";
+import { usePreloaderReady } from "@/components/ui/Preloader";
 
 const LOGO = "/images/logo-dual-badge.svg";
 
@@ -19,6 +20,8 @@ export default function Nav() {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  // Slide in as the preloader curtain lifts (it is shorter on phones), not on a fixed timer.
+  const ready = usePreloaderReady(150);
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 100));
 
   useEffect(() => setOpen(false), [pathname]);
@@ -34,8 +37,8 @@ export default function Nav() {
     <>
       <motion.header
         initial={{ y: -90, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: ease.out, delay: 1.9 }}
+        animate={ready ? { y: 0, opacity: 1 } : undefined}
+        transition={{ duration: 0.7, ease: ease.out }}
         className="fixed inset-x-0 top-0 z-[9990] lg:top-4"
       >
         {/* ---------------- Desktop ---------------- */}
@@ -76,7 +79,7 @@ export default function Nav() {
 
         {/* ---------------- Mobile ---------------- */}
         <div
-          className={`flex items-center justify-between px-4 py-2 transition-all duration-300 lg:hidden ${
+          className={`flex items-center justify-between px-[clamp(16px,5vw,56px)] py-2 transition-all duration-300 lg:hidden ${
             scrolled || open ? "bg-white shadow-md" : ""
           }`}
         >
@@ -118,7 +121,8 @@ export default function Nav() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.45, ease: ease.inOut }}
-              className="fixed inset-y-0 right-0 z-[9980] flex w-[82%] max-w-sm flex-col bg-cream px-7 pb-8 pt-24 lg:hidden"
+              className="fixed inset-y-0 right-0 z-[9980] flex w-[82%] max-w-sm flex-col overflow-y-auto overscroll-contain bg-cream px-7 pb-8 pt-24 lg:hidden"
+              data-lenis-prevent
             >
               <nav className="flex flex-col gap-1">
                 {[{ label: "Home", href: "/" }, ...nav.links].map((l, i) => (
@@ -159,9 +163,11 @@ export default function Nav() {
                 ))}
               </div>
 
-              <div className="mt-auto flex flex-wrap gap-x-3 gap-y-1 pt-8 text-xs uppercase tracking-caps text-ink-400">
-                {site.markets.slice(0, 6).map((m) => (
-                  <span key={m}>{m}</span>
+              <div className="mt-auto flex flex-wrap gap-x-4 gap-y-1 pt-8 text-xs font-bold uppercase tracking-caps text-ink-400">
+                {footer.legal.map((l) => (
+                  <Link key={l.href} href={l.href} className="py-1 transition-colors hover:text-primary">
+                    {l.label}
+                  </Link>
                 ))}
               </div>
             </motion.aside>

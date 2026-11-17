@@ -23,7 +23,7 @@ const GROUPS = faqsPage.groups.map((g) => ({
 /** Render an answer: blank lines split paragraphs, `[label](href)` becomes a link. */
 function Answer({ text }: { text: string }) {
   return (
-    <div className="space-y-4 px-6 pb-6 text-lg leading-relaxed text-third/85 md:px-8">
+    <div className="space-y-4 px-5 pb-5 text-base leading-relaxed text-third/85 md:px-8 md:pb-6 md:text-lg">
       {text.split(/\n{2,}/).map((para, p) => {
         const parts: React.ReactNode[] = [];
         let last = 0;
@@ -46,7 +46,7 @@ function Answer({ text }: { text: string }) {
 /* ---------------------------------------------------------------- hero */
 export function FaqsHeroV2() {
   return (
-    <section className="bg-white pb-10 pt-32 text-third md:pb-14 lg:pt-44">
+    <section className="bg-white pb-8 pt-24 text-third md:pb-14 md:pt-32 lg:pt-44">
       <div className="container-tx">
         <Title as="h1" lines={faqsV2.hero.title} size="lg" className="!mt-0 md:text-[5.4rem]" />
       </div>
@@ -72,10 +72,11 @@ export function FaqsBodyV2() {
 
   return (
     <section id="faq-search" className="relative scroll-mt-28 bg-white pb-10 md:pb-14">
-      <div className="container-tx grid gap-12 lg:grid-cols-[1fr_340px]">
-        <div>
+      <div className="container-tx grid gap-10 lg:grid-cols-[1fr_340px] lg:gap-12">
+        {/* min-w-0: the swipeable chip row must not widen the grid track */}
+        <div className="min-w-0">
           {/* Search */}
-          <label className="flex items-center gap-4 rounded-full border-2 border-third/10 bg-white px-6 py-4 shadow-soft3 focus-within:border-secondary">
+          <label className="flex items-center gap-3 rounded-full border-2 border-third/10 bg-white px-5 py-3.5 shadow-soft3 focus-within:border-secondary md:gap-4 md:px-6 md:py-4">
             <svg viewBox="0 0 24 24" className="size-6 shrink-0 text-primary" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden>
               <circle cx="11" cy="11" r="7" />
               <path d="m20 20-3.5-3.5" />
@@ -84,7 +85,7 @@ export function FaqsBodyV2() {
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder={faqsV2.hero.search}
-              className="w-full bg-transparent font-texas text-xl text-third placeholder:text-third/40 focus:outline-none"
+              className="w-full min-w-0 bg-transparent font-texas text-lg text-third md:text-xl placeholder:text-third/40 focus:outline-none"
               aria-label="Search FAQs"
             />
             {q && (
@@ -95,13 +96,13 @@ export function FaqsBodyV2() {
           </label>
 
           {/* Category chips */}
-          <div className="mt-6 flex flex-wrap gap-2">
+          <div className="chip-row mt-5 gap-2 md:mt-6">
             {["All", ...GROUPS.map((g) => g.title)].map((t) => (
               <button
                 key={t}
                 onClick={() => setGroup(t)}
                 data-cursor="link"
-                className={`rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-caps transition-colors ${
+                className={`rounded-full px-4 py-2.5 text-xs font-bold uppercase tracking-caps transition-colors md:px-5 ${
                   group === t ? "bg-third text-white" : "bg-third/5 text-third/70 hover:bg-secondary hover:text-third"
                 }`}
               >
@@ -111,14 +112,14 @@ export function FaqsBodyV2() {
           </div>
 
           {/* Accordion */}
-          <div className="mt-12 space-y-14">
+          <div className="mt-8 space-y-10 md:mt-12 md:space-y-14">
             {results.length === 0 && <p className="rounded-3xl bg-secondary/15 p-8 text-lg text-third/80">{faqsV2.empty}</p>}
             {results.map((g) => (
               <div key={g.title}>
-                <h2 className="display text-4xl uppercase text-third md:text-5xl">
+                <h2 className="display text-[2.1rem] uppercase text-third md:text-5xl">
                   {g.title}
                 </h2>
-                <div className="mt-6 space-y-3">
+                <div className="mt-4 space-y-2.5 md:mt-6 md:space-y-3">
                   {g.items.map((item) => {
                     const isOpen = open === item.q;
                     return (
@@ -129,9 +130,9 @@ export function FaqsBodyV2() {
                         <button
                           onClick={() => setOpen(isOpen ? null : item.q)}
                           aria-expanded={isOpen}
-                          className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left md:px-8"
+                          className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left md:px-8 md:py-5"
                         >
-                          <span className="font-texas text-xl font-bold text-third">{item.q}</span>
+                          <span className="font-texas text-lg font-bold leading-snug text-third md:text-xl">{item.q}</span>
                           <span
                             className={`grid size-9 shrink-0 place-items-center rounded-full text-xl font-bold transition-transform ${
                               isOpen ? "rotate-45 bg-third text-white" : "bg-white text-primary"

@@ -246,7 +246,7 @@ export default function MarketExplorer({
   };
 
   return (
-    <section className={`relative overflow-hidden bg-cream ${pageTitle ? "pb-10 pt-32 md:pb-12 lg:pt-44" : "py-10 md:py-12"}`}>
+    <section className={`relative overflow-hidden bg-cream ${pageTitle ? "pb-10 pt-24 md:pb-12 md:pt-32 lg:pt-44" : "py-10 md:py-12"}`}>
       <div
         className="pointer-events-none absolute inset-0"
         style={{ background: "#ffffff" }}
@@ -272,8 +272,9 @@ export default function MarketExplorer({
         )}
 
         {/* ------------------------------ brand filter ------------------------- */}
-        <div className="mt-9 flex justify-center">
-          <div className="inline-flex flex-wrap items-center justify-center gap-1 rounded-full border border-ink/10 bg-paper p-1.5 shadow-sm">
+        {/* Phones: a 3-up segmented control (labels may wrap to two lines) instead of a pill that broke onto a second row. */}
+        <div className="mt-6 flex justify-center md:mt-9">
+          <div className="grid w-full max-w-md grid-cols-3 gap-1 rounded-2xl border border-ink/10 bg-paper p-1.5 shadow-sm sm:inline-flex sm:w-auto sm:max-w-none sm:items-center sm:justify-center sm:rounded-full">
             {[{ id: "all" as const, label: copy.allBrands }, ...brands.map((b) => ({ id: b.id, label: b.name }))].map(
               (b) => {
                 const active = b.id === brand;
@@ -290,7 +291,7 @@ export default function MarketExplorer({
                         if (region !== "all" && !stillLive) onRegionChange("all");
                       }
                     }}
-                    className={`relative rounded-full px-4 py-2.5 text-[11px] font-extrabold uppercase tracking-caps transition-colors duration-300 md:px-5 ${
+                    className={`relative rounded-xl px-2 py-2.5 text-[10.5px] font-extrabold uppercase leading-tight tracking-caps transition-colors duration-300 sm:rounded-full sm:px-4 sm:text-[11px] md:px-5 ${
                       active ? "text-cream" : "text-ink-600 hover:text-ink"
                     }`}
                   >
@@ -298,17 +299,17 @@ export default function MarketExplorer({
                       <motion.span
                         layoutId="market-brand"
                         transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                        className="absolute inset-0 rounded-full"
+                        className="absolute inset-0 rounded-xl sm:rounded-full"
                         style={{
                           background:
                             b.id === "churchs" ? FILL.churchs : b.id === "texas" ? "#2d2a26" : "#2d2a26",
                         }}
                       />
                     )}
-                    <span className="relative z-10 flex items-center gap-2">
+                    <span className="relative z-10 flex h-full items-center justify-center gap-1.5 text-center sm:gap-2">
                       {b.id !== "all" && (
                         <span
-                          className="size-2 rounded-full"
+                          className="size-2 shrink-0 rounded-full"
                           style={{ background: b.id === "texas" ? FILL.texas : active ? "#fffdf7" : FILL.churchs }}
                         />
                       )}
@@ -322,7 +323,7 @@ export default function MarketExplorer({
         </div>
 
         {/* -------------------------------- regions ---------------------------- */}
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-2 md:gap-3">
+        <div className="chip-row mt-3 items-center gap-2 md:mt-5 md:justify-center md:gap-3">
           {[{ id: "all" as const, label: copy.allLabel }, ...liveRegions.map((r) => ({ id: r.id, label: r.short }))].map(
             (t) => {
               const active = t.id === region;
@@ -335,7 +336,7 @@ export default function MarketExplorer({
                     onRegionChange(t.id);
                     onFocus(null);
                   }}
-                  className={`relative rounded-full px-5 py-3 text-[11px] font-extrabold uppercase tracking-caps transition-colors duration-300 md:text-xs ${
+                  className={`relative rounded-full px-4 py-2.5 text-[11px] font-extrabold md:px-5 md:py-3 uppercase tracking-caps transition-colors duration-300 md:text-xs ${
                     active
                       ? "text-cream"
                       : "border border-ink/12 bg-paper text-ink-600 hover:border-ink/30 hover:text-ink"
@@ -345,7 +346,7 @@ export default function MarketExplorer({
                     <motion.span
                       layoutId="market-tab"
                       transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                      className="absolute inset-0 rounded-full bg-primary shadow-[0_10px_24px_rgba(154,51,36,0.28)]"
+                      className="absolute inset-0 rounded-full bg-primary md:shadow-[0_10px_24px_rgba(154,51,36,0.28)]"
                     />
                   )}
                   <span className="relative z-10">{t.label}</span>
@@ -356,7 +357,7 @@ export default function MarketExplorer({
         </div>
 
         {/* ------------------------------- the map ----------------------------- */}
-        <div className="relative mt-10 lg:mt-12">
+        <div className="relative mt-6 md:mt-10 lg:mt-12">
           <div
             ref={boxRef}
             className="relative h-[340px] w-full overflow-hidden rounded-[28px] border border-ink/10 bg-[#f0ece3] shadow-soft3 sm:h-[420px] lg:h-[560px]"
@@ -506,7 +507,7 @@ export default function MarketExplorer({
             initial={{ opacity: 0, y: 24 }}
             animate={ready ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, ease: ease.out, delay: 0.2 }}
-            className="relative z-20 mx-auto -mt-6 w-full max-w-md rounded-[24px] border border-ink/10 bg-paper p-6 shadow-pop md:p-7 lg:absolute lg:bottom-8 lg:right-8 lg:mt-0 lg:w-[24rem]"
+            className="relative z-20 mx-auto -mt-6 w-full max-w-md rounded-[24px] border border-ink/10 bg-paper p-5 shadow-pop md:p-7 lg:absolute lg:bottom-8 lg:right-8 lg:mt-0 lg:w-[24rem]"
           >
             <span
               className="absolute inset-x-6 top-0 h-1 rounded-full md:inset-x-7"

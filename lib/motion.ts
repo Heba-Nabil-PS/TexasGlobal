@@ -73,7 +73,10 @@ export const wordChild: Variants = {
   show: { y: "0%", opacity: 1, transition: { duration: 0.7, ease: ease.expo } },
 };
 
-// Clip-path image reveal (wipe up)
+// Clip-path image reveal (wipe up).
+// NOTE: never put whileInView on the clipped element itself: Chrome's
+// IntersectionObserver honours clip-path, so a fully clipped element never
+// "enters" the viewport and stays invisible. Trigger from a parent wrapper.
 export const clipReveal: Variants = {
   hidden: { clipPath: "inset(100% 0% 0% 0%)", scale: 1.15 },
   show: {
@@ -83,6 +86,9 @@ export const clipReveal: Variants = {
   },
 };
 
-// Standard viewport trigger config
-export const inView = { once: true, amount: 0.3 } as const;
-export const inViewSoft = { once: true, amount: 0.2 } as const;
+// Standard viewport trigger config.
+// `amount` is a share of the *element's* height, so on phones a tall stacked
+// block (a 1-col grid of cards) at 0.3 could need more than a full screen
+// before it fires, leaving blank space while you scroll. Keep it low.
+export const inView = { once: true, amount: 0.15 } as const;
+export const inViewSoft = { once: true, amount: 0.1 } as const;

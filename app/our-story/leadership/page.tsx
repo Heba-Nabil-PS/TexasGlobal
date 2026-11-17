@@ -44,14 +44,14 @@ export default function LeadershipPage() {
             initial="hidden"
             whileInView="show"
             viewport={inView}
-            className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            className="mt-8 grid gap-3 sm:grid-cols-2 sm:gap-6 md:mt-14 lg:grid-cols-3"
           >
             {leadershipPage.execs.map((e) => (
               <motion.div key={e.name} variants={fadeUp}>
                 <Tilt max={6} glare={false} className="h-full">
-                  <article className="group flex h-full flex-col rounded-3xl border border-ink/10 bg-white p-7 transition-colors hover:border-tex-red/40">
+                  <article className="group flex h-full flex-col rounded-3xl border border-ink/10 bg-white p-5 transition-colors hover:border-tex-red/40 sm:p-7">
                     <div className="flex items-center gap-4">
-                      <span className="relative size-16 shrink-0 overflow-hidden rounded-full ring-2 ring-ink/10 transition-all group-hover:ring-tex-red/50">
+                      <span className="relative size-14 shrink-0 overflow-hidden rounded-full sm:size-16 ring-2 ring-ink/10 transition-all group-hover:ring-tex-red/50">
                         <Image
                           src={e.image}
                           alt={e.name}
@@ -65,7 +65,7 @@ export default function LeadershipPage() {
                         <p className="text-xs font-bold uppercase tracking-caps text-tex-red">{e.role}</p>
                       </div>
                     </div>
-                    <p className="mt-5 leading-relaxed text-ink-600">{e.bio}</p>
+                    <p className="mt-3 text-[15px] leading-relaxed text-ink-600 sm:mt-5 sm:text-base">{e.bio}</p>
                   </article>
                 </Tilt>
               </motion.div>
@@ -75,8 +75,8 @@ export default function LeadershipPage() {
       </section>
 
       {/* Press landing point */}
-      <section className="bg-ink py-12 text-cream md:py-14">
-        <div className="container-tx flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
+      <section className="bg-ink py-10 text-cream md:py-14">
+        <div className="container-tx flex flex-col items-start justify-between gap-6 md:flex-row md:items-center md:gap-8">
           <div className="max-w-xl">
             <span className="eyebrow text-tex-yellow">
               <BrandStar /> Press
@@ -89,7 +89,7 @@ export default function LeadershipPage() {
           <a
             href={`mailto:${leadershipPage.press.email}`}
             data-cursor="link"
-            className="inline-flex items-center gap-2 rounded-full bg-tex-yellow px-8 py-4 text-sm font-extrabold uppercase tracking-caps text-ink transition-colors hover:bg-tex-yellow600"
+            className="inline-flex w-full max-w-full items-center justify-center gap-2 break-all rounded-full sm:w-auto bg-tex-yellow px-6 py-3.5 text-sm font-extrabold sm:px-8 sm:py-4 uppercase tracking-caps text-ink transition-colors hover:bg-tex-yellow600"
           >
             {leadershipPage.press.email}
           </a>

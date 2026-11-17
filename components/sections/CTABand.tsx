@@ -72,13 +72,13 @@ export default function CTABand({
             whileInView="show"
             viewport={inView}
             transition={{ delay: 0.1 }}
-            className="mx-auto mt-6 max-w-xl text-base text-cream/75 md:text-lg"
+            className="mx-auto mt-4 max-w-xl text-base text-cream/75 md:mt-6 md:text-lg"
           >
             {body}
           </motion.p>
         )}
 
-        <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+        <div className="btn-row mt-7 flex flex-wrap items-center justify-center gap-3 md:mt-9 md:gap-4">
           <Button href={primary.href} variant="yellow">
             {primary.label}
           </Button>
