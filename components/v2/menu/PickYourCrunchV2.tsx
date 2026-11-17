@@ -32,7 +32,9 @@ const HOLD = 0.38; // finished tray stays put
 const SWAP = 0.88; // one tray leaves, the next builds
 const END = 0.45; // last tray holds before the page moves on
 
-type Tl = { inA: number; inB: number; outA: number; outB: number; hold: number; switchAt: number };
+const VIDEO_HOLD = 1.5; // extra scroll room so a video tray's clip plays out (≈ screens)
+
+type Tl = { inA: number; inB: number; outA: number; outB: number; hold: number; switchAt: number; vEnd: number };
 
 function buildTimeline(n: number) {
   const cats: Tl[] = [];
@@ -41,9 +43,12 @@ function buildTimeline(n: number) {
   let inB = 1.12;
   for (let i = 0; i < n; i++) {
     const last = i === n - 1;
-    const outA = last ? Infinity : inB + HOLD;
+    const hold = crunchBuild[i].video ? VIDEO_HOLD : HOLD;
+    const outA = last ? Infinity : inB + hold;
     const outB = last ? Infinity : outA + 0.62 * SWAP;
-    cats.push({ inA, inB, outA, outB, hold: last ? inB + END * 0.4 : (inB + outA) / 2, switchAt: last ? Infinity : outA + 0.5 * SWAP });
+    // a video clip runs from the start of the build to just before the take-off
+    const vEnd = inB + hold * 0.85;
+    cats.push({ inA, inB, outA, outB, hold: last ? inB + END * 0.4 : (inB + outA) / 2, switchAt: last ? Infinity : outA + 0.5 * SWAP, vEnd });
     if (!last) {
       inA = outA + 0.3 * SWAP;
       inB = outA + SWAP;
@@ -152,9 +157,9 @@ function CrunchBuilder() {
                 aria-hidden
                 className="crunch-food relative aspect-[800/530]"
               >
-                {crunchBuild.map((c, i) => (
-                  <Tray key={c.id} c={c} u={u} tl={TL.cats[i]} />
-                ))}
+                {crunchBuild.map((c, i) =>
+                  c.video ? <VideoTray key={c.id} video={c.video} u={u} tl={TL.cats[i]} /> : <Tray key={c.id} c={c} u={u} tl={TL.cats[i]} />,
+                )}
               </div>
             </div>
           </div>
@@ -212,6 +217,191 @@ function Tray({ c, u, tl }: { c: BuildCategory; u: MotionValue<number>; tl: Tl }
         <Piece key={p.key} p={p} k={i + 1} n={c.pieces.length} u={u} tl={tl} />
       ))}
     </>
+  );
+}
+
+/**
+ * Fits a smooth surface a + bx + cy + dx² + exy + fy² (per channel) to the
+ * empty studio backdrop in a small sample of the video's first frame. Cells
+ * darker than the fit (a stray shadow already in frame) are dropped and the fit
+ * repeated, so the plate is just the backdrop's light falloff.
+ */
+function fitBackdrop(data: Uint8ClampedArray, gw: number, gh: number) {
+  const cells = gw * gh;
+  const xs: number[] = [], ys: number[] = [];
+  for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) { xs.push(i / (gw - 1) - 0.5); ys.push(j / (gh - 1) - 0.5); }
+  const basis = (k: number) => [1, xs[k], ys[k], xs[k] * xs[k], xs[k] * ys[k], ys[k] * ys[k]];
+  const solve = (keep: boolean[], ch: number) => {
+    const A = Array.from({ length: 6 }, () => new Array(7).fill(0));
+    for (let k = 0; k < cells; k++) {
+      if (!keep[k]) continue;
+      const b = basis(k), v = data[k * 4 + ch];
+      for (let r = 0; r < 6; r++) { for (let c = 0; c < 6; c++) A[r][c] += b[r] * b[c]; A[r][6] += b[r] * v; }
+    }
+    for (let c = 0; c < 6; c++) { // Gauss-Jordan
+      let p = c;
+      for (let r = c + 1; r < 6; r++) if (Math.abs(A[r][c]) > Math.abs(A[p][c])) p = r;
+      [A[c], A[p]] = [A[p], A[c]];
+      const d = A[c][c] || 1e-9;
+      for (let k = c; k < 7; k++) A[c][k] /= d;
+      for (let r = 0; r < 6; r++) if (r !== c) { const m = A[r][c]; for (let k = c; k < 7; k++) A[r][k] -= m * A[c][k]; }
+    }
+    return A.map((row) => row[6]);
+  };
+  const lum = (k: number) => (data[k * 4] + data[k * 4 + 1] + data[k * 4 + 2]) / 3;
+  let keep = new Array(cells).fill(true);
+  for (let it = 0; it < 4; it++) {
+    const co = [0, 1, 2].map((ch) => solve(keep, ch));
+    keep = keep.map((_, k) => {
+      const b = basis(k);
+      const fit = co.reduce((s, c) => s + c.reduce((t, w, q) => t + w * b[q], 0), 0) / 3;
+      return lum(k) > fit - 3;
+    });
+  }
+  return [0, 1, 2].map((ch) => solve(keep, ch));
+}
+
+/**
+ * A tray told by its brand video: the clip is scrubbed by scroll (inA → vEnd
+ * maps to 0 → duration), so scrolling up rewinds it. Every frame is drawn to a
+ * canvas and divided by the studio backdrop (colour-dodge with the inverted
+ * plate), which turns the grey backdrop pure white — the food and its real
+ * shadows sit straight on the page with no visible frame. It fades in as its
+ * build starts and lifts away during the take-off like the cut-out trays.
+ */
+const PLATE_GAIN = 0.955; // < 1 pushes the near-backdrop (noise, compression) fully to white
+
+function VideoTray({ video, u, tl }: { video: NonNullable<BuildCategory["video"]>; u: MotionValue<number>; tl: Tl }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const plate = useRef<HTMLCanvasElement | null>(null);
+  const target = useRef(0); // 0–1 through the clip
+  const raf = useRef(0);
+
+  const paint = () => {
+    const v = videoRef.current, c = canvasRef.current, p = plate.current;
+    const ctx = c?.getContext("2d");
+    if (!v || !c || !ctx || !p || v.readyState < 2) return;
+    ctx.globalCompositeOperation = "source-over";
+    ctx.drawImage(v, 0, 0, c.width, c.height);
+    ctx.globalCompositeOperation = "color-dodge"; // frame / (gain × backdrop)
+    ctx.drawImage(p, 0, 0, c.width, c.height);
+  };
+
+  const seek = () => {
+    raf.current = 0;
+    const v = videoRef.current;
+    if (!v || !v.duration || v.seeking || !plate.current) return; // `seeked` calls back in
+    const t = target.current * Math.max(0, v.duration - 0.05);
+    if (Math.abs(v.currentTime - t) > 0.012) v.currentTime = t;
+  };
+  const schedule = () => {
+    if (!raf.current) raf.current = requestAnimationFrame(seek);
+  };
+
+  useMotionValueEvent(u, "change", (x) => {
+    target.current = seg(x, tl.inA, tl.vEnd);
+    schedule();
+  });
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    let url = "";
+    let cancelled = false;
+    target.current = seg(u.get(), tl.inA, tl.vEnd);
+
+    const buildPlate = () => {
+      // sample the empty first frame small, fit the backdrop, render 1 − gain·backdrop full size
+      const gw = 48, gh = Math.round((48 * video.h) / video.w);
+      const s = document.createElement("canvas");
+      s.width = gw; s.height = gh;
+      const sx = s.getContext("2d", { willReadFrequently: true })!;
+      sx.drawImage(v, 0, 0, gw, gh);
+      const co = fitBackdrop(sx.getImageData(0, 0, gw, gh).data, gw, gh);
+      const W = 212, H = Math.round((W * video.h) / video.w); // smooth surface: low res is plenty, scaled up bilinear
+      const p = document.createElement("canvas");
+      p.width = W; p.height = H;
+      const px = p.getContext("2d")!;
+      const img = px.createImageData(W, H);
+      for (let j = 0; j < H; j++) {
+        const y = j / (H - 1) - 0.5;
+        for (let i = 0; i < W; i++) {
+          const x = i / (W - 1) - 0.5;
+          const b = [1, x, y, x * x, x * y, y * y];
+          const o = (j * W + i) * 4;
+          for (let ch = 0; ch < 3; ch++) {
+            const bg = co[ch].reduce((t, w, q) => t + w * b[q], 0);
+            img.data[o + ch] = 255 - Math.min(255, bg * PLATE_GAIN);
+          }
+          img.data[o + 3] = 255;
+        }
+      }
+      px.putImageData(img, 0, 0);
+      plate.current = p;
+    };
+
+    const onSeeked = () => {
+      if (!plate.current) {
+        try {
+          buildPlate();
+        } catch {
+          return;
+        }
+      }
+      paint();
+      schedule();
+    };
+    const onLoaded = () => {
+      v.currentTime = 0.001; // first frame → backdrop plate
+    };
+    v.addEventListener("loadeddata", onLoaded);
+    v.addEventListener("seeked", onSeeked);
+
+    // pull the whole file into memory so scrubbing never waits on the network
+    fetch(video.src)
+      .then((r) => (r.ok ? r.blob() : Promise.reject()))
+      .then((b) => {
+        if (cancelled) return;
+        url = URL.createObjectURL(b);
+        v.src = url;
+      })
+      .catch(() => {
+        if (!cancelled) v.src = video.src;
+      });
+
+    return () => {
+      cancelled = true;
+      v.removeEventListener("loadeddata", onLoaded);
+      v.removeEventListener("seeked", onSeeked);
+      if (raf.current) cancelAnimationFrame(raf.current);
+      if (url) URL.revokeObjectURL(url);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [video.src]);
+
+  const opacity = useTransform(u, (v) => seg(v, tl.inA - 0.05, tl.inA + 0.12) * (1 - (Number.isFinite(tl.outA) ? seg(v, tl.outA + 0.1, tl.outB) : 0)));
+  const transform = useTransform(u, (v) => {
+    const o = Number.isFinite(tl.outA) ? inCubic(seg(v, tl.outA, tl.outB)) : 0;
+    return `translate3d(${(-o * 40).toFixed(2)}%, ${(-o * 6).toFixed(2)}%, 0) scale(${(1 - o * 0.15).toFixed(4)})`;
+  });
+  const visibility = useTransform(opacity, (o) => (o <= 0.001 ? "hidden" : "visible"));
+
+  // soft edges as a safety net: whatever is left of the backdrop never ends in a hard line
+  const edgeX = "linear-gradient(to right, transparent, #000 7%, #000 93%, transparent)";
+  const edgeY = "linear-gradient(to bottom, transparent, #000 7%, #000 93%, transparent)";
+
+  return (
+    <motion.div style={{ opacity, transform, visibility }} className="absolute inset-[-14%] will-change-transform">
+      <canvas
+        ref={canvasRef}
+        width={video.w}
+        height={video.h}
+        className="block h-full w-full object-contain"
+        style={{ maskImage: `${edgeX}, ${edgeY}`, maskComposite: "intersect", WebkitMaskImage: `${edgeX}, ${edgeY}`, WebkitMaskComposite: "source-in" }}
+      />
+      <video ref={videoRef} muted playsInline preload="auto" disablePictureInPicture aria-hidden className="pointer-events-none absolute left-0 top-0 h-px w-px opacity-0" />
+    </motion.div>
   );
 }
 

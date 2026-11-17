@@ -56,6 +56,11 @@ export type BuildCategory = {
   ink: "dark" | "light";
   /** back-to-front */
   pieces: BuildPiece[];
+  /**
+   * brand video scrubbed by scroll instead of the piece-by-piece build
+   * (shot on a light-grey studio background, which is flattened to white live)
+   */
+  video?: { src: string; w: number; h: number };
 };
 
 export const STAGE = { w: 800, y0: 70, h: 530 };
@@ -85,6 +90,7 @@ export const crunchBuild: BuildCategory[] = [
     blurb: "Bone-in pieces and hand-battered tenders, with sides and a drink.",
     href: "/find-your-market",
     combo: { src: `${dir}/chicken/combo.webp`, iw: 735, ih: 480 },
+    video: { src: "/assets/v2/crunch/video/chicken-tender.mp4", w: 848, h: 480 },
     bg: ["#ffffff", "#ffffff"],
     glow: "#ffffff",
     ink: "dark",
@@ -106,6 +112,7 @@ export const crunchBuild: BuildCategory[] = [
     blurb: "Crispy chicken sandwiches and wraps, built bold and stacked high.",
     href: "/find-your-market",
     combo: { src: `${dir}/burger/combo.webp`, iw: 732, ih: 479 },
+    video: { src: "/assets/v2/crunch/video/burger-wrap.mp4", w: 848, h: 480 },
     bg: ["#ffffff", "#ffffff"],
     glow: "#ffffff",
     ink: "dark",
