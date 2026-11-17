@@ -29,7 +29,7 @@ export function StoryHeroV2({
   const foodY = useTransform(scrollYProgress, [0, 1], [0, 140]);
 
   return (
-    <section ref={ref} className="relative flex items-center overflow-hidden bg-white pb-10 pt-32 text-third md:pb-14 md:pt-36 lg:min-h-[100svh]">
+    <section ref={ref} className="relative flex items-center overflow-hidden bg-[#fff4d6] pb-10 pt-32 text-third md:pb-14 md:pt-36 lg:min-h-[100svh]">
 
       <div className="container-tx relative z-10 grid w-full items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
         <div>

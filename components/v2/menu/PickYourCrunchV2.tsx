@@ -134,13 +134,6 @@ function CrunchBuilder() {
           <Wipe key={c.id} u={u} tl={TL.cats[i]} color={c.bg} />
         ))}
 
-        {/* ghost numbers rolling like an odometer */}
-        <div aria-hidden className="pointer-events-none absolute inset-0">
-          {crunchBuild.map((c, i) => (
-            <GhostNumber key={c.id} u={u} tl={TL.cats[i]} n={i + 1} light={c.ink === "light"} />
-          ))}
-        </div>
-
         {/* content area between the fixed nav and the rail */}
         <div className="crunch-area absolute inset-x-0">
           <div className="crunch-grid container-tx grid h-full">
@@ -176,25 +169,6 @@ function CrunchBuilder() {
 function Wipe({ u, tl, color }: { u: MotionValue<number>; tl: Tl; color: [string, string] }) {
   const clipPath = useTransform(u, (v) => `circle(${inOut(seg(v, tl.inA - 0.08, tl.inB)) * 150}% at var(--cx) var(--cy))`);
   return <motion.div aria-hidden style={{ clipPath, background: `radial-gradient(120% 95% at var(--cx) var(--cy), ${color[0]} 0%, ${color[0]} 22%, ${color[1]} 100%)` }} className="absolute inset-0" />;
-}
-
-function GhostNumber({ u, tl, n, light }: { u: MotionValue<number>; tl: Tl; n: number; light: boolean }) {
-  const transform = useTransform(u, (v) => {
-    const i = outCubic(seg(v, tl.inA + 0.2, tl.inB));
-    const o = Number.isFinite(tl.outA) ? inCubic(seg(v, tl.outA, tl.outB)) : 0;
-    return `translate3d(0, ${(1 - i) * 70 - o * 70}%, 0)`;
-  });
-  const opacity = useTransform(u, (v) => life(v, tl));
-  return (
-    <motion.span
-      style={{ transform, opacity }}
-      className={`display absolute right-[2%] top-[18%] select-none text-[clamp(11rem,30vw,28rem)] leading-none text-transparent md:right-[6%] md:top-[12%] ${
-        light ? "[-webkit-text-stroke:2px_rgba(255,255,255,0.09)]" : "[-webkit-text-stroke:2px_rgba(45,41,38,0.07)]"
-      }`}
-    >
-      {two(n)}
-    </motion.span>
-  );
 }
 
 /* ---------- the tray ---------- */
