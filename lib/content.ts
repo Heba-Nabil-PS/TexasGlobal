@@ -631,7 +631,7 @@ export const newsPage = {
       date: "March 1, 2023",
       excerpt:
         "The International Franchise Association handed its top franchisee honour to Texas Chicken™ Malaysia for community engagement and innovation, from plant-based menu additions to staff training.",
-      image: "/assets/news/ifa-franchisee-of-the-year.jpg",
+      image: "/assets/franchising/world/why9.jpg",
       href: "https://franchise.texaschicken.com/PressRoom/TexasChickenFranchiseeforMalaysiaDatoJayaTanNamedIFAFranchiseeoftheYear",
     },
     {
@@ -649,7 +649,7 @@ export const newsPage = {
       date: "November 14, 2022",
       excerpt:
         "The brand landed at No. 87 on the Franchise Times Top 500, a ranking of the largest U.S.-based franchise systems, and a marker of momentum at home and abroad.",
-      image: "/assets/news/franchise-times-top-500.jpg",
+      image: "/assets/franchising/world/why11.jpg",
       href: "https://franchise.texaschicken.com/PressRoom/ChurchsTexasChickenRanksintheFranchiseTimesTop500AmongtheLargestUSBasedFranchiseSystems",
     },
     {
@@ -694,7 +694,7 @@ export const newsPage = {
       date: "March 30, 2022",
       excerpt:
         "Consumers voted the brand Silver in the Restaurant & Fast Foods category for a second year running, recognising consistent service across 85 Malaysian restaurants.",
-      image: "/assets/news/ifa-franchisee-of-the-year.jpg",
+      image: "/assets/franchising/world/why4.jpg",
       href: "https://franchise.texaschicken.com/PressRoom/TexasChickenMalaysiaEarnsSilverPutraBrandAwardforSecondConsecutiveYear",
     },
     {
@@ -721,7 +721,7 @@ export const newsPage = {
       date: "February 28, 2022",
       excerpt:
         "Roughly 100 openings were slated across the Americas, the Middle East and Asia, with Ignacio Barbadillo appointed Director of International New Business Development.",
-      image: "/assets/news/global-expansion-2022.jpg",
+      image: "/assets/franchising/world/why1.jpg",
       href: "https://franchise.texaschicken.com/PressRoom/TexasChickenTMandChurchsTexasChickenStepUpGlobalExpansionin2022withanEstimated100NewRestaurantsSettoOpenThroughouttheAmericastheMiddleEastandAsia",
     },
     {

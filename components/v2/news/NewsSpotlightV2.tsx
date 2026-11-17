@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { newsPage } from "@/lib/content";
 import { newsV2 } from "@/lib/content-v2/news";
-import { Eyebrow, SliderControls, Title } from "@/components/v2/kit";
+import { SliderControls, Title } from "@/components/v2/kit";
 
 type Slide = { title: string; excerpt: string; image: string; badge: string; date: string; href: string };
 
@@ -50,10 +50,7 @@ export default function NewsSpotlightV2() {
 function Header({ aside }: { aside?: React.ReactNode }) {
   return (
     <div className="container-tx flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-      <div>
-        <Eyebrow>{newsV2.spotlight.eyebrow}</Eyebrow>
-        <Title lines={newsV2.spotlight.heading} size="md" />
-      </div>
+      <Title as="h1" lines={newsV2.spotlight.heading} size="md" className="mt-0" />
       {aside}
     </div>
   );
@@ -84,7 +81,7 @@ function PinnedRow({ slides }: { slides: Slide[] }) {
 
   return (
     <section ref={sectionRef} className="relative hidden bg-white md:block" style={{ height: `calc(100svh + ${travel}px)` }}>
-      <div className="sticky top-0 flex h-[100svh] flex-col justify-center overflow-hidden pt-24">
+      <div className="sticky top-0 flex h-[100svh] flex-col justify-center overflow-hidden pt-32">
         <Header aside={<ScrollProgress progress={scrollYProgress} count={slides.length} />} />
         <motion.div ref={trackRef} style={{ x, paddingInline: GUTTER, willChange: "transform" }} className="mt-10 flex w-max gap-8">
           {slides.map((s, k) => (
@@ -121,7 +118,7 @@ function MobileCarousel({ slides }: { slides: Slide[] }) {
   const startX = useRef<number | null>(null);
 
   return (
-    <section className="relative overflow-hidden bg-white pb-10 pt-10 md:hidden">
+    <section className="relative overflow-hidden bg-white pb-10 pt-28 md:hidden">
       <Header aside={<SliderControls index={i} count={slides.length} onPrev={() => go(i - 1)} onNext={() => go(i + 1)} />} />
       <div className="container-tx mt-6">
         <div
