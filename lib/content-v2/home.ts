@@ -43,7 +43,7 @@ export const whatsNewV2 = {
   fullMenu: {
     kicker: "Hungry for more?",
     lines: ["The full", "menu"],
-    cta: "See the full menu",
+    cta: "Explore our classics",
     image: "/assets/v2/whats-new/full-menu-combo.webp",
   },
   note: "Availability varies by market.",

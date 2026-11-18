@@ -76,7 +76,7 @@ export const about = {
   image: "/assets/home-tray.png",
   video: "/assets/built-standards.webm",
   cta: {
-    primary: { label: "Follow the journey", href: "/our-story" },
+    primary: { label: "Know more about the journey", href: "/our-story" },
   },
 };
 
@@ -1049,6 +1049,16 @@ export const appPage = {
       { src: "/assets/app-data/findus-pin3.png", pos: "right-[20%] top-32", amp: -22, dur: 8, delay: 1.0 },
     ],
   },
+};
+
+/** "Find us" on the menu page: global wording (the /app page keeps appPage.findUs). */
+export const menuFindUs = {
+  ...appPage.findUs,
+  title: "Hungry yet?",
+  highlight: "Find us near you",
+  body: "Texas Chicken is served in 25+ markets around the world, and every market has its own menu, offers and ways to order. Pick yours to see what's cooking near you, from dine-in to delivery.",
+  cta: "Find your market",
+  ctaHref: "/find-your-market",
 };
 
 /* --------------------------------------------------------------------------

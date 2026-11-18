@@ -86,31 +86,71 @@ function FollowUs() {
   );
 }
 
-/** Home-page band: the app's loyalty program (informational, no CTA). */
+/** Home-page band: what's on offer beyond the restaurant (rewards, app, online
+ *  ordering), stated plainly, with the "varies by market" caveat up front.
+ *  Informational, no CTA. */
+const digitalOffers = [
+  {
+    title: "Rewards",
+    desc: "Earn points on your orders and swap them for free favourites and members-only treats.",
+    icon: <path d="M12 2.5l2.94 5.96 6.58.96-4.76 4.64 1.12 6.55L12 17.52l-5.88 3.09 1.12-6.55L2.48 9.42l6.58-.96L12 2.5z" fill="currentColor" />,
+  },
+  {
+    title: "The Texas Chicken app",
+    desc: "Order ahead, pay in-app, unlock app-only deals and find your nearest restaurant.",
+    icon: (
+      <>
+        <rect x="6" y="2" width="12" height="20" rx="2.5" fill="none" stroke="currentColor" strokeWidth={2} />
+        <path d="M10.5 18.5h3" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
+      </>
+    ),
+  },
+  {
+    title: "Online ordering",
+    desc: "Order on the web for pick-up or delivery, cooked fresh and ready when you are.",
+    icon: (
+      <>
+        <path d="M3 4h2.2l2.1 10.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L21 8H6.3" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="9.5" cy="19.5" r="1.5" fill="currentColor" />
+        <circle cx="17" cy="19.5" r="1.5" fill="currentColor" />
+      </>
+    ),
+  },
+];
+
 function AppRewardsBand() {
   return (
     <div className="relative overflow-hidden bg-secondary text-third">
-      <div className="mx-auto grid max-w-7xl items-center gap-6 px-6 py-10 md:grid-cols-[auto_1fr] md:py-8 lg:px-8">
-        <motion.div
-          initial={{ rotate: -20, scale: 0.8, opacity: 0 }}
-          whileInView={{ rotate: 0, scale: 1, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="mx-auto flex size-28 items-center justify-center rounded-full bg-third md:mx-0 md:size-32"
-        >
-          <svg viewBox="0 0 24 24" className="size-14 text-white md:size-16" fill="currentColor" aria-hidden>
-            <path d="M12 2.5l2.94 5.96 6.58.96-4.76 4.64 1.12 6.55L12 17.52l-5.88 3.09 1.12-6.55L2.48 9.42l6.58-.96L12 2.5z" />
-          </svg>
-        </motion.div>
+      <div className="mx-auto max-w-7xl px-6 py-12 md:py-14 lg:px-8">
         <div className="text-center md:text-left">
           <p className="display text-4xl leading-[0.9] md:text-5xl">
-            Every order earns.
-            <br />
-            <span className="text-primary">Every crunch counts.</span>
+            Rewards, app <span className="text-primary">&amp; online ordering.</span>
           </p>
-          <p className="mt-3 max-w-2xl text-sm font-semibold uppercase tracking-caps text-third/70 md:text-base">
-            Collect points on every app order and swap them for free favourites and members-only treats.
+          <p className="mt-3 text-sm font-bold uppercase tracking-caps text-third/70 md:text-base">
+            Availability varies by market. Check what&apos;s offered where you are.
           </p>
+        </div>
+        <div className="mt-8 grid gap-4 md:grid-cols-3 md:gap-6">
+          {digitalOffers.map((o, i) => (
+            <motion.div
+              key={o.title}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="flex items-start gap-4 rounded-2xl bg-third p-5 text-white md:p-6"
+            >
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-secondary text-third">
+                <svg viewBox="0 0 24 24" className="size-6" aria-hidden>
+                  {o.icon}
+                </svg>
+              </span>
+              <div>
+                <h3 className="text-lg font-extrabold uppercase leading-tight tracking-wide">{o.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-white/75">{o.desc}</p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </div>
@@ -121,7 +161,8 @@ export default function Footer() {
   const columns = footer.columns;
   const pathname = usePathname();
   // The band is a "Find your market" prompt — pointless on that page itself.
-  const showBand = pathname !== "/find-your-market";
+  // The menu page ends on its own "Find us" section instead.
+  const showBand = pathname !== "/find-your-market" && pathname !== "/menu";
 
   return (
     <footer className="relative bg-third text-white">

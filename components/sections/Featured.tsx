@@ -24,7 +24,7 @@ export default function Featured({
 }: {
   cards?: ReactNode;
   note?: string;
-  /** closing tile after the cards (defaults to the red "See the full menu" square) */
+  /** closing tile after the cards (defaults to the red "Explore our classics" square) */
   endCard?: ReactNode;
 }) {
   return (
@@ -145,9 +145,9 @@ function EndCard() {
       className="group flex aspect-square w-[82vw] max-w-[420px] shrink-0 snap-start md:snap-center flex-col items-center justify-center gap-5 rounded-[2rem] bg-[#94332b] shadow-soft3 text-cream md:h-full md:max-h-[58vh] md:w-auto md:max-w-none"
     >
       <span className="display text-center text-4xl leading-[0.9]">
-        See the
+        Explore our
         <br />
-        full menu
+        classics
       </span>
       <span className="flex h-16 w-16 items-center justify-center rounded-full bg-tex-yellow text-2xl text-ink transition-transform duration-300 group-hover:scale-110">
         <BrandArrow />

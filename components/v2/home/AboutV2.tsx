@@ -26,7 +26,7 @@ export default function AboutV2() {
 
             <StatCards />
 
-            <Reveal delay={0.15} className="btn-row mt-7 flex flex-wrap items-center gap-4 md:mt-10">
+            <Reveal delay={0.15} className="btn-row mt-7 flex flex-wrap items-center justify-center gap-4 md:mt-10">
               <Button href={about.cta.primary.href} variant="yellow">
                 {about.cta.primary.label}
               </Button>

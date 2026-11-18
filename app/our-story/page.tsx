@@ -10,7 +10,7 @@ import CTABand from "@/components/sections/CTABand";
 import { storyPage, leadershipPage } from "@/lib/content";
 import { StoryHeroV2, KeywordStripV2, HeritageV2 } from "@/components/v2/story/StorySections";
 import Timeline from "@/components/v2/story/Timeline";
-import { staggerContainer, fadeUp, inView, ease } from "@/lib/motion";
+import { staggerContainer, fadeUp, inView } from "@/lib/motion";
 
 export default function StoryPage() {
   return (
@@ -23,14 +23,11 @@ export default function StoryPage() {
       {/* 1 — Heritage & founding */}
       <HeritageV2 />
 
-      {/* Story in motion — the brand film */}
-      <StoryFilm />
+      {/* Timeline */}
+      <Timeline />
 
       {/* Mission & vision */}
       <MissionVision />
-
-      {/* Timeline */}
-      <Timeline />
 
       {/* Leadership team (sub-page) */}
       <LeadershipTeaser />
@@ -49,37 +46,6 @@ export default function StoryPage() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Story in motion — full-width brand film                             */
-/* ------------------------------------------------------------------ */
-function StoryFilm() {
-  return (
-    <section className="bg-cream pb-2 md:pb-12">
-      {/* Phones: bleed the wide film edge to edge so it isn't a thin strip. */}
-      <div className="container-tx px-0 md:px-[var(--gutter)]">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.8, ease: ease.out }}
-        >
-          <video
-            className="block aspect-[1536/530] w-full object-cover mix-blend-multiply"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            poster="/assets/story/heritage-chicken.jpg"
-          >
-            <source src="/assets/story/story-film.mp4" type="video/mp4" />
-          </video>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /* Mission & vision — reference story-page layout                       */
 /* Structure mirrors the reference MissionVisionSection: two-column      */
 /* grid, rounded blocks, the OUR MISSION / OUR VISION title graphic,     */
@@ -88,9 +54,9 @@ function StoryFilm() {
 function MissionVision() {
   const { missionVision } = storyPage;
   return (
-    <section className="relative bg-cream pb-6 pt-6 md:pb-8 md:pt-12">
+    <section className="relative bg-white pb-14 pt-8 md:pb-24 md:pt-12">
       <div className="container-tx">
-        <div className="grid gap-8 md:grid-cols-2 md:gap-16">
+        <div className="grid gap-12 md:grid-cols-2 md:gap-20">
           {missionVision.items.map((item) => (
             <motion.div
               key={item.alt}
@@ -101,7 +67,7 @@ function MissionVision() {
               className="relative rounded-2xl"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.titleImage} alt={item.alt} className="mb-3 h-20 w-auto sm:mb-5 sm:h-28 md:h-32" />
+              <img src={item.titleImage} alt={item.alt} className="mb-5 h-20 w-auto sm:mb-7 sm:h-28 md:h-32" />
               <p className="text-lg leading-relaxed text-ink-600 md:text-xl">{item.body}</p>
             </motion.div>
           ))}

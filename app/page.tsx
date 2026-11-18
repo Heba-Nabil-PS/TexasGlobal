@@ -5,7 +5,8 @@
 // import LatestNews from "@/components/sections/LatestNews";
 // Hidden for now ("Backed by the industry") — uncomment this and <PartnersV2 /> below to restore.
 // import PartnersV2 from "@/components/v2/home/PartnersV2";
-import { RegionsStripV2 } from "@/components/v2/home/PartnersV2";
+// Removed from the home page (repeated the regions after the globe). Uncomment this and <RegionsStripV2 /> below to restore.
+// import { RegionsStripV2 } from "@/components/v2/home/PartnersV2";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta("home");
@@ -30,7 +31,7 @@ export default function Home() {
       {/* <WhatsNewV2 /> */}
       {/* <LatestNews /> */}
       {/* <PartnersV2 /> */}
-      <RegionsStripV2 />
+      {/* <RegionsStripV2 /> */}
     </>
   );
 }

@@ -2,76 +2,32 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useInView, useMotionValueEvent, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { AnimatePresence, motion, useInView, useMotionValueEvent, useScroll, useTransform, type MotionValue, type Variants } from "framer-motion";
 import { useLenis } from "lenis/react";
-import { STAGE, crunchBuild, type BuildCategory, type BuildPiece } from "@/lib/content-v2/crunch-build";
+import { crunchBuild, type BuildCategory } from "@/lib/content-v2/crunch-build";
 
 /**
- * Pick your crunch — a pinned, scroll-scrubbed "tray builder".
+ * Pick your crunch — the menu categories, one stage per category.
  *
- * The section pins one full-screen stage. Scroll progress drives a single
- * timeline value `u` (≈ screens scrolled); everything on the stage is a pure
- * function of `u`, so scrolling up plays the exact same motion in reverse.
- *
- * Per category:
- *  BUILD    a circle of the category's colour wipes out from the tray, the tray
- *           paper slides in, then each cut-out flies in on an arc (own
- *           direction, spin and scale), landing with a small pop, back to front;
- *           the title rises letter by letter through a mask
- *  HOLD     the finished tray floats with depth parallax
- *  TAKE-OFF pieces fly back out (front first, tray paper last, conveyor-style)
- *           while the next category's pieces are already flying in
- *
- * A category rail (the finished composite artworks) shows progress and jumps
- * to any tray. Reduced motion gets a static list of the composites.
+ * Desktop / landscape ("wide"): a short pinned stage. Scroll only *chooses* the
+ * category (about two-thirds of a screen each); everything else runs on its own
+ * clock, so it reacts instantly instead of being dragged frame by frame:
+ *  - the category's brand video plays in real time (food drops onto the tray)
+ *    and holds on the finished tray
+ *  - the outgoing tray slides away, the next one slides in; the title rises
+ *    letter by letter
+ *  - a "next" button on the rail moves on; the rail jumps to any category
+ * Phones / portrait tablets: a compact autoplay player (no pinning).
+ * Reduced motion: a static list of the finished composites.
  */
 
-/* ---------- timeline (units ≈ viewport heights of scroll) ---------- */
+/** screens of scroll per category on the pinned stage */
+const STEP = 0.65;
+/** brand clips play a little faster than shot */
+const PLAYBACK_RATE = 1.5;
 
-const HOLD = 0.38; // finished tray stays put
-const SWAP = 0.88; // one tray leaves, the next builds
-const END = 0.45; // last tray holds before the page moves on
-
-const VIDEO_HOLD = 1.5; // extra scroll room so a video tray's clip plays out (≈ screens)
-
-type Tl = { inA: number; inB: number; outA: number; outB: number; hold: number; switchAt: number; vEnd: number };
-
-function buildTimeline(n: number) {
-  const cats: Tl[] = [];
-  // first tray builds while the section scrolls into view (u 0 → 1)
-  let inA = 0.3;
-  let inB = 1.12;
-  for (let i = 0; i < n; i++) {
-    const last = i === n - 1;
-    const hold = crunchBuild[i].video ? VIDEO_HOLD : HOLD;
-    const outA = last ? Infinity : inB + hold;
-    const outB = last ? Infinity : outA + 0.62 * SWAP;
-    // a video clip runs from the start of the build to just before the take-off
-    const vEnd = inB + hold * 0.85;
-    cats.push({ inA, inB, outA, outB, hold: last ? inB + END * 0.4 : (inB + outA) / 2, switchAt: last ? Infinity : outA + 0.5 * SWAP, vEnd });
-    if (!last) {
-      inA = outA + 0.3 * SWAP;
-      inB = outA + SWAP;
-    }
-  }
-  return { cats, U: cats[n - 1].inB + END };
-}
-
-const TL = buildTimeline(crunchBuild.length);
-
-/* ---------- easing ---------- */
-
+const ease = [0.22, 1, 0.36, 1] as const;
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
-const seg = (v: number, a: number, b: number) => clamp01((v - a) / (b - a));
-const outCubic = (t: number) => 1 - (1 - t) ** 3;
-const inCubic = (t: number) => t * t * t;
-const outBack = (t: number, c = 1.4) => 1 + (c + 1) * (t - 1) ** 3 + c * (t - 1) ** 2;
-const inOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
-
-/** 0 → 1 while building, 1 while held, → 0 while taken apart */
-const life = (u: number, tl: Tl) => seg(u, tl.inA, tl.inB) * (1 - (Number.isFinite(tl.outA) ? seg(u, tl.outA, tl.outB) : 0));
-
-const pct = (v: number, of: number) => `${(v / of) * 100}%`;
 const two = (n: number) => String(n).padStart(2, "0");
 
 /* ---------- section ---------- */
@@ -223,103 +179,167 @@ function CrunchPlayer() {
   );
 }
 
+/* ---------- desktop: pinned stage, scroll picks the category ---------- */
+
 function CrunchBuilder() {
   const ref = useRef<HTMLElement>(null);
   const lenis = useLenis();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end end"] });
-  const u = useTransform(scrollYProgress, (p) => p * TL.U);
+  const n = crunchBuild.length;
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  // load the clips a screen before the section arrives; play only while it's on screen
+  const near = useInView(ref, { once: true, margin: "100% 0px 100% 0px" });
+  const stageRef = useRef<HTMLDivElement>(null);
+  const onScreen = useInView(stageRef, { amount: 0.5 });
 
-  // the only React state: which category is "live" (for links / a11y / rail)
   const [active, setActive] = useState(0);
-  useMotionValueEvent(u, "change", (v) => {
-    const i = TL.cats.findIndex((c) => v < c.switchAt);
-    const next = i === -1 ? crunchBuild.length - 1 : i;
+  const [done, setDone] = useState(false); // the live clip has finished: nudge the "next" button
+  useMotionValueEvent(scrollYProgress, "change", (p) => {
+    const next = Math.min(n - 1, Math.max(0, Math.floor(p * n)));
     setActive((a) => (a === next ? a : next));
   });
+  useEffect(() => setDone(!crunchBuild[active].video), [active]);
 
-  const jump = (i: number) => {
+  const scrollTo = (y: number) => {
+    if (lenis) lenis.scrollTo(y, { duration: 0.9 });
+    else window.scrollTo({ top: y, behavior: "smooth" });
+  };
+  /** scroll to category i (k = n: just past the stage) */
+  const jump = (k: number) => {
     const el = ref.current;
     if (!el) return;
     const top = el.getBoundingClientRect().top + window.scrollY;
-    const y = top - window.innerHeight + (TL.cats[i].hold / TL.U) * el.offsetHeight;
-    if (lenis) lenis.scrollTo(y, { duration: 1.6 });
-    else window.scrollTo({ top: y, behavior: "smooth" });
+    const range = el.offsetHeight - window.innerHeight;
+    scrollTo(k >= n ? top + el.offsetHeight - window.innerHeight * 0.25 : top + ((k + 0.1) / n) * range);
   };
+
+  const c = crunchBuild[active];
 
   return (
     <section
       ref={ref}
       aria-labelledby="crunch-heading"
       className="crunch-section relative bg-white text-third"
-      style={{ height: `${TL.U * 100}svh` }}
+      style={{ height: `${100 + n * STEP * 100}svh` }}
     >
       <h2 id="crunch-heading" className="sr-only">
         Pick your crunch: menu categories
       </h2>
 
-      <div className="sticky top-0 h-[100svh] crunch-stage overflow-hidden">
-        {/* colour wipes, one per category, stacked in order */}
-        {crunchBuild.map((c, i) => (
-          <Wipe key={c.id} u={u} tl={TL.cats[i]} color={c.bg} />
-        ))}
-
+      <div ref={stageRef} className="crunch-stage sticky top-0 h-[100svh] overflow-hidden">
         {/* content area between the fixed nav and the rail */}
         <div className="crunch-area absolute inset-x-0">
           <div className="crunch-grid container-tx grid h-full">
             {/* copy */}
             <div className="crunch-copy relative">
-              {crunchBuild.map((c, i) => (
-                <CategoryCopy key={c.id} c={c} i={i} u={u} tl={TL.cats[i]} live={active === i} />
-              ))}
+              <AnimatePresence initial={false}>
+                <CategoryCopy key={c.id} c={c} i={active} />
+              </AnimatePresence>
             </div>
 
-            {/* food stage */}
+            {/* food stage: the live tray in front, the others parked left (done) / right (next) */}
             <div className="relative flex items-center justify-center">
-              <div
-                aria-hidden
-                className="crunch-food relative aspect-[800/530]"
-              >
-                {crunchBuild.map((c, i) =>
-                  c.video ? <VideoTray key={c.id} video={c.video} u={u} tl={TL.cats[i]} /> : <Tray key={c.id} c={c} u={u} tl={TL.cats[i]} />,
-                )}
+              <div aria-hidden className="crunch-food relative aspect-[800/530]">
+                {crunchBuild.map((cat, k) => {
+                  const live = k === active;
+                  return (
+                    <motion.div
+                      key={cat.id}
+                      initial={false}
+                      animate={live ? { opacity: 1, x: "0%", scale: 1 } : { opacity: 0, x: k < active ? "-28%" : "28%", scale: 0.9 }}
+                      transition={{ duration: live ? 0.7 : 0.5, ease, delay: live ? 0.12 : 0 }}
+                      className={`absolute inset-[-14%] ${live ? "" : "pointer-events-none"}`}
+                    >
+                      {cat.video ? (
+                        near && (
+                          <KeyedVideo
+                            video={cat.video}
+                            playing={live && onScreen}
+                            restart
+                            width={1024}
+                            label={cat.title.join(" ")}
+                            onEnded={() => live && setDone(true)}
+                          />
+                        )
+                      ) : (
+                        <Image src={cat.combo.src} alt="" fill sizes="56vw" className="object-contain p-[12%]" />
+                      )}
+                    </motion.div>
+                  );
+                })}
               </div>
             </div>
           </div>
         </div>
 
-        <Rail u={u} active={active} onJump={jump} />
+        <Rail progress={scrollYProgress} active={active} done={done} onJump={jump} />
       </div>
     </section>
   );
 }
 
-/* ---------- background ---------- */
+/* ---------- copy ---------- */
 
-function Wipe({ u, tl, color }: { u: MotionValue<number>; tl: Tl; color: [string, string] }) {
-  const clipPath = useTransform(u, (v) => `circle(${inOut(seg(v, tl.inA - 0.08, tl.inB)) * 150}% at var(--cx) var(--cy))`);
-  return <motion.div aria-hidden style={{ clipPath, background: `radial-gradient(120% 95% at var(--cx) var(--cy), ${color[0]} 0%, ${color[0]} 22%, ${color[1]} 100%)` }} className="absolute inset-0" />;
-}
+const copyV: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.02 } },
+  exit: { transition: { staggerChildren: 0.008 } },
+};
+const charV: Variants = {
+  hidden: { y: "115%", rotate: 12 },
+  show: { y: "0%", rotate: 0, transition: { duration: 0.55, ease } },
+  exit: { y: "-115%", rotate: -8, transition: { duration: 0.3, ease: [0.55, 0, 0.75, 0.2] } },
+};
+const fadeV: Variants = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease, delay: 0.25 } },
+  exit: { opacity: 0, y: -14, transition: { duration: 0.2 } },
+};
+const lineV: Variants = {
+  hidden: { scaleX: 0 },
+  show: { scaleX: 1, transition: { duration: 0.6, ease, delay: 0.2 } },
+  exit: { scaleX: 0, transition: { duration: 0.2 } },
+};
 
-/* ---------- the tray ---------- */
-
-function Tray({ c, u, tl }: { c: BuildCategory; u: MotionValue<number>; tl: Tl }) {
-  const glowOpacity = useTransform(u, (v) => life(v, tl) * 0.85);
-  const glowScale = useTransform(u, (v) => 0.55 + 0.45 * life(v, tl));
+function CategoryCopy({ c, i }: { c: BuildCategory; i: number }) {
+  const light = c.ink === "light";
   return (
-    <>
-      <motion.div
-        style={{ opacity: glowOpacity, scale: glowScale, background: `radial-gradient(closest-side, ${c.glow}, transparent)` }}
-        className="absolute inset-[-12%] rounded-full blur-2xl"
-      />
-      {/* paper, then the contact shadows on it, then the food back to front */}
-      <Piece p={c.pieces[0]} k={0} n={c.pieces.length} u={u} tl={tl} />
-      {c.pieces.slice(1).map((p, i) => (
-        <ContactShadow key={p.key} p={p} k={i + 1} n={c.pieces.length} u={u} tl={tl} />
-      ))}
-      {c.pieces.slice(1).map((p, i) => (
-        <Piece key={p.key} p={p} k={i + 1} n={c.pieces.length} u={u} tl={tl} />
-      ))}
-    </>
+    <motion.div variants={copyV} initial="hidden" animate="show" exit="exit" className="crunch-layer absolute inset-0 flex flex-col">
+      <motion.span variants={fadeV} className={`text-xs font-extrabold uppercase tracking-caps md:text-sm ${light ? "text-white/50" : "text-third/40"}`}>
+        {two(i + 1)} / {two(crunchBuild.length)}
+      </motion.span>
+
+      <h3 className={`crunch-title display mt-1 uppercase leading-[0.86] md:mt-2 ${light ? "text-secondary" : "text-primary"}`}>
+        <a href={c.href} data-cursor="link" className="block" aria-label={c.title.join(" ")}>
+          {c.title.map((t) => (
+            <motion.span key={t} variants={copyV} className="-mt-[0.1em] block overflow-hidden pb-[0.04em] pt-[0.1em]" aria-hidden>
+              {[...t].map((ch, j) => (
+                <motion.span key={j} variants={charV} className="inline-block origin-bottom-left">
+                  {ch === " " ? " " : ch}
+                </motion.span>
+              ))}
+            </motion.span>
+          ))}
+        </a>
+      </h3>
+
+      <motion.span aria-hidden variants={lineV} className="mt-3 block h-1 w-28 shrink-0 origin-left rounded-full bg-secondary md:mt-5 md:w-40" />
+
+      <motion.div variants={fadeV}>
+        <p className={`crunch-blurb mt-2 max-w-sm text-base leading-snug md:mt-4 md:text-lg md:leading-relaxed ${light ? "text-white/75" : "text-third/70"}`}>{c.blurb}</p>
+        <a
+          href={c.href}
+          data-cursor="link"
+          className={`group mt-2 inline-flex items-center gap-2 text-sm font-extrabold uppercase tracking-caps transition-colors md:mt-5 ${
+            light ? "text-white hover:text-secondary" : "text-third hover:text-primary"
+          }`}
+        >
+          Find it near you
+          <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
+            →
+          </span>
+        </a>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -365,12 +385,10 @@ function fitBackdrop(data: Uint8ClampedArray, gw: number, gh: number) {
 }
 
 /**
- * A tray told by its brand video: the clip is scrubbed by scroll (inA → vEnd
- * maps to 0 → duration), so scrolling up rewinds it. Every frame is drawn to a
- * canvas and divided by the studio backdrop (colour-dodge with the inverted
- * plate), which turns the grey backdrop pure white — the food and its real
- * shadows sit straight on the page with no visible frame. It fades in as its
- * build starts and lifts away during the take-off like the cut-out trays.
+ * Backdrop key: every video frame is drawn to a canvas and divided by the
+ * studio backdrop (colour-dodge with the inverted plate), which turns the grey
+ * backdrop pure white — the food and its real shadows sit straight on the page
+ * with no visible frame.
  */
 const PLATE_GAIN = 0.955; // < 1 pushes the near-backdrop (noise, compression) fully to white
 
@@ -439,344 +457,52 @@ function paintKeyed(c: HTMLCanvasElement | null, v: HTMLVideoElement | null, p: 
 }
 
 
-function VideoTray({ video, u, tl }: { video: NonNullable<BuildCategory["video"]>; u: MotionValue<number>; tl: Tl }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const plate = useRef<HTMLCanvasElement | null>(null);
-  const target = useRef(0); // 0–1 through the clip
-  const raf = useRef(0);
-
-  const paint = () => paintKeyed(canvasRef.current, videoRef.current, plate.current, video);
-
-  const seek = () => {
-    raf.current = 0;
-    const v = videoRef.current;
-    if (!v || !v.duration || v.seeking || !plate.current) return; // `seeked` calls back in
-    const t = target.current * Math.max(0, v.duration - 0.05);
-    if (Math.abs(v.currentTime - t) > 0.012) v.currentTime = t;
-  };
-  const schedule = () => {
-    if (!raf.current) raf.current = requestAnimationFrame(seek);
-  };
-
-  useMotionValueEvent(u, "change", (x) => {
-    target.current = seg(x, tl.inA, tl.vEnd);
-    schedule();
-  });
-
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    let url = "";
-    let cancelled = false;
-    target.current = seg(u.get(), tl.inA, tl.vEnd);
-
-    const buildPlate = () => {
-      plate.current = makePlate(v, video);
-    };
-
-    const onSeeked = () => {
-      if (!plate.current) {
-        try {
-          buildPlate();
-        } catch {
-          return;
-        }
-      }
-      paint();
-      schedule();
-    };
-    const onLoaded = () => {
-      v.currentTime = 0.001; // first frame → backdrop plate
-    };
-    v.addEventListener("loadeddata", onLoaded);
-    v.addEventListener("seeked", onSeeked);
-
-    // pull the whole file into memory so scrubbing never waits on the network
-    fetch(video.src)
-      .then((r) => (r.ok ? r.blob() : Promise.reject()))
-      .then((b) => {
-        if (cancelled) return;
-        url = URL.createObjectURL(b);
-        v.src = url;
-      })
-      .catch(() => {
-        if (!cancelled) v.src = video.src;
-      });
-
-    return () => {
-      cancelled = true;
-      v.removeEventListener("loadeddata", onLoaded);
-      v.removeEventListener("seeked", onSeeked);
-      if (raf.current) cancelAnimationFrame(raf.current);
-      if (url) URL.revokeObjectURL(url);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [video.src]);
-
-  const opacity = useTransform(u, (v) => seg(v, tl.inA - 0.05, tl.inA + 0.12) * (1 - (Number.isFinite(tl.outA) ? seg(v, tl.outA + 0.1, tl.outB) : 0)));
-  const transform = useTransform(u, (v) => {
-    const o = Number.isFinite(tl.outA) ? inCubic(seg(v, tl.outA, tl.outB)) : 0;
-    return `translate3d(${(-o * 40).toFixed(2)}%, ${(-o * 6).toFixed(2)}%, 0) scale(${(1 - o * 0.15).toFixed(4)})`;
-  });
-  const visibility = useTransform(opacity, (o) => (o <= 0.001 ? "hidden" : "visible"));
-
-  // soft edges as a safety net: whatever is left of the backdrop never ends in a hard line
-  const edgeX = "linear-gradient(to right, transparent, #000 7%, #000 93%, transparent)";
-  const edgeY = "linear-gradient(to bottom, transparent, #000 7%, #000 93%, transparent)";
-
-  return (
-    <motion.div style={{ opacity, transform, visibility }} className="absolute inset-[-14%] will-change-transform">
-      <canvas
-        ref={canvasRef}
-        width={video.w}
-        height={video.h}
-        className="block h-full w-full object-contain"
-        style={{
-          // per-video framing so every tray reads at the same size, standing on the same line
-          transform: video.scale && video.scale !== 1 ? `scale(${video.scale})` : undefined,
-          transformOrigin: "50% 65%",
-          maskImage: `${edgeX}, ${edgeY}`, maskComposite: "intersect", WebkitMaskImage: `${edgeX}, ${edgeY}`, WebkitMaskComposite: "source-in" }}
-      />
-      <video ref={videoRef} muted playsInline preload="auto" disablePictureInPicture aria-hidden className="pointer-events-none absolute left-0 top-0 h-px w-px opacity-0" />
-    </motion.div>
-  );
-}
-
-/** build (e) and take-apart (o) progress of one piece */
-function piecePhase(v: number, k: number, n: number, tl: Tl) {
-  // build: back-to-front stagger
-  const span = tl.inB - tl.inA;
-  const L = n > 1 ? span * 0.5 : span * 0.8;
-  const a = tl.inA + (n > 1 ? (k * (span - L)) / (n - 1) : span * 0.2);
-  const e = seg(v, a, a + L);
-
-  // take apart: front-to-back (the tray paper leaves last)
-  let o = 0;
-  if (Number.isFinite(tl.outA)) {
-    const ospan = tl.outB - tl.outA;
-    const Lo = n > 1 ? ospan * 0.55 : ospan;
-    const b = tl.outA + (n > 1 ? ((n - 1 - k) * (ospan - Lo)) / (n - 1) : 0);
-    o = inCubic(seg(v, b, b + Lo));
-  }
-  return { e, o };
-}
-
-function pieceMotion(v: number, p: BuildPiece, k: number, n: number, tl: Tl) {
-  const { e, o } = piecePhase(v, k, n, tl);
-  // once landed (e = 1) every piece is locked to the paper: no drift, no float
-  const dx = p.from.dx * (1 - outCubic(e)) + p.to.dx * o;
-  const dy = p.from.dy * (1 - outBack(e, 1.1)) + p.to.dy * o;
-  const r = p.from.r * (1 - outCubic(e)) + p.to.r * o;
-  const s = (p.from.s + (1 - p.from.s) * outBack(e, 1.7)) * (1 + (p.to.s - 1) * o);
-  const opacity = seg(e, 0, 0.12) * (1 - seg(o, 0.45, 1));
-  return { dx, dy, r, s, opacity };
-}
-
 /**
- * Soft shadow on the paper right under a piece's solid footprint — the dark
- * "contact" line that makes food read as resting on the sheet, not hovering.
- * Fades in as the piece lands; lifts away first when it leaves.
- */
-function ContactShadow({ p, k, n, u, tl }: { p: BuildPiece; k: number; n: number; u: MotionValue<number>; tl: Tl }) {
-  const strength = p.shadow ?? 0.5;
-  const h = (p.w * p.ih) / p.iw;
-  const [foot, l, r] = p.base;
-  const sw = p.w * (r - l) * 0.96;
-  const sh = Math.min(p.w * 0.1, h * 0.22);
-  const cx = p.x + p.w * (l + r) * 0.5;
-  const cy = p.y + h * foot - sh * 0.35; // tucked just under the base
-  const opacity = useTransform(u, (v) => {
-    const { e, o } = piecePhase(v, k, n, tl);
-    return strength * seg(e, 0.6, 1) * (1 - seg(o, 0, 0.2));
-  });
-  if (strength <= 0) return null;
-  return (
-    <motion.div
-      aria-hidden
-      style={{
-        left: pct(cx - sw / 2, STAGE.w),
-        top: pct(cy - sh / 2 - STAGE.y0, STAGE.h),
-        width: pct(sw, STAGE.w),
-        height: pct(sh, STAGE.h),
-        opacity,
-        background: "radial-gradient(closest-side, rgba(64,36,12,0.55), rgba(64,36,12,0.22) 55%, rgba(64,36,12,0))",
-      }}
-      className="pointer-events-none absolute rounded-full"
-    />
-  );
-}
-
-function Piece({ p, k, n, u, tl }: { p: BuildPiece; k: number; n: number; u: MotionValue<number>; tl: Tl }) {
-  const h = (p.w * p.ih) / p.iw; // artwork px
-  // stage-relative offsets → % of the piece's own box (so no measuring)
-  const kx = (100 * STAGE.w) / p.w;
-  const ky = (100 * STAGE.h) / h;
-
-  const transform = useTransform(u, (v) => {
-    const m = pieceMotion(v, p, k, n, tl);
-    return `translate3d(${(m.dx * kx).toFixed(2)}%, ${(m.dy * ky).toFixed(2)}%, 0) rotate(${m.r.toFixed(2)}deg) scale(${m.s.toFixed(4)})`;
-  });
-  const opacity = useTransform(u, (v) => pieceMotion(v, p, k, n, tl).opacity);
-  const visibility = useTransform(opacity, (o) => (o <= 0.001 ? "hidden" : "visible"));
-
-  return (
-    <motion.div
-      style={{
-        left: pct(p.x, STAGE.w),
-        top: pct(p.y - STAGE.y0, STAGE.h),
-        width: pct(p.w, STAGE.w),
-        transform,
-        opacity,
-        visibility,
-      }}
-      className="absolute will-change-transform"
-    >
-      <Image
-        src={p.src}
-        alt=""
-        width={p.iw}
-        height={p.ih}
-        sizes={`(max-width: 768px) ${Math.ceil((94 * p.w) / STAGE.w)}vw, ${Math.ceil((56 * p.w) / STAGE.w)}vw`}
-        className="block h-auto w-full select-none"
-        draggable={false}
-      />
-    </motion.div>
-  );
-}
-
-/* ---------- copy ---------- */
-
-function CategoryCopy({ c, i, u, tl, live }: { c: BuildCategory; i: number; u: MotionValue<number>; tl: Tl; live: boolean }) {
-  const light = c.ink === "light";
-  const chars = c.title.join("").length;
-  let offset = 0;
-
-  const span = tl.inB - tl.inA;
-  const metaOpacity = useTransform(u, (v) => seg(v, tl.inA + 0.35 * span, tl.inB) * (1 - (Number.isFinite(tl.outA) ? seg(v, tl.outA, tl.outA + 0.25 * SWAP) : 0)));
-  const restT = useTransform(u, (v) => {
-    const i_ = outCubic(seg(v, tl.inB - 0.3 * span, tl.inB + 0.05));
-    const o = Number.isFinite(tl.outA) ? inCubic(seg(v, tl.outA, tl.outA + 0.3 * SWAP)) : 0;
-    return `translate3d(0, ${(1 - i_) * 28 - o * 24}px, 0)`;
-  });
-  const restOpacity = useTransform(u, (v) => seg(v, tl.inB - 0.3 * span, tl.inB + 0.05) * (1 - (Number.isFinite(tl.outA) ? seg(v, tl.outA, tl.outA + 0.25 * SWAP) : 0)));
-  const line = useTransform(u, (v) => outCubic(seg(v, tl.inB - 0.35 * span, tl.inB + 0.05)) * (1 - (Number.isFinite(tl.outA) ? seg(v, tl.outA, tl.outA + 0.3 * SWAP) : 0)));
-
-  return (
-    <div
-      aria-hidden={!live}
-      inert={!live}
-      className="crunch-layer absolute inset-0 flex flex-col"
-    >
-      <motion.span
-        style={{ opacity: metaOpacity }}
-        className={`text-xs font-extrabold uppercase tracking-caps md:text-sm ${light ? "text-white/50" : "text-third/40"}`}
-      >
-        {two(i + 1)} / {two(crunchBuild.length)}
-      </motion.span>
-
-      <h3
-        className={`crunch-title display mt-1 uppercase leading-[0.86] md:mt-2 ${
-          light ? "text-secondary" : "text-primary"
-        }`}
-      >
-        <a href={c.href} tabIndex={live ? 0 : -1} data-cursor="link" className="block">
-          {c.title.map((t) => {
-            const start = offset;
-            offset += t.length;
-            return (
-              <span key={t} className="block overflow-hidden pb-[0.04em] pt-[0.1em] -mt-[0.1em]">
-                {[...t].map((ch, j) => (
-                  <Char key={j} ch={ch} j={start + j} m={chars} u={u} tl={tl} />
-                ))}
-              </span>
-            );
-          })}
-        </a>
-      </h3>
-
-      <motion.span aria-hidden style={{ scaleX: line }} className="mt-3 block h-1 w-28 shrink-0 origin-left rounded-full bg-secondary md:mt-5 md:w-40" />
-
-      <motion.div style={{ transform: restT, opacity: restOpacity }}>
-        <p className={`crunch-blurb mt-2 max-w-sm text-base leading-snug md:mt-4 md:text-lg md:leading-relaxed ${light ? "text-white/75" : "text-third/70"}`}>{c.blurb}</p>
-        <a
-          href={c.href}
-          tabIndex={live ? 0 : -1}
-          data-cursor="link"
-          className={`group mt-2 inline-flex items-center gap-2 text-sm font-extrabold uppercase tracking-caps transition-colors md:mt-5 ${
-            light ? "text-white hover:text-secondary" : "text-third hover:text-primary"
-          }`}
-        >
-          Find it near you
-          <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
-            →
-          </span>
-        </a>
-      </motion.div>
-    </div>
-  );
-}
-
-function Char({ ch, j, m, u, tl }: { ch: string; j: number; m: number; u: MotionValue<number>; tl: Tl }) {
-  const transform = useTransform(u, (v) => {
-    const span = tl.inB - tl.inA;
-    const tIn = seg(v, tl.inA + 0.3 * span, tl.inB);
-    const st = (j / Math.max(1, m - 1)) * 0.45;
-    const ci = outCubic(seg(tIn, st, st + 0.55));
-    let co = 0;
-    if (Number.isFinite(tl.outA)) {
-      const tOut = seg(v, tl.outA, tl.outA + 0.45 * SWAP);
-      const so = (j / Math.max(1, m - 1)) * 0.4;
-      co = inCubic(seg(tOut, so, so + 0.6));
-    }
-    return `translate3d(0, ${((1 - ci) * 118 - co * 118).toFixed(2)}%, 0) rotate(${((1 - ci) * 14 - co * 10).toFixed(2)}deg)`;
-  });
-  return (
-    <motion.span style={{ transform }} className="inline-block origin-bottom-left will-change-transform">
-      {ch === " " ? " " : ch}
-    </motion.span>
-  );
-}
-
-/**
- * Phone player video: plays in real time (no scrubbing) and paints each frame
- * through the same backdrop key as the desktop stage, so the food sits on the
- * white page instead of in a grey box. Plays only while `playing` (on screen).
+ * A brand video played in real time (never scrubbed — that's what made the
+ * stage lag) and painted each frame through the backdrop key, so the food sits
+ * on the white page instead of in a grey box. Plays only while `playing`;
+ * with `restart` it starts from the top each time it becomes live, and it
+ * holds on the finished tray when the clip ends.
  */
 function KeyedVideo({
   video,
   playing,
   label,
+  restart = false,
+  width = 720,
   onProgress,
   onEnded,
 }: {
   video: CrunchVideo;
   playing: boolean;
   label: string;
-  onProgress: (p: number) => void;
-  onEnded: () => void;
+  restart?: boolean;
+  width?: number;
+  onProgress?: (p: number) => void;
+  onEnded?: () => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const plate = useRef<HTMLCanvasElement | null>(null);
   const [ready, setReady] = useState(false); // plate built, first frame painted
 
-  // 1) first (empty) frame → backdrop plate, then paint it
+  // 1) first (empty) frame → backdrop plate; every later seek repaints the canvas
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
     const onLoaded = () => {
-      v.currentTime = 0.001;
+      if (!plate.current) v.currentTime = 0.001;
     };
     const onSeeked = () => {
-      if (plate.current) return;
-      try {
-        plate.current = makePlate(v, video);
-      } catch {
-        return;
+      if (!plate.current) {
+        try {
+          plate.current = makePlate(v, video);
+        } catch {
+          return;
+        }
+        setReady(true);
       }
       paintKeyed(canvasRef.current, v, plate.current, video);
-      setReady(true);
     };
     v.addEventListener("loadeddata", onLoaded);
     v.addEventListener("seeked", onSeeked);
@@ -805,9 +531,12 @@ function KeyedVideo({
     const tick = () => {
       if (stopped) return;
       paintKeyed(canvasRef.current, v, plate.current, video);
-      if (v.duration) onProgress(v.currentTime / v.duration);
+      if (v.duration) onProgress?.(v.currentTime / v.duration);
+      if (v.ended) return; // hold the finished tray
       handle = vv.requestVideoFrameCallback ? vv.requestVideoFrameCallback(tick) : requestAnimationFrame(tick);
     };
+    if (restart) v.currentTime = 0;
+    v.playbackRate = PLAYBACK_RATE;
     v.play().then(tick).catch(() => {});
     return () => {
       stopped = true;
@@ -826,12 +555,15 @@ function KeyedVideo({
     <>
       <canvas
         ref={canvasRef}
-        width={720}
-        height={Math.round((720 * video.h) / video.w)}
+        width={width}
+        height={Math.round((width * video.h) / video.w)}
         role="img"
         aria-label={label}
-        className={`absolute inset-0 h-full w-full transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 h-full w-full object-contain transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`}
         style={{
+          // per-video framing so every tray reads at the same size, standing on the same line
+          transform: video.scale && video.scale !== 1 ? `scale(${video.scale})` : undefined,
+          transformOrigin: "50% 65%",
           maskImage: `${edgeX}, ${edgeY}`,
           maskComposite: "intersect",
           WebkitMaskImage: `${edgeX}, ${edgeY}`,
@@ -855,24 +587,50 @@ function KeyedVideo({
 
 /* ---------- category rail ---------- */
 
-function Rail({ u, active, onJump }: { u: MotionValue<number>; active: number; onJump: (i: number) => void }) {
+function Rail({ progress, active, done, onJump }: { progress: MotionValue<number>; active: number; done: boolean; onJump: (i: number) => void }) {
+  const last = active === crunchBuild.length - 1;
   return (
     <nav aria-label="Menu categories" className="absolute inset-x-0 bottom-3 z-10 flex justify-center px-3 md:bottom-6">
-      {/* same pill bar as the Franchising tabs */}
-      <ol className="flex gap-1 rounded-full border border-ink/10 bg-paper/90 p-1.5 shadow-soft3 backdrop-blur-md md:gap-2 md:p-2">
+      {/* same pill bar as the Franchising tabs, plus a "next" button at the end */}
+      <ol className="flex items-center gap-1 rounded-full border border-ink/10 bg-paper/90 p-1.5 shadow-soft3 backdrop-blur-md md:gap-2 md:p-2">
         {crunchBuild.map((c, i) => (
           <li key={c.id}>
-            <RailButton c={c} i={i} u={u} live={active === i} onJump={onJump} />
+            <RailButton c={c} i={i} progress={progress} live={active === i} onJump={onJump} />
           </li>
         ))}
+        <li className="ms-1 border-s border-ink/10 ps-2 md:ps-3">
+          <button
+            type="button"
+            onClick={() => onJump(active + 1)}
+            aria-label={last ? "Continue down the page" : `Next: ${crunchBuild[active + 1].short}`}
+            data-cursor="link"
+            className={`relative grid size-10 place-items-center rounded-full text-white transition-colors duration-300 md:size-11 ${done ? "bg-tex-red" : "bg-third hover:bg-tex-red"}`}
+          >
+            {done && <span aria-hidden className="absolute inset-0 animate-ping rounded-full bg-tex-red/40" />}
+            <motion.svg
+              aria-hidden
+              viewBox="0 0 24 24"
+              className="relative size-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.6}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              animate={done ? { y: [0, 3, 0] } : { y: 0 }}
+              transition={done ? { duration: 1, repeat: Infinity, ease: "easeInOut" } : { duration: 0.2 }}
+            >
+              <path d="M12 5v14M5 12l7 7 7-7" />
+            </motion.svg>
+          </button>
+        </li>
       </ol>
     </nav>
   );
 }
 
-function RailButton({ c, i, u, live, onJump }: { c: BuildCategory; i: number; u: MotionValue<number>; live: boolean; onJump: (i: number) => void }) {
-  const tl = TL.cats[i];
-  const fill = useTransform(u, (v) => (v < tl.inA ? 0 : v >= tl.switchAt ? 1 : seg(v, tl.inA, Math.min(tl.switchAt, TL.U))));
+function RailButton({ c, i, progress, live, onJump }: { c: BuildCategory; i: number; progress: MotionValue<number>; live: boolean; onJump: (i: number) => void }) {
+  // how far through this category's slice of the scroll we are
+  const fill = useTransform(progress, (p) => clamp01(p * crunchBuild.length - i));
   return (
     <button
       type="button"
@@ -887,10 +645,9 @@ function RailButton({ c, i, u, live, onJump }: { c: BuildCategory; i: number; u:
         <motion.span
           aria-hidden
           layoutId="crunch-rail-pill"
-          transition={{ type: "spring", stiffness: 380, damping: 32 }}
+          transition={{ type: "spring", stiffness: 420, damping: 34 }}
           className="absolute inset-0 overflow-hidden rounded-full bg-tex-red"
         >
-          {/* progress through this category */}
           <motion.span style={{ scaleX: fill }} className="absolute inset-x-6 bottom-1 h-[2px] origin-left rounded-full bg-tex-yellow" />
         </motion.span>
       )}

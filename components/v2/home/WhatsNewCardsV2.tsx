@@ -11,7 +11,7 @@ const TILE =
 
 /**
  * What's new — the pinned horizontal gallery from Featured, carrying the square
- * LTO photos, ending in the solid maroon "See the full menu" square.
+ * LTO photos, ending in the solid maroon "Explore our classics" square.
  */
 export default function WhatsNewCardsV2() {
   return (

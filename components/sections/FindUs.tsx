@@ -7,8 +7,8 @@ import { appPage } from "@/lib/content";
 import { ease } from "@/lib/motion";
 
 /** "Find your nearest store" — light street-map bg, headline, CTA and floating pins. */
-export default function FindUs({ showPins = true }: { showPins?: boolean }) {
-  const { findUs } = appPage;
+export default function FindUs({ showPins = true, content }: { showPins?: boolean; content?: typeof appPage.findUs }) {
+  const findUs = content ?? appPage.findUs;
 
   return (
     <section className="relative overflow-hidden bg-white py-10 md:py-12">
