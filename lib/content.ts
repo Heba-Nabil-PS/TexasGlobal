@@ -776,12 +776,12 @@ export const franchisePage = {
     "No. 64 in the 2023 Franchise Times Top 400",
   ],
 
-  /** The four source pages, stacked in order under a sticky section nav. */
+  /** The four source pages, folded into one tabbed dossier. */
   tabs: [
     { id: "why-us", label: "Why us", blurb: "The brand and the proof" },
     { id: "opportunities", label: "Opportunities", blurb: "Where we're looking" },
     { id: "investment", label: "Investment", blurb: "Terms and costs" },
-    { id: "support", label: "Support", blurb: "What you get from us" },
+    { id: "resources", label: "Support", blurb: "What you get from us" },
   ],
 
   whyUs: {
@@ -852,11 +852,11 @@ export const franchisePage = {
       { label: "Brand fund", value: "1%", note: "of gross sales" },
       { label: "Local marketing", value: "4%", note: "minimum spend" },
     ],
-    /** The three build models the investment chart is broken down by. Totals are summed from `lines`. */
+    /** The three build models the investment chart is broken down by. */
     models: [
-      { id: "low" as const, name: "Non drive-thru", tier: "Low end" },
-      { id: "avg" as const, name: "Non drive-thru", tier: "Average" },
-      { id: "high" as const, name: "Large venue / drive-thru", tier: "High end" },
+      { id: "low" as const, name: "Non drive-thru", tier: "Low end", total: 525000 },
+      { id: "avg" as const, name: "Non drive-thru", tier: "Average", total: 686000 },
+      { id: "high" as const, name: "Large venue / drive-thru", tier: "High end", total: 1295400 },
     ],
     /** Full line-by-line chart. `null` = not applicable to that model. */
     lines: [

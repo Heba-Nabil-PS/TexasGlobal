@@ -9,7 +9,7 @@ export default function FranchisingPage() {
     <>
       <FranchiseHeroV2 />
 
-      {/* The four source pages, stacked under a sticky section nav */}
+      {/* The four source pages, tabbed */}
       <FranchiseTabs />
 
       <FranchiseCredentialsV2 />
