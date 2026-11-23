@@ -18,12 +18,6 @@
  *
  * Deep links (`/franchising#apply` typed or pasted) get the same treatment
  * once on mount, after layout has settled.
- *
- * A target that sets its own `scroll-margin-top` (e.g. the /franchising
- * sections, which also sit under a sticky section nav) is trusted to know its
- * offset: Lenis applies that margin itself, so the header offset is skipped.
- * Targets marked `data-no-flash` skip the arrival ring (whole sections).
- * `prefers-reduced-motion` gets an instant jump instead of the eased scroll.
  */
 
 import { useCallback, useEffect } from "react";
@@ -34,12 +28,6 @@ import { usePathname } from "next/navigation";
 const FLASH_MS = 1800;
 /** breathing room between the header and the top of the target */
 const GAP = 16;
-
-/** the target's own scroll-margin-top, if it declares one */
-function ownMargin(el: HTMLElement) {
-  const m = Number.parseFloat(getComputedStyle(el).scrollMarginTop);
-  return Number.isFinite(m) && m > 0 ? m : 0;
-}
 
 export default function HashScroll() {
   const lenis = useLenis();
@@ -52,7 +40,6 @@ export default function HashScroll() {
   };
 
   const flash = useCallback((el: HTMLElement) => {
-    if (el.hasAttribute("data-no-flash")) return;
     el.setAttribute("data-flash", "");
     window.setTimeout(() => el.removeAttribute("data-flash"), FLASH_MS);
   }, []);
@@ -68,22 +55,15 @@ export default function HashScroll() {
       }
       if (!el) return false;
 
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const jump = instant || reduce;
-      const margin = ownMargin(el);
-
       if (lenis) {
-        // Lenis subtracts scroll-margin-top on its own; only add the header
-        // offset for targets that don't declare one.
         lenis.scrollTo(el, {
-          offset: margin ? 0 : -headerOffset(),
-          duration: jump ? 0 : 1.15,
-          immediate: jump,
+          offset: -headerOffset(),
+          duration: instant ? 0 : 1.15,
         });
       } else {
-        // Lenis not mounted yet — plain jump still works.
-        const y = el.getBoundingClientRect().top + window.scrollY - (margin || headerOffset());
-        window.scrollTo({ top: y, behavior: jump ? "auto" : "smooth" });
+        // Lenis not mounted yet (or reduced motion) — plain jump still works.
+        const y = el.getBoundingClientRect().top + window.scrollY - headerOffset();
+        window.scrollTo({ top: y, behavior: instant ? "auto" : "smooth" });
       }
 
       flash(el);
@@ -134,8 +114,7 @@ export default function HashScroll() {
       } catch {
         el = document.getElementById(hash.slice(1));
       }
-      if (el && Math.abs(el.getBoundingClientRect().top - (ownMargin(el) || headerOffset())) > 12)
-        goTo(hash);
+      if (el && Math.abs(el.getBoundingClientRect().top - headerOffset()) > 12) goTo(hash);
     }, 1700);
     return () => {
       window.clearTimeout(t1);

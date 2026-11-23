@@ -2,33 +2,28 @@
 
 /**
  * FranchiseTabs — the four franchise.texaschicken.com pages (Why Us,
- * Opportunities, Investment, Support) stacked in order on /franchising, under
- * a sticky section nav. (The file keeps its old name; nothing is tabbed now.)
+ * Opportunities, Investment, Resources) folded into one tabbed dossier so the
+ * whole story fits on /franchising without repeating itself.
  *
  * Behaviour worth knowing about:
- *  - every section is rendered and visible: no hidden panels
- *  - the nav items are plain `<a href="#id">` links. The site-wide HashScroll
- *    provider does the (Lenis) scroll and the replaceState; it honours each
- *    section's scroll-margin-top and prefers-reduced-motion. Deep links such as
- *    /franchising#investment are handled there too.
- *  - scrollspy is an IntersectionObserver band just under the sticky nav; the
- *    active link gets aria-current="true" plus the sliding red pill
- *  - under 768px the nav is a swipeable row of label-only chips, and the
- *    active chip is scrolled into view horizontally
+ *  - the tab bar is sticky under the site nav, with a shared-layout indicator
+ *  - panels crossfade direction-aware (left/right depending on travel)
+ *  - the active tab is mirrored into the URL hash, so #investment is linkable
+ *    from anywhere on the site
+ *  - full ARIA tablist semantics + ←/→/Home/End keyboard support
  */
 
 import BrandArrow from "@/components/ui/BrandArrow";
 import BrandStar from "@/components/ui/BrandStar";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useLenis } from "lenis/react";
 import Button from "@/components/ui/Button";
+import Counter from "@/components/ui/Counter";
 import OpportunityMap from "@/components/sections/OpportunityMap";
 import { franchisePage } from "@/lib/content";
 import { staggerContainer, fadeUp, ease } from "@/lib/motion";
-
-type Tab = (typeof franchisePage.tabs)[number];
-type PanelProps = { tab: Tab };
 
 const TABS = franchisePage.tabs;
 const IDS = TABS.map((t) => t.id);
@@ -36,253 +31,164 @@ const IDS = TABS.map((t) => t.id);
 /** Index-aligned with TABS. */
 const PANELS = [WhyUs, Opportunities, Investment, Support];
 
-/** CTA closing each section. All point at the application form further down. */
-const CTAS = [
-  { label: "Get started", href: "#apply-form" },
-  { label: "Explore open territories", href: "#apply-form" },
-  { label: "Apply now", href: "#apply-form" },
-  { label: "Apply now", href: "#apply-form" },
-];
-
-/**
- * The sticky nav sits under the fixed site header (72px phones, 132px lg).
- * `--frnav-h` is the nav's measured height; the fallbacks match its
- * server-rendered size so the margin is right before the first measurement.
- */
-const SECTION_SCROLL_MARGIN =
-  "scroll-mt-[calc(72px_+_var(--frnav-h,84px))] lg:scroll-mt-[calc(132px_+_var(--frnav-h,100px))]";
-
 /* ------------------------------------------------------------------ shell */
 export default function FranchiseTabs() {
-  const reduce = useReducedMotion();
   const [active, setActive] = useState(0);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const navRef = useRef<HTMLElement>(null);
-  const rowRef = useRef<HTMLUListElement>(null);
-  const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
-  const endRef = useRef<HTMLDivElement>(null);
-  /** section a nav click is travelling to; scrollspy holds still until we arrive */
-  const lockRef = useRef<number | null>(null);
-  const lockTimer = useRef<number | undefined>(undefined);
-  /** re-runs the scrollspy pick (set by the observer effect) */
-  const resyncRef = useRef<() => void>(() => {});
+  const [dir, setDir] = useState(1);
+  const barRef = useRef<HTMLDivElement>(null);
+  const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const panelsRef = useRef<HTMLDivElement>(null);
+  const lenis = useLenis();
 
-  // ---- scrollspy ---------------------------------------------------------
+  // Deep-link in: honour #investment etc. on load and on back/forward.
   useEffect(() => {
-    const nav = navRef.current;
-    const root = rootRef.current;
-    const end = endRef.current;
-    const sections = IDS.map((id) => document.getElementById(id));
-    if (!nav || !root || !end || sections.some((s) => !s)) return;
-
-    const inBand = new Set<number>();
-    let atEnd = false;
-
-    const pick = () => {
-      // The end of the block is on screen: the last section wins even if it is
-      // too short to ever reach the band under the nav.
-      if (atEnd && inBand.has(IDS.length - 1)) return IDS.length - 1;
-      for (let i = 0; i < IDS.length; i++) if (inBand.has(i)) return i;
-      return null;
-    };
-
-    const update = () => {
-      const next = pick();
-      if (next === null) return; // above or below the block: keep the last value
-      if (lockRef.current !== null) {
-        if (next !== lockRef.current) return;
-        lockRef.current = null;
+    const sync = () => {
+      const i = IDS.indexOf(window.location.hash.replace("#", ""));
+      if (i >= 0) {
+        setDir(i > active ? 1 : -1);
+        setActive(i);
       }
+    };
+    sync();
+    window.addEventListener("hashchange", sync);
+    return () => window.removeEventListener("hashchange", sync);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const go = useCallback(
+    (next: number, focus = false) => {
+      setDir(next > active ? 1 : -1);
       setActive(next);
-    };
-    // let a nav click's timeout release the lock and re-sync
-    resyncRef.current = update;
+      // replaceState, not a hash jump — the browser's jump would fight Lenis.
+      window.history.replaceState(null, "", `#${IDS[next]}`);
+      if (focus) btnRefs.current[next]?.focus();
 
-    let bandIO: IntersectionObserver | null = null;
-    const build = () => {
-      bandIO?.disconnect();
-      inBand.clear();
-      // `--frnav-h` feeds the sections' scroll-margin-top (no layout impact)
-      root.style.setProperty("--frnav-h", `${nav.offsetHeight}px`);
-      // Band: from the nav's bottom edge (when stuck) down 40% of what's left.
-      const line = (Number.parseFloat(getComputedStyle(nav).top) || 0) + nav.offsetHeight;
-      const vh = window.innerHeight;
-      const band = Math.max(24, (vh - line) * 0.4);
-      const bottom = Math.max(0, vh - line - band);
-      bandIO = new IntersectionObserver(
-        (entries) => {
-          for (const e of entries) {
-            const i = sections.indexOf(e.target as HTMLElement);
-            if (e.isIntersecting) inBand.add(i);
-            else inBand.delete(i);
-          }
-          update();
-        },
-        { rootMargin: `-${Math.round(line)}px 0px -${Math.round(bottom)}px 0px` },
-      );
-      sections.forEach((s) => bandIO!.observe(s!));
-    };
+      // Picked a tab while scrolled down into the content: bring the start of
+      // the new panel back up, just under the sticky tab bar. (Nothing above
+      // the panels changes on a switch, so their top can be measured now.)
+      const bar = barRef.current;
+      const panels = panelsRef.current;
+      if (!bar || !panels) return;
+      const barBottom = bar.getBoundingClientRect().bottom;
+      const panelsTop = panels.getBoundingClientRect().top;
+      if (panelsTop >= barBottom - 1) return; // already at (or above) the start
+      const y = window.scrollY + panelsTop - barBottom;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (lenis) lenis.scrollTo(y, { duration: reduce ? 0 : 0.9, immediate: reduce });
+      else window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
+    },
+    [active, lenis],
+  );
 
-    const endIO = new IntersectionObserver(([e]) => {
-      atEnd = e.isIntersecting;
-      update();
-    });
-    endIO.observe(end);
-
-    build();
-    // Rebuild when the band moves: viewport resize, or the nav changing height
-    // (breakpoint, font load).
-    let raf = 0;
-    const rebuild = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(build);
-    };
-    const ro = new ResizeObserver(rebuild);
-    ro.observe(nav);
-    window.addEventListener("resize", rebuild);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      bandIO?.disconnect();
-      endIO.disconnect();
-      ro.disconnect();
-      window.removeEventListener("resize", rebuild);
-      window.clearTimeout(lockTimer.current);
-    };
-  }, []);
-
-  // ---- nav click -----------------------------------------------------------
-  // HashScroll (document listener) does the scroll + replaceState; here we only
-  // light the target immediately, hold the scrollspy while the page travels
-  // past the sections in between, and move focus like a native anchor would.
-  const onPick = useCallback((i: number) => {
-    setActive(i);
-    lockRef.current = i;
-    window.clearTimeout(lockTimer.current);
-    lockTimer.current = window.setTimeout(() => {
-      lockRef.current = null;
-      resyncRef.current();
-    }, 1600);
-    document.getElementById(IDS[i])?.focus({ preventScroll: true });
-  }, []);
-
-  // ---- keep the active chip in view in the (phone) scrolling row -----------
-  useEffect(() => {
-    const row = rowRef.current;
-    const link = linkRefs.current[active];
-    if (!row || !link || row.scrollWidth <= row.clientWidth) return;
-    const li = link.parentElement as HTMLElement;
-    const left = li.offsetLeft - (row.clientWidth - li.offsetWidth) / 2;
-    row.scrollTo({ left: Math.max(0, left), behavior: reduce ? "auto" : "smooth" });
-  }, [active, reduce]);
+  const onKey = (e: React.KeyboardEvent) => {
+    const last = TABS.length - 1;
+    if (e.key === "ArrowRight") { e.preventDefault(); go(active === last ? 0 : active + 1, true); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); go(active === 0 ? last : active - 1, true); }
+    if (e.key === "Home") { e.preventDefault(); go(0, true); }
+    if (e.key === "End") { e.preventDefault(); go(last, true); }
+  };
 
   return (
-    <div ref={rootRef} className="bg-cream-200 pb-10 md:pb-14">
-      {/* ---- sticky section nav ----------------------------------------- */}
-      {/* The band echoes the site nav rather than bleeding edge to edge: same
+    <section className="bg-cream-200 pb-10 md:pb-14">
+      {/* ---- sticky tab bar ------------------------------------------- */}
+      {/* The band echoes the nav rather than bleeding edge to edge: same
           1150px / px-8 box the desktop header uses, floating on the section. */}
-      <nav
-        ref={navRef}
-        aria-label="Franchising sections"
-        className="sticky top-[72px] z-30 py-3 lg:top-[132px]"
-      >
+      <div ref={barRef} className="sticky top-[72px] z-30 py-3 lg:top-[132px]">
         <div className="mx-auto flex w-full max-w-[1150px] justify-center px-5 lg:px-8">
-          <ul
-            ref={rowRef}
-            className="flex max-w-full gap-1 overflow-x-auto overscroll-x-contain rounded-full border border-ink/10 bg-paper/90 p-2 shadow-soft3 backdrop-blur-md [scrollbar-width:none] md:gap-2 [&::-webkit-scrollbar]:hidden"
+          <div
+            role="tablist"
+            aria-label="Franchise information"
+            onKeyDown={onKey}
+            className="inline-flex max-w-full gap-1 overflow-x-auto rounded-full border border-ink/10 bg-paper/90 p-2 shadow-soft3 backdrop-blur-md [scrollbar-width:none] md:gap-2 [&::-webkit-scrollbar]:hidden"
           >
             {TABS.map((t, i) => {
               const on = i === active;
               return (
-                <li key={t.id} className="shrink-0">
-                  <a
-                    ref={(el) => {
-                      linkRefs.current[i] = el;
-                    }}
-                    href={`#${t.id}`}
-                    aria-current={on ? "true" : undefined}
-                    onClick={(e) => {
-                      // modified clicks (new tab etc.) are left to the browser
-                      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-                      onPick(i);
-                    }}
-                    data-cursor="link"
-                    className="relative flex min-h-11 items-center rounded-full px-4 py-2 text-left transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tex-red md:px-7 md:py-3"
-                  >
-                    {on && (
-                      <motion.span
-                        layoutId="fr-tab"
-                        transition={
-                          reduce ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 32 }
-                        }
-                        className="absolute inset-0 rounded-full bg-tex-red"
-                      />
-                    )}
-                    <span className="relative block">
-                      <span
-                        className={`block whitespace-nowrap text-sm font-extrabold uppercase tracking-caps ${
-                          on ? "text-cream" : "text-ink"
-                        }`}
-                      >
-                        {t.label}
-                      </span>
-                      <span
-                        className={`hidden text-[0.68rem] font-semibold ${
-                          on ? "text-cream/70" : "text-ink-400"
-                        } md:block`}
-                      >
-                        {t.blurb}
-                      </span>
+                <button
+                  key={t.id}
+                  ref={(el) => { btnRefs.current[i] = el; }}
+                  role="tab"
+                  id={`tab-${t.id}`}
+                  aria-selected={on}
+                  aria-controls={`panel-${t.id}`}
+                  tabIndex={on ? 0 : -1}
+                  onClick={() => go(i)}
+                  data-cursor="link"
+                  className="relative shrink-0 rounded-full px-5 py-3 text-left transition-colors duration-300 md:px-7"
+                >
+                  {on && (
+                    <motion.span
+                      layoutId="fr-tab"
+                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                      className="absolute inset-0 rounded-full bg-tex-red"
+                    />
+                  )}
+                  <span className="relative block">
+                    <span
+                      className={`block text-sm font-extrabold uppercase tracking-caps ${
+                        on ? "text-cream" : "text-ink"
+                      }`}
+                    >
+                      {t.label}
                     </span>
-                  </a>
-                </li>
+                    <span
+                      className={`hidden text-[0.68rem] font-semibold ${
+                        on ? "text-cream/70" : "text-ink-400"
+                      } md:block`}
+                    >
+                      {t.blurb}
+                    </span>
+                  </span>
+                </button>
               );
             })}
-          </ul>
+          </div>
         </div>
-      </nav>
-
-      {/* ---- the four sections, in order ----------------------------------
-          tabIndex -1 so a nav click can hand focus to the section (as a native
-          anchor jump would) without making sections Tab stops. */}
-      <div className="container-tx">
-        {PANELS.map((Panel, i) => {
-          const t = TABS[i];
-          return (
-            <section
-              key={t.id}
-              id={t.id}
-              aria-labelledby={`${t.id}-label`}
-              tabIndex={-1}
-              data-no-flash
-              className={`${SECTION_SCROLL_MARGIN} outline-none ${
-                i === 0 ? "pt-16 md:pt-20" : "mt-20 border-t border-ink/10 pt-20 md:mt-28 md:pt-28"
-              }`}
-            >
-              <Panel tab={t} />
-              <div className="mt-12 flex md:mt-14">
-                <Button href={CTAS[i].href} variant="red">
-                  {CTAS[i].label}
-                  <BrandArrow />
-                </Button>
-              </div>
-            </section>
-          );
-        })}
-        {/* marks the end of the block for the scrollspy (see `atEnd`) */}
-        <div ref={endRef} aria-hidden className="h-px" />
       </div>
-    </div>
+
+      {/* ---- panels -----------------------------------------------------
+          All four stay MOUNTED and are hidden with the `hidden` attribute
+          rather than being conditionally rendered. That is the canonical ARIA
+          tabpanel pattern, and it keeps every figure (investment costs above
+          all) in the server-rendered HTML, so the content stays indexable and
+          findable with Ctrl+F instead of existing only after a click.
+          The inner wrapper is re-keyed on activation so the panel still plays
+          its direction-aware entry animation. */}
+      <div ref={panelsRef} className="container-tx pt-16 md:pt-20">
+        {PANELS.map((Panel, i) => (
+          <div
+            key={TABS[i].id}
+            role="tabpanel"
+            id={`panel-${TABS[i].id}`}
+            aria-labelledby={`tab-${TABS[i].id}`}
+            hidden={i !== active}
+          >
+            {i === active ? (
+              <motion.div
+                key={`${TABS[i].id}-${dir}`}
+                initial={{ opacity: 0, x: dir * 36 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.42, ease: ease.out }}
+              >
+                <Panel />
+              </motion.div>
+            ) : (
+              <Panel />
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
-/* -------------------------------------------------------------- section 1 */
-function WhyUs({ tab }: PanelProps) {
+/* -------------------------------------------------------------- panel 1 */
+function WhyUs() {
   const { whyUs } = franchisePage;
   return (
     <div className="grid gap-14 lg:grid-cols-[1.1fr_0.9fr]">
       <div>
-        <PanelHeading tab={tab} eyebrow="Why us" heading={whyUs.heading} />
+        <PanelHeading eyebrow="Why us" heading={whyUs.heading} />
         {whyUs.points.map((p) => (
           <motion.p
             key={p.k}
@@ -346,9 +252,6 @@ function OpeningsSlider() {
   const slides = franchisePage.whyUs.openings;
   const count = slides.length;
   const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  // the section is always on the page now, so only autoplay while it is seen
-  const onScreen = useInView(ref, { amount: 0.25 });
   const [index, setIndex] = useState(0);
   const [dir, setDir] = useState(1);
   const [paused, setPaused] = useState(false);
@@ -361,18 +264,17 @@ function OpeningsSlider() {
     [count]
   );
 
-  // Gentle autoplay; pauses on hover/focus, off screen, and when the visitor prefers reduced motion.
+  // Gentle autoplay; pauses on hover/focus and when the visitor prefers reduced motion.
   useEffect(() => {
-    if (reduce || paused || !onScreen) return;
+    if (reduce || paused) return;
     const t = window.setTimeout(() => go(index + 1, 1), AUTOPLAY_MS);
     return () => window.clearTimeout(t);
-  }, [index, paused, reduce, onScreen, go]);
+  }, [index, paused, reduce, go]);
 
   const slide = slides[index];
 
   return (
     <motion.div
-      ref={ref}
       variants={fadeUp}
       initial="hidden"
       whileInView="show"
@@ -463,15 +365,15 @@ function OpeningsSlider() {
   );
 }
 
-/* -------------------------------------------------------------- section 2 */
-function Opportunities({ tab }: PanelProps) {
+/* -------------------------------------------------------------- panel 2 */
+function Opportunities() {
   const { opportunities } = franchisePage;
   return (
     <div>
       {/* Intro + the US note side by side, so the right of the heading isn't empty */}
       <div className="grid items-end gap-8 lg:grid-cols-[1.25fr_0.75fr] lg:gap-12">
         <div>
-          <PanelHeading tab={tab} eyebrow="Global opportunities" heading={opportunities.heading} />
+          <PanelHeading eyebrow="Global opportunities" heading={opportunities.heading} />
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-600 md:text-lg">
             {opportunities.body}
           </p>
@@ -503,39 +405,21 @@ function Opportunities({ tab }: PanelProps) {
   );
 }
 
-/* -------------------------------------------------------------- section 3 */
+/* -------------------------------------------------------------- panel 3 */
 const money = (n: number) => `US$${n.toLocaleString("en-US")}`;
+/** cost lines visible before "show all" — keeps the card roughly one screen */
+const LINES_SHOWN = 6;
 
-type ModelId = (typeof franchisePage.investment.models)[number]["id"];
-
-/**
- * Totals are SUMMED from the line items (null = not applicable = 0) instead of
- * being typed in next to them, so the headline figure can never drift from the
- * breakdown. Computed at module level: identical on server and client.
- */
-const MODEL_TOTALS = Object.fromEntries(
-  franchisePage.investment.models.map((m) => [
-    m.id,
-    franchisePage.investment.lines.reduce((sum, l) => sum + (l[m.id] ?? 0), 0),
-  ]),
-) as Record<ModelId, number>;
-const TOTAL_LOW = Math.min(...Object.values(MODEL_TOTALS));
-const TOTAL_HIGH = Math.max(...Object.values(MODEL_TOTALS));
-
-function Investment({ tab }: PanelProps) {
+function Investment() {
   const { investment } = franchisePage;
-  const reduce = useReducedMotion();
-  const [model, setModel] = useState<ModelId>("avg");
-  const [showLines, setShowLines] = useState(false);
+  const [model, setModel] = useState<"low" | "avg" | "high">("avg");
+  const [showAllLines, setShowAllLines] = useState(false);
   const current = investment.models.find((m) => m.id === model)!;
-  const total = MODEL_TOTALS[model];
   const peak = Math.max(...investment.lines.map((l) => l[model] ?? 0));
-  const lowTier = investment.models.find((m) => MODEL_TOTALS[m.id] === TOTAL_LOW)!.tier;
-  const highTier = investment.models.find((m) => MODEL_TOTALS[m.id] === TOTAL_HIGH)!.tier;
 
   return (
     <div>
-      <PanelHeading tab={tab} eyebrow="Investment" heading={investment.profileHeading} />
+      <PanelHeading eyebrow="Investment" heading={investment.profileHeading} />
 
       <motion.div
         variants={staggerContainer(0.08)}
@@ -559,7 +443,7 @@ function Investment({ tab }: PanelProps) {
         ))}
       </motion.div>
 
-      {/* commercial terms + the all-in range, both visible without expanding */}
+      {/* commercial terms */}
       <h3 className="display mt-16 text-2xl uppercase text-ink md:text-3xl">
         {investment.termsHeading}
       </h3>
@@ -587,23 +471,11 @@ function Investment({ tab }: PanelProps) {
             </dd>
           </motion.div>
         ))}
-        <motion.div
-          variants={fadeUp}
-          className="rounded-2xl bg-ink px-6 py-5 sm:col-span-2 lg:col-span-3 lg:flex lg:items-baseline lg:justify-between lg:gap-6"
-        >
-          <dt className="text-xs font-bold uppercase tracking-caps text-cream/60">Total investment</dt>
-          <dd className="display mt-1 text-2xl text-tex-yellow md:text-3xl lg:mt-0">
-            {money(TOTAL_LOW)} – {money(TOTAL_HIGH)}
-            <span className="ml-2 align-middle text-xs font-bold uppercase tracking-caps text-cream/60">
-              {lowTier} – {highTier}
-            </span>
-          </dd>
-        </motion.div>
       </motion.dl>
 
-      {/* build-model switcher + total, with the line items behind a toggle */}
+      {/* build-model switcher + chart */}
       <div className="mt-16 overflow-hidden rounded-[1.75rem] border border-ink/10 bg-paper shadow-soft3">
-        <div className="flex flex-col gap-6 p-8 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-6 border-b border-ink/10 p-8 md:flex-row md:items-end md:justify-between">
           <div>
             <span className="eyebrow text-tex-red"><BrandStar /> Estimated investment</span>
             <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Build model">
@@ -616,12 +488,12 @@ function Investment({ tab }: PanelProps) {
                     onClick={() => setModel(m.id)}
                     aria-pressed={on}
                     data-cursor="link"
-                    className="relative min-h-11 rounded-full px-5 py-2.5 text-xs font-extrabold uppercase tracking-caps transition-colors duration-300"
+                    className="relative rounded-full px-5 py-2.5 text-xs font-extrabold uppercase tracking-caps transition-colors duration-300"
                   >
                     {on && (
                       <motion.span
                         layoutId="fr-model"
-                        transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 32 }}
+                        transition={{ type: "spring", stiffness: 380, damping: 32 }}
                         className="absolute inset-0 rounded-full bg-ink"
                       />
                     )}
@@ -638,88 +510,81 @@ function Investment({ tab }: PanelProps) {
             <p className="mt-3 text-sm text-ink-600">{current.name}</p>
           </div>
 
-          <div className="text-left md:text-right" aria-live="polite">
+          <div className="text-left md:text-right">
             <span className="text-xs font-bold uppercase tracking-caps text-ink-400">
               Total investment
             </span>
-            {/* Plain server-rendered figure (no count-up from 0); only a model
-                switch animates. tabular-nums keeps the width steady. */}
-            <div className="display text-4xl tabular-nums text-tex-red md:text-5xl">
-              <AnimatePresence initial={false} mode="wait">
-                <motion.span
-                  key={model}
-                  className="inline-block"
-                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
-                  transition={{ duration: reduce ? 0 : 0.22, ease: ease.out }}
-                >
-                  {money(total)}
-                </motion.span>
-              </AnimatePresence>
+            <div className="display text-4xl text-tex-red md:text-5xl">
+              {/* re-keyed so the counter re-runs when the model changes */}
+              <span key={model}>
+                US$<Counter value={current.total} />
+              </span>
             </div>
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setShowLines((s) => !s)}
-          aria-expanded={showLines}
-          aria-controls="investment-breakdown"
-          data-cursor="link"
-          className="flex min-h-11 w-full items-center justify-center gap-2 border-t border-ink/10 px-8 py-3.5 text-xs font-extrabold uppercase tracking-caps text-tex-red transition-colors hover:bg-cream focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-tex-red"
+        {/* Line items. Seventeen of these stacked label-over-bar ran well over a
+            screen, so the bar now sits inline between label and figure and the
+            list is clamped to a few rows until asked.
+            Clamped with max-height, NOT by slicing the array: every figure has
+            to stay in the server-rendered HTML for the same reason the panels
+            all stay mounted. */}
+        <div
+          className={`relative ${showAllLines ? "" : "max-h-[15.5rem] overflow-hidden"}`}
         >
-          {showLines ? "Hide full breakdown" : "View full breakdown"}
-          <span aria-hidden className={`transition-transform duration-300 ${showLines ? "rotate-180" : ""}`}>
-            <BrandArrow dir="down" />
-          </span>
-        </button>
-
-        {/* Collapsed to height 0 rather than unmounted, so every figure stays in
-            the server-rendered HTML; `inert` keeps it out of the a11y tree and
-            tab order while shut. */}
-        <motion.div
-          id="investment-breakdown"
-          initial={false}
-          animate={{ height: showLines ? "auto" : 0 }}
-          transition={{ duration: reduce ? 0 : 0.45, ease: ease.out }}
-          className="overflow-hidden"
-          inert={!showLines}
-        >
-          <ul className="divide-y divide-ink/10 border-t border-ink/10">
-            {investment.lines.map((l) => {
-              const v = l[model];
-              return (
-                <li
-                  key={l.label}
-                  className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-6 py-2.5 md:grid-cols-[minmax(0,1.5fr)_minmax(80px,1fr)_auto] md:gap-6 md:px-8"
+        <ul className="divide-y divide-ink/10">
+          {investment.lines.map((l) => {
+            const v = l[model];
+            return (
+              <li
+                key={l.label}
+                className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-6 py-2.5 md:grid-cols-[minmax(0,1.5fr)_minmax(80px,1fr)_auto] md:gap-6 md:px-8"
+              >
+                <span className="truncate text-sm text-ink">{l.label}</span>
+                {/* the bar is a nicety — on a phone the figure is what matters */}
+                <div className="hidden h-1 w-full overflow-hidden rounded-full bg-ink/[0.07] md:block">
+                  <motion.span
+                    className="block h-full rounded-full bg-tex-yellow"
+                    initial={false}
+                    animate={{ width: v ? `${(v / peak) * 100}%` : "0%" }}
+                    transition={{ duration: 0.5, ease: ease.out }}
+                  />
+                </div>
+                <span
+                  className={`shrink-0 text-sm font-bold tabular-nums ${
+                    v ? "text-ink" : "text-ink-400"
+                  }`}
                 >
-                  <span className="text-sm text-ink">{l.label}</span>
-                  {/* the bar is a nicety — on a phone the figure is what matters */}
-                  <div className="hidden h-1 w-full overflow-hidden rounded-full bg-ink/[0.07] md:block">
-                    <motion.span
-                      className="block h-full rounded-full bg-tex-yellow"
-                      initial={false}
-                      animate={{ width: v ? `${(v / peak) * 100}%` : "0%" }}
-                      transition={{ duration: reduce ? 0 : 0.5, ease: ease.out }}
-                    />
-                  </div>
-                  <span
-                    className={`shrink-0 text-sm font-bold tabular-nums ${
-                      v ? "text-ink" : "text-ink-400"
-                    }`}
-                  >
-                    {v ? money(v) : "N/A"}
-                  </span>
-                </li>
-              );
-            })}
-            <li className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 bg-cream px-6 py-3.5 md:px-8">
-              <span className="text-sm font-extrabold uppercase tracking-caps text-ink">Total investment</span>
-              <span className="text-sm font-extrabold tabular-nums text-tex-red">{money(total)}</span>
-            </li>
-          </ul>
-        </motion.div>
+                  {v ? money(v) : "N/A"}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+          {!showAllLines && (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-0 block h-14 bg-gradient-to-t from-paper to-transparent"
+            />
+          )}
+        </div>
+
+        {investment.lines.length > LINES_SHOWN && (
+          <button
+            type="button"
+            onClick={() => setShowAllLines((s) => !s)}
+            aria-expanded={showAllLines}
+            data-cursor="link"
+            className="flex w-full items-center justify-center gap-2 border-t border-ink/10 px-8 py-3.5 text-xs font-extrabold uppercase tracking-caps text-tex-red transition-colors hover:bg-cream"
+          >
+            {showAllLines
+              ? "Show fewer"
+              : `Show all ${investment.lines.length} line items`}
+            <span aria-hidden className={showAllLines ? "rotate-180" : ""}>
+              <BrandArrow dir="down" />
+            </span>
+          </button>
+        )}
 
         <p className="border-t border-ink/10 bg-cream px-8 py-4 text-xs leading-relaxed text-ink-600">
           {investment.disclaimer}
@@ -729,96 +594,86 @@ function Investment({ tab }: PanelProps) {
   );
 }
 
-/* -------------------------------------------------------------- section 4 */
-function Support({ tab }: PanelProps) {
+/* -------------------------------------------------------------- panel 4 */
+function Support() {
   const { resources } = franchisePage;
-  // Phones only: each card's bullets fold into an accordion (first one open).
-  // From md up the bullets are always shown and the toggle is not rendered.
-  const [open, setOpen] = useState<Set<string>>(() => new Set([resources.pillars[0].id]));
-  const toggle = (id: string) =>
-    setOpen((s) => {
-      const n = new Set(s);
-      if (n.has(id)) n.delete(id);
-      else n.add(id);
-      return n;
-    });
+  const [open, setOpen] = useState(resources.pillars[0].id);
 
   return (
     <div>
-      <PanelHeading tab={tab} eyebrow="Support" heading={resources.heading} />
+      <PanelHeading eyebrow="Support" heading={resources.heading} />
       <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-600 md:text-lg">
         {resources.body}
       </p>
 
-      <div className="mt-12 grid gap-4 md:grid-cols-2 md:gap-5">
+      <div className="mt-12 flex flex-col gap-4">
         {resources.pillars.map((p, i) => {
-          const on = open.has(p.id);
-          const titleId = `pillar-${p.id}-title`;
-          const bodyId = `pillar-${p.id}`;
+          const on = p.id === open;
           return (
-            <article
+            <div
               key={p.id}
-              aria-labelledby={titleId}
-              className="overflow-hidden rounded-[1.75rem] border border-ink/10 bg-paper shadow-soft3"
+              className={`overflow-hidden rounded-[1.75rem] border bg-paper transition-colors duration-300 ${
+                on ? "border-tex-red" : "border-ink/10"
+              }`}
             >
-              <div className="flex items-start gap-5 p-7 md:p-8">
+              <button
+                type="button"
+                onClick={() => setOpen(on ? "" : p.id)}
+                aria-expanded={on}
+                aria-controls={`pillar-${p.id}`}
+                data-cursor="link"
+                className="flex w-full items-start gap-5 p-7 text-left md:p-8"
+              >
                 <span className="display shrink-0 text-2xl text-tex-yellow">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <div className="min-w-0 flex-1">
-                  <h3 id={titleId} className="display text-xl uppercase text-ink md:text-2xl">
+                <span className="min-w-0 flex-1">
+                  <span className="display block text-xl uppercase text-ink md:text-2xl">
                     {p.title}
-                  </h3>
-                  <p className="mt-1 text-sm leading-relaxed text-ink-600">{p.summary}</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => toggle(p.id)}
-                  aria-expanded={on}
-                  aria-controls={bodyId}
-                  aria-labelledby={titleId}
-                  data-cursor="link"
-                  className="-mr-1 -mt-1 grid size-11 shrink-0 place-items-center rounded-full border border-ink/15 text-lg text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-tex-red md:hidden"
-                >
-                  <span
-                    aria-hidden
-                    className={`transition-transform duration-300 ${on ? "rotate-45" : ""}`}
-                  >
-                    +
                   </span>
-                </button>
-              </div>
+                  <span className="mt-1 block text-sm leading-relaxed text-ink-600">
+                    {p.summary}
+                  </span>
+                </span>
+                <motion.span
+                  aria-hidden
+                  animate={{ rotate: on ? 45 : 0 }}
+                  transition={{ duration: 0.3, ease: ease.out }}
+                  className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-ink/15 text-lg text-ink"
+                >
+                  +
+                </motion.span>
+              </button>
 
-              {/* grid-rows 0fr→1fr animates to the content's height in CSS only;
-                  `invisible` (transitioned, so it flips after the close) keeps the
-                  folded bullets out of the a11y tree. Always open from md up. */}
-              <div
-                id={bodyId}
-                className={`grid transition-[grid-template-rows,visibility] duration-300 ease-out md:visible md:grid-rows-[1fr] ${
-                  on ? "visible grid-rows-[1fr]" : "invisible grid-rows-[0fr]"
-                }`}
+              {/* Body stays mounted and collapses to height 0 rather than
+                  unmounting, so every support detail is in the HTML even while
+                  the pillar is shut. */}
+              <motion.div
+                id={`pillar-${p.id}`}
+                initial={false}
+                animate={{ height: on ? "auto" : 0, opacity: on ? 1 : 0 }}
+                transition={{ duration: 0.4, ease: ease.out }}
+                className="overflow-hidden"
               >
-                <div className="min-h-0 overflow-hidden">
-                  <div className="grid gap-8 border-t border-ink/10 p-7 sm:grid-cols-2 md:p-8">
-                    {p.groups.map((g) => (
-                      <div key={g.title}>
-                        <h4 className="text-xs font-bold uppercase tracking-caps text-tex-red">
-                          {g.title}
-                        </h4>
-                        <ul className="mt-4 flex flex-col gap-2.5">
-                          {g.items.map((it) => (
-                            <li key={it} className="flex gap-3 text-sm leading-relaxed text-ink-600">
-                              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-tex-yellow" />
-                              {it}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </article>
+                    <div className="grid gap-8 border-t border-ink/10 p-7 md:grid-cols-3 md:p-8">
+                      {p.groups.map((g) => (
+                        <div key={g.title}>
+                          <h4 className="text-xs font-bold uppercase tracking-caps text-tex-red">
+                            {g.title}
+                          </h4>
+                          <ul className="mt-4 flex flex-col gap-2.5">
+                            {g.items.map((it) => (
+                              <li key={it} className="flex gap-3 text-sm leading-relaxed text-ink-600">
+                                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-tex-yellow" />
+                                {it}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+              </motion.div>
+            </div>
           );
         })}
       </div>
@@ -827,25 +682,18 @@ function Support({ tab }: PanelProps) {
 }
 
 /* ---------------------------------------------------------------- shared */
-/**
- * Section heading: the nav's label line (eyebrow + the nav subtitle) and the
- * section's h2. The eyebrow carries the id the <section> is labelled by.
- */
-function PanelHeading({ tab, eyebrow, heading }: { tab: Tab; eyebrow: string; heading: string }) {
+function PanelHeading({ eyebrow, heading }: { eyebrow: string; heading: string }) {
   return (
     <div>
-      <motion.p
+      <motion.span
         variants={fadeUp}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: "some" }}
-        className="flex flex-wrap items-center gap-x-3 gap-y-1"
+        className="eyebrow text-tex-red"
       >
-        <span id={`${tab.id}-label`} className="eyebrow text-tex-red">
-          <BrandStar /> {eyebrow}
-        </span>
-        <span className="text-sm font-semibold text-ink-400">{tab.blurb}</span>
-      </motion.p>
+        <BrandStar /> {eyebrow}
+      </motion.span>
       <motion.h2
         variants={fadeUp}
         initial="hidden"

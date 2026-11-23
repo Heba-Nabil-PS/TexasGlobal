@@ -4,7 +4,7 @@ import BrandArrow from "@/components/ui/BrandArrow";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { footer, brand } from "@/lib/content";
 import type { ComponentType } from "react";
 
@@ -93,15 +93,20 @@ const digitalOffers = [
   {
     title: "Rewards",
     desc: "Earn points on your orders and swap them for free favourites and members-only treats.",
-    icon: <path d="M12 2.5l2.94 5.96 6.58.96-4.76 4.64 1.12 6.55L12 17.52l-5.88 3.09 1.12-6.55L2.48 9.42l6.58-.96L12 2.5z" fill="currentColor" />,
+    icon: (
+      <path
+        d="M12 2.8l2.75 5.57 6.15.9-4.45 4.33 1.05 6.12L12 16.83l-5.5 2.89 1.05-6.12L3.1 9.27l6.15-.9L12 2.8z"
+        fill="currentColor"
+      />
+    ),
   },
   {
     title: "The Texas Chicken app",
     desc: "Order ahead, pay in-app, unlock app-only deals and find your nearest restaurant.",
     icon: (
       <>
-        <rect x="6" y="2" width="12" height="20" rx="2.5" fill="none" stroke="currentColor" strokeWidth={2} />
-        <path d="M10.5 18.5h3" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
+        <rect x="6.75" y="2.5" width="10.5" height="19" rx="2.75" />
+        <path d="M10.75 18.25h2.5" />
       </>
     ),
   },
@@ -110,15 +115,17 @@ const digitalOffers = [
     desc: "Order on the web for pick-up or delivery, cooked fresh and ready when you are.",
     icon: (
       <>
-        <path d="M3 4h2.2l2.1 10.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L21 8H6.3" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-        <circle cx="9.5" cy="19.5" r="1.5" fill="currentColor" />
-        <circle cx="17" cy="19.5" r="1.5" fill="currentColor" />
+        <path d="M2.75 4h2.4l2.2 10.05a1.5 1.5 0 0 0 1.47 1.2h8.53a1.5 1.5 0 0 0 1.45-1.12L20.75 8H6.1" />
+        <path d="M10 11.5h7.5" />
+        <circle cx="9.5" cy="19.5" r="1.6" fill="currentColor" stroke="none" />
+        <circle cx="17" cy="19.5" r="1.6" fill="currentColor" stroke="none" />
       </>
     ),
   },
 ];
 
 function AppRewardsBand() {
+  const reduceMotion = useReducedMotion();
   return (
     <div className="relative overflow-hidden bg-secondary text-third">
       <div className="mx-auto max-w-7xl px-6 py-12 md:py-14 lg:px-8">
@@ -140,10 +147,23 @@ function AppRewardsBand() {
               transition={{ duration: 0.6, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
               className="flex items-start gap-4 rounded-2xl bg-third p-5 text-white md:p-6"
             >
-              <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-secondary text-third">
-                <svg viewBox="0 0 24 24" className="size-6" aria-hidden>
+              {/* Vector icon (crisp at any size/DPR) with a gentle looping pop,
+                  staggered per card. No ring/border — just the yellow disc. */}
+              <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-secondary text-third md:size-16">
+                <motion.svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.25}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-7 md:size-8"
+                  aria-hidden
+                  animate={reduceMotion ? undefined : { scale: [1, 1.14, 0.96, 1], rotate: [0, -8, 4, 0] }}
+                  transition={{ duration: 0.9, ease: "easeInOut", repeat: Infinity, repeatDelay: 2.4, delay: 0.6 + i * 0.35 }}
+                >
                   {o.icon}
-                </svg>
+                </motion.svg>
               </span>
               <div>
                 <h3 className="text-lg font-extrabold uppercase leading-tight tracking-wide">{o.title}</h3>
