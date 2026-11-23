@@ -7,8 +7,8 @@ export const franchiseV2 = {
   hero: {
     // Copy from the franchise.texaschicken.com homepage hero.
     eyebrow: "Bold, Texas flavor",
-    title: ["Let's bring the", "legendary taste", "of Texas to", "the [world]!"],
-    body: "Want to join the Texas Way? Get cooking. Open a Texas Chicken™ or Church's Texas Chicken™ restaurant near you.",
+    title: ["Bring Texas", "to the [world]!"],
+    body: "Open a Texas Chicken™ or Church's Texas Chicken™ restaurant near you.",
     primary: { label: "Get started", href: "#apply-form" },
     secondary: { label: "See the investment", href: "#investment" },
   },
