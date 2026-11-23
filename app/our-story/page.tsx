@@ -36,7 +36,7 @@ export default function StoryPage() {
         eyebrow="Be part of the story"
         heading="70 years in."
         accent="Just getting warmed up."
-        body="Taste the recipe that started it all, or help us write the next chapter in your market."
+        body="Taste the original recipe that started it all in 1952, or help us write the next chapter of the Church's Texas Chicken story in your market."
         primary={{ label: "Explore the menu", href: "/menu" }}
         tone="ink"
         video="/assets/home/hero-reference.mp4"

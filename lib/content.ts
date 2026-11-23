@@ -76,7 +76,7 @@ export const about = {
   image: "/assets/home-tray.png",
   video: "/assets/built-standards.webm",
   cta: {
-    primary: { label: "Know more about the journey", href: "/our-story" },
+    primary: { label: "Know more about our journey", href: "/our-story" },
   },
 };
 
@@ -483,7 +483,7 @@ export const storyPage = {
   leadership: {
     eyebrow: "Leadership team",
     heading: "Operators first. Brand-builders always.",
-    body: "Seventy-two years of craft doesn't run itself. Meet the leaders steering Church's Texas Chicken across 25+ markets, and keeping every piece hand-battered and cooked fresh.",
+    body: "Seventy-two years of Church's Chicken history have shaped the standards behind the brand. Meet the leaders steering Church's Texas Chicken across 25+ markets, carrying forward its Texas heritage and commitment to quality, hand-battered chicken and fresh preparation.",
     cta: "Join us",
     ctaHref: "/careers",
   },
@@ -502,12 +502,12 @@ export const storyPage = {
       {
         titleImage: "/assets/story/mission-title.webp",
         alt: "Our Mission",
-        body: "To serve authentic, bold, crispy fried chicken cooked fresh in small batches, guided by clear standards, real kitchen discipline, and consistent execution that guests can trust in every market we serve.",
+        body: "To serve authentic, bold, crispy fried chicken, prepared using the Church's Chicken original recipe, hand-battered and cooked fresh in small batches, with consistent standards guests can count on across every market.",
       },
       {
         titleImage: "/assets/story/vision-title.webp",
         alt: "Our Vision",
-        body: "To lead the fried chicken category as the most culturally magnetic Texas brand, built on strong standards, real preparation, and consistent experiences people choose and return to across all markets.",
+        body: "To lead the fried chicken category as a globally recognised Texas brand, carrying forward the heritage behind the Church's Texas Chicken story through strong standards, real preparation, and memorable experiences across all markets.",
       },
     ],
   },
@@ -525,7 +525,7 @@ export const storyPage = {
       year: "1952",
       title: "The first stand",
       place: "San Antonio, Texas",
-      desc: "George W. Church opens a walk-up stand across from the Alamo: crispy fried chicken, hand-battered and cooked fresh to order. Two pieces, a roll and jalapeños.",
+      desc: "Church's Chicken founder George W. Church opens a walk-up stand across from the Alamo, marking the beginning of Church's Chicken history with crispy fried chicken, hand-battered and cooked fresh to order. Two pieces, a roll and jalapeños.",
       image: "/assets/story/timeline/1952-first-stand.webp",
       inset: { image: "/assets/story/timeline/1952-george-church.webp", caption: "George W. Church Sr., founder" },
     },
@@ -786,9 +786,11 @@ export const franchisePage = {
 
   whyUs: {
     heading: "Munch into the crunch.",
-    body: [
-      "One recipe, hand-battered and fried fresh, has carried this brand from a single San Antonio stand to restaurants on four continents. It travels because the product is genuinely craveable and the operating model is proven.",
-      "Two names, one kitchen: Texas Chicken across the Middle East, Asia-Pacific and Europe; Church's Texas Chicken across the Americas and the Caribbean.",
+    /** From franchise.texaschicken.com/whyus. */
+    points: [
+      { k: "Origin of the Name:", v: "We have been cooking up the great tastes of Texas for 72 years since our founder, Mr. George W. Church began selling his chicken right across from the famous Alamo in San Antonio, Texas in 1952." },
+      { k: "Number of Restaurants and Countries Served:", v: "More than 1,500 restaurants operating in 24 countries." },
+      { k: "Projected Market Entries in the Coming Years:", v: "We expect to bring our brands to more than 20 new international markets." },
     ],
     /** "See us opening around the world" — slides (order + images) from franchise.texaschicken.com/whyus. */
     openings: [

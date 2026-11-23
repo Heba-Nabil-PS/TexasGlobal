@@ -28,7 +28,9 @@ const INK = "#2d2926";
 /** Measured in artwork units (2000 × 723). */
 const M = {
   eyebrow: { starX: 815, starY: 62, starW: 42, x: 866, base: 98, cap: 30, w: 267 },
-  line1: { x: 133, base: 320, cap: 175, w: 1735 },
+  // "Explore Church's Texas" is longer than the artwork's "Explore our Texas", so its
+  // cap height is scaled down (17/22 chars) to keep the letter shapes from squashing
+  line1: { x: 133, base: 320, cap: 135, w: 1735 },
   chicken: { x: 133, base: 555, cap: 175, w: 772 },
   menu: { x: 1345, base: 555, cap: 175, w: 508 },
   // image has transparent padding (~4% left, ~9% right), so the frame is wider than
@@ -38,6 +40,8 @@ const M = {
   // food span ~877 → 1350, bottom ~585
   video: { x: 873, y: 274, w: 480 },
   tagline: { x: 535, base: 636, cap: 23, w: 1015 },
+  /** second tagline line, same box one line lower */
+  tagline2: { x: 535, base: 676, cap: 23, w: 1015 },
 };
 
 const pct = (v: number, of: number) => `${(v / of) * 100}%`;
@@ -45,6 +49,7 @@ const pct = (v: number, of: number) => `${(v / of) * 100}%`;
 export default function ExploreMenuV2() {
   const { eyebrow, lines, tagline, image, video } = menuV2.explore;
   const [left, right] = lines[1].split("|");
+  const [tag1, tag2] = tagline.split("|");
 
   return (
     <section id="pick-your-crunch" className="relative z-10 scroll-mt-24 overflow-hidden bg-white pb-0 pt-6 text-third md:pb-4 md:pt-10">
@@ -82,7 +87,8 @@ export default function ExploreMenuV2() {
 
           {/* tagline */}
           <g className="hidden md:inline" fill={INK}>
-            <Line {...M.tagline} weight={600} text={tagline} />
+            <Line {...M.tagline} weight={600} text={tag1} />
+            {tag2 && <Line {...M.tagline2} weight={600} text={tag2} />}
           </g>
         </motion.svg>
 
@@ -92,7 +98,7 @@ export default function ExploreMenuV2() {
 
       <div className="container-tx flex flex-col items-center text-center">
         {/* mobile-only tagline */}
-        <p className="mt-2 text-sm font-semibold uppercase text-third md:hidden">{tagline}</p>
+        <p className="mt-2 text-sm font-semibold uppercase text-third md:hidden">{tagline.replace("|", " ")}</p>
 
         {/* Hidden for now: body copy + "Find your market to order" / "See the signatures" buttons.
             Restore with: <motion.p variants={fadeUp} ...>{body}</motion.p> and the two <Button>s (see git history). */}

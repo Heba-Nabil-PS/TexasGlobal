@@ -6,11 +6,10 @@ import manifest from "./burger-manifest.json";
 
 /**
  * The Mexicana opening layer by layer as you scroll — a transparent image
- * sequence drawn to a canvas, built from the brand video (img/video.MP4,
- * 4.05 s back to 2.40 s: the closed sandwich from the end of the clip,
- * opening to its widest):
- *  - motion-interpolated to 120 fps, so even the fast "snap" where the top
- *    bun lifts has in-between frames
+ * sequence drawn to a canvas, built from the brand video
+ * (img3/432317040_1795041065419696.mp4, 0.85 s → 2.80 s: closed sandwich
+ * opening to its widest; white studio backdrop keyed out):
+ *  - motion-interpolated to 96 fps, so the scrub has in-between frames
  *  - frames picked at equal visual change, so every bit of scroll moves the
  *    sandwich by the same amount (no dead zones, no jumps)
  *  - frames are shown crisp (never blended); the framing (gentle zoom-out as

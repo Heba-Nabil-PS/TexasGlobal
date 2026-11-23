@@ -167,40 +167,23 @@ export default function FranchiseTabs() {
 
 /* -------------------------------------------------------------- panel 1 */
 function WhyUs() {
-  const { whyUs, credentials } = franchisePage;
+  const { whyUs } = franchisePage;
   return (
     <div className="grid gap-14 lg:grid-cols-[1.1fr_0.9fr]">
       <div>
         <PanelHeading eyebrow="Why us" heading={whyUs.heading} />
-        {whyUs.body.map((p) => (
+        {whyUs.points.map((p) => (
           <motion.p
-            key={p}
+            key={p.k}
             variants={fadeUp}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: "some" }}
             className="mt-5 max-w-xl text-base leading-relaxed text-ink-600 md:text-lg"
           >
-            {p}
+            <span className="font-bold text-ink">{p.k}</span> {p.v}
           </motion.p>
         ))}
-
-        <motion.ul
-          variants={staggerContainer(0.08)}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: "some" }}
-          className="mt-9 flex flex-col gap-3"
-        >
-          {credentials.map((c) => (
-            <motion.li key={c} variants={fadeUp} className="flex items-center gap-3">
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-tex-red text-sm text-cream">
-                <BrandStar />
-              </span>
-              <span className="text-sm font-bold uppercase tracking-caps text-ink">{c}</span>
-            </motion.li>
-          ))}
-        </motion.ul>
       </div>
 
       {/* "See us opening around the world" — photo slider (from the Why Us page) */}

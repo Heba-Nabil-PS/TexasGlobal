@@ -10,10 +10,10 @@ export const stripV2 = {
 export const aboutV2 = {
   eyebrow: "Our story",
   titleLines: ["From one Texas stand", "to [25+ markets] worldwide."],
-  body: "In 1952 one San Antonio stand served crispy fried chicken, hand-battered and cooked fresh to order. Seven decades on, Church's Texas Chicken brings that same taste of Texas, done right, to 25+ markets across the Americas, the Middle East, Africa and Asia, still made by hand, in small batches, in every restaurant.",
+  body: "Founded in San Antonio, Texas, in 1952, Church's Texas Chicken began as one stand serving crispy fried chicken, hand-battered and cooked fresh to order. Today, Texas Chicken brings its signature Texas taste and southern fried chicken heritage to 25+ markets worldwide, continuing a 70+ year legacy of serving hand-battered chicken in every restaurant.",
   stats: [
     { value: 1952, suffix: "", label: "Born in Texas", year: true },
-    { value: 25, suffix: "+", label: "Markets" },
+    { value: 25, suffix: "+", label: "Markets worldwide" },
     { value: 70, suffix: "+", label: "Years of legacy" },
     { value: 100, suffix: "%", label: "Hand-battered" },
   ],
@@ -23,8 +23,8 @@ export const ceoV2 = {
   titleLines: ["Message", "from [our CEO]"],
   body: [
     "Our standards are what make the difference.",
-    "Every piece of our crispy fried chicken is cooked fresh in small batches to deliver the texture and crunch people know us for. It is never rushed, and it is never treated as routine.",
-    "From the first bite to the last, the experience is built on care, attention, and doing things properly. That is the taste of Texas, done right, and why people keep coming back.",
+    "Every piece of our crispy fried chicken is hand-battered and cooked fresh in small batches to deliver the signature crunch and flavour people know us for. It is never rushed, and it is never treated as routine.",
+    "From the first bite to the last, the experience is built on care, attention, and doing things properly. Every piece of our crispy fried chicken reflects our Texas heritage and commitment to quality. That is the taste of Texas, done right, and why people keep coming back.",
   ],
   name: "Roland Gonzalez",
   role: "Chief Executive Officer",
@@ -66,7 +66,7 @@ export const globeV2 = {
     { key: "south-america", label: "South America", lat: -14, lon: -60, markets: "Guyana" },
   ],
   stat: "25+ markets",
-  body: "Crispy fried chicken, spicy sandwiches and honey-butter biscuits, cooked fresh across the Americas, the Middle East, Africa, Europe and Asia Pacific.",
+  body: "Crispy fried chicken, spicy sandwiches and honey-butter biscuits, hand-battered and cooked fresh to order, bringing the signature taste of Texas to the Americas, the Middle East, Africa, Europe and Asia Pacific.",
   ctaPrimary: { label: "Find your market", href: "/find-your-market" },
   ctaSecondary: { label: "Bring the crunch to your market", href: "/franchising" },
 };

@@ -5,10 +5,11 @@
 
 export const franchiseV2 = {
   hero: {
-    eyebrow: "Franchise with a global leader",
-    title: ["Own a piece of", "a [legend]."],
-    body: "Since 1952, Church's Texas Chicken has grown from a single San Antonio stand into 1,500+ restaurants across 25+ markets, serving crispy fried chicken cooked fresh. Now we're opening the door to the next generation of partners.",
-    primary: { label: "Start your application", href: "#apply-form" },
+    // Copy from the franchise.texaschicken.com homepage hero.
+    eyebrow: "Bold, Texas flavor",
+    title: ["Let's bring the", "legendary taste", "of Texas to", "the [world]!"],
+    body: "Want to join the Texas Way? Get cooking. Open a Texas Chicken™ or Church's Texas Chicken™ restaurant near you.",
+    primary: { label: "Get started", href: "#apply-form" },
     secondary: { label: "See the investment", href: "#investment" },
   },
   proof: [

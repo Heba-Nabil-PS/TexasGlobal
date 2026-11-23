@@ -21,40 +21,40 @@ export type HeroSlide = {
 export const menuV2 = {
   hero: {
     eyebrow: "The full line-up",
-    // photos: img/BIC.png, side.png, mexicana.png, tenders.png (2560px WebP)
+    // photos: img3/BIC.png, side.png, mexicana.png, tenders.png (2560px WebP)
     slides: [
       {
         key: "bone-in",
-        image: "/assets/v2/menu/hero-bic.webp",
+        image: "/assets/v2/menu/hero-bic-v3.webp",
         title: ["Bone-in", "chicken"],
-        body: "Crispy fried chicken, marinated for hours, hand-battered to order and cooked fresh in small batches. The crunch that started it all in 1952.",
+        body: "Crispy fried chicken, marinated for hours, hand-battered to order and cooked fresh in small batches. The bone-in chicken crunch that started it all in 1952.",
         tone: "dark",
         wash: "#16110e",
       },
       {
         key: "sides",
-        image: "/assets/v2/menu/hero-sides.webp",
+        image: "/assets/v2/menu/hero-sides-v3.webp",
         title: ["Bold", "sides"],
-        body: "Honey-butter biscuits, jalapeño poppers, coleslaw and mashed potatoes with gravy: the crew that makes every meal.",
+        body: "Honey butter biscuits, jalapeño poppers, coleslaw and mashed potatoes with gravy: the sides that make every meal, with the Church's Chicken biscuits everyone loves.",
         tone: "light",
-        // photo already has a clean yellow field on the left, so no desktop wash
+        // the new tray photo fills the left side, so a full wash keeps the copy legible
         wash: "#dc991d",
-        washStrength: 0,
+        washStrength: 1,
         bodyWhite: true,
       },
       {
         key: "mexicana",
-        image: "/assets/v2/menu/hero-mexicana.webp",
+        image: "/assets/v2/menu/hero-mexicana-v3.webp",
         title: ["The", "Mexicana"],
-        body: "Our spicy sandwich icon: a hand-battered fillet, melted cheese and a tortilla-chip crunch, stacked high on a toasted sesame bun.",
+        body: "Our spicy chicken sandwich icon: a hand-battered fillet, melted cheese and a tortilla-chip crunch, stacked high on a toasted sesame bun. A signature choice on the Church's Chicken menu.",
         tone: "dark",
         wash: "#0b0402",
       },
       {
         key: "tenders",
-        image: "/assets/v2/menu/hero-tenders.webp",
+        image: "/assets/v2/menu/hero-tenders-v3.webp",
         title: ["Crunchy", "tenders"],
-        body: "Whole-muscle tenders in our signature crunchy coating, made for dipping, sharing and coming back for more.",
+        body: "Whole-muscle chicken tenders in our signature crispy fried chicken coating, made for dipping, sharing and coming back for more. Discover Church's Chicken crispy tenders.",
         tone: "light",
         wash: "#d6bea6",
       },
@@ -78,8 +78,9 @@ export const menuV2 = {
   explore: {
     /** words exactly as in the supplied artwork (images/Explore our menu-01.png) */
     eyebrow: "Pick your crunch",
-    lines: ["Explore our Texas", "Chicken|Menu"],
-    tagline: "Crispy fried chicken, spicy sandwiches, wraps and honey-butter biscuits. Cooked fresh in every category, with one unmistakable crunch.",
+    lines: ["Explore Church's Texas", "Chicken|Menu"],
+    /** "|" splits the desktop tagline into two lines */
+    tagline: "Crispy fried chicken, spicy chicken sandwiches, fried chicken tenders, chicken wraps and honey butter biscuits.|Explore the flavours on the Church's Chicken menu, cooked fresh in every category, with one unmistakable crunch.",
     image: "/assets/v2/menu/explore-combo.png",
     /** the combo assembling itself; transparent WebM keyed from img/Create a premium… u82.mp4 */
     video: "/assets/v2/menu/explore-combo.webm",
