@@ -21,16 +21,16 @@ export const franchiseV2 = {
   credentials: {
     eyebrow: "Trusted by the industry",
     title: ["A brand partners", "[bank on.]"],
-    body: "Recognised by the people who know franchising best, and backed by a support system built over seven decades.",
+    body: "Recognised by the people who know franchising best, and backed by a support system built over seven decades. Our proven restaurant franchise model creates exciting chicken franchise opportunities backed by global experience.",
     items: [
       { badge: "/assets/badge-ifa-member.svg", title: "IFA member", note: "International Franchise Association" },
       { badge: "/assets/badge-franchise-times.svg", title: "Top 400", note: "No. 64 · Franchise Times 2023" },
       { badge: "/assets/badge-ifa-foty.svg", title: "Franchisee of the Year", note: "IFA award, Malaysia" },
     ],
     reasons: [
-      { k: "Craveable product", v: "A recipe guests cross town for: the engine behind every P&L." },
-      { k: "Proven model", v: "Playbooks refined across 1,500+ restaurants and 25+ markets." },
-      { k: "Global buying power", v: "Local-first sourcing, backed by a worldwide supply chain." },
+      { k: "Craveable product", v: "A recipe guests cross town for: the engine behind every successful fried chicken franchise." },
+      { k: "Proven model", v: "Playbooks refined across 1,500+ restaurants and 25+ markets, creating a strong foundation for international franchise opportunities." },
+      { k: "Global buying power", v: "Local-first sourcing, backed by a worldwide supply chain, supporting our global food franchise network." },
     ],
   },
   apply: {
@@ -39,11 +39,11 @@ export const franchiseV2 = {
     intro: "From the first conversation to opening day, our development team works alongside you at every step: territory, site, build and launch.",
     formEyebrow: "Get started",
     formTitle: ["Ready to make", "a [bold move?]"],
-    formBody: "Share a few details and our development team will be in touch within 5 business days.",
+    formBody: "Share a few details about your franchise opportunities interest, and our development team will be in touch within 5 business days.",
     next: [
-      "A reply from our development team within 5 business days",
-      "A review of your territory and investment fit",
-      "A call to walk you through the full opportunity",
+      "A reply from our development team within 5 business days.",
+      "A review of your territory and chicken franchise investment fit.",
+      "A call to walk you through our Church's Texas Chicken franchise opportunities.",
     ],
     formHeading: "Franchise enquiry",
     formTime: "Takes about 2 minutes",
@@ -56,7 +56,7 @@ export const contactV2 = {
   hero: {
     eyebrow: "Get in touch",
     title: ["Let's talk", "[crunch]."],
-    body: "Questions, feedback, press or partnerships: one global team, serving 25+ markets. Pick a channel and we'll get you to the right people, fast.",
+    body: "Questions, feedback, press or partnerships: one global team, serving 25+ markets. Contact Church's Texas Chicken and pick a channel to reach the Church's Texas Chicken corporate office or Church's Chicken customer service team, fast.",
     bubbles: ["Franchise enquiry? 👋", "Press kit, please!", "Best biscuits ever."],
     stamp: "We're all ears",
   },
@@ -92,7 +92,7 @@ export const careersV2 = {
   hero: {
     eyebrow: "Careers at Texas Chicken",
     title: ["Join the [crew]", "behind the crunch."],
-    body: "40,000+ people in 25+ markets serve crispy fried chicken, cooked fresh and made by hand, every day. From the fryer to the boardroom, this is where bold careers are built.",
+    body: "40,000+ people in 25+ markets serve crispy fried chicken, cooked fresh and made by hand, every day. From the fryer to the boardroom, build your career at Texas Chicken and explore opportunities across our global team.",
     primary: { label: "See open roles", href: "#roles" },
     secondary: { label: "Our story", href: "/our-story" },
     stamp: "Join the crew",

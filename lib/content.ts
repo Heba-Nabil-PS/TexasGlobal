@@ -176,7 +176,7 @@ export const finalCta = {
   eyebrow: "Come hungry",
   heading: "Bold bites are",
   headingAccent: "right around the corner.",
-  body: "Find your nearest Texas Chicken or bring the crunch to your door. Menus, prices and hours vary by market.",
+  body: "Find your nearest Church's Texas Chicken near me, or bring the crunch to your door. Menus, prices and hours vary by market.",
   ctaPrimary: "Find your market",
   ctaSecondary: "Franchise with us",
   video: "/assets/home/hero-reference.mp4",
@@ -328,12 +328,12 @@ export const marketPage = {
     heading: "Pick your region.",
     /** same text as `heading`, as Title lines — [bracketed] renders in brand red */
     titleLines: ["Pick your [region.]"],
-    body: "Every highlighted country serves crispy fried chicken, cooked fresh the exact same way we do in Texas.",
+    body: "Every highlighted country serves crispy fried chicken, cooked fresh the exact same way we do in Texas, across Church's Texas Chicken locations in multiple countries.",
     allBrands: "Both brands",
     allLabel: "All markets",
     allName: "Around the world",
     allBlurb:
-      "From the Gulf to South East Asia, Europe to the Caribbean: one recipe, hand-battered fresh in every kitchen. Choose a region to zoom in.",
+      "From the Gulf to South East Asia, Europe to the Caribbean: one recipe, hand-battered fresh in every kitchen across our Church's Texas Chicken locations. Choose a region to zoom in.",
     selectedLabel: "Selected region",
     selectedMarket: "Selected market",
     hint: "Tap a country to see it up close",
@@ -343,7 +343,7 @@ export const marketPage = {
   finder: {
     eyebrow: "Find your country",
     heading: "Find your country.",
-    body: "Search by country, region or brand to visit the Texas Chicken market closest to you.",
+    body: "Search by country, region or brand to visit the nearest Church's Texas Chicken location closest to you.",
     searchPlaceholder: "Search by country…",
     allRegions: "All regions",
     allBrands: "All brands",
@@ -788,9 +788,9 @@ export const franchisePage = {
     heading: "Munch into the crunch.",
     /** From franchise.texaschicken.com/whyus. */
     points: [
-      { k: "Origin of the Name:", v: "We have been cooking up the great tastes of Texas for 72 years since our founder, Mr. George W. Church began selling his chicken right across from the famous Alamo in San Antonio, Texas in 1952." },
-      { k: "Number of Restaurants and Countries Served:", v: "More than 1,500 restaurants operating in 24 countries." },
-      { k: "Projected Market Entries in the Coming Years:", v: "We expect to bring our brands to more than 20 new international markets." },
+      { k: "Origin of the Name:", v: "We have been cooking up the great tastes of Texas for 72 years since our founder, Mr. George W. Church, began selling his chicken right across from the famous Alamo in San Antonio, Texas, in 1952. Today, the Church's Texas Chicken franchise offers fried chicken franchise opportunities backed by a globally recognised brand." },
+      { k: "Number of Restaurants and Countries Served:", v: "More than 1,500 restaurants operating in 24 countries, creating exciting international franchise opportunities for those looking to own a franchise with an established global brand." },
+      { k: "Projected Market Entries in the Coming Years:", v: "We expect to bring our brands to more than 20 new international markets, expanding our Texas Chicken franchise opportunities and global restaurant franchise network." },
     ],
     /** "See us opening around the world" — slides (order + images) from franchise.texaschicken.com/whyus. */
     openings: [
@@ -1240,7 +1240,7 @@ export const faqsPage = {
 export const privacyPage = {
   hero: {
     eyebrow: "Legal",
-    title: ["Privacy & Cookies", "Policy."],
+    title: ["Church's Texas Chicken Privacy", "& Cookies Policy."],
     subtitle: privacyPolicy.subtitle,
   },
   updated: privacyPolicy.updated,
